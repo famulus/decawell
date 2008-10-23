@@ -44,6 +44,7 @@ icosahedron = Matrix[
 ]
 
 DB = "test3.g"
+mged ="/usr/brlcad/bin/mged -f -c  #{DB} "
 torus = 0.125
 torus_negative = 0.90 * torus
 torus_ring_size = 1
@@ -52,9 +53,14 @@ torus_ring_size = 1
 # `/usr/brlcad/bin/mged -f -c  #{DB} 'kill -f * '`
 
 icosahedron.row_vectors().each_with_index do |v,index|
-	`/usr/brlcad/bin/mged -f -c  #{DB} 'in torus#{index}.t tor #{v[0]} #{v[1]} #{v[2]} #{v[0]} #{v[1]} #{v[2]} #{torus_ring_size} #{torus}'`
-	`/usr/brlcad/bin/mged -f -c  #{DB} 'in torus_negative#{index}.t tor #{v[0]} #{v[1]} #{v[2]} #{v[0]} #{v[1]} #{v[2]} #{torus_ring_size} #{torus_negative}'`
-	`/usr/brlcad/bin/mged -f -c  #{DB} 'in cylinder_knockout#{index} rcc #{v[0]} #{v[1]} #{v[2]} #{v[0]} #{v[1]} #{v[2]} #{torus_ring_size* 1.2}.'`
-	`/usr/brlcad/bin/mged -f -c  #{DB} 'r torus_shell.r u torus#{index}.t - torus_negative#{index}.t - cylinder_knockout#{index} '`
+	`#{mged} 'in torus#{index} tor #{v[0]} #{v[1]} #{v[2]} #{v[0]} #{v[1]} #{v[2]} #{torus_ring_size} #{torus}'`
+	`#{mged} 'in torus_negative#{index} tor #{v[0]} #{v[1]} #{v[2]} #{v[0]} #{v[1]} #{v[2]} #{torus_ring_size} #{torus_negative}'`
+	`#{mged} 'in cylinder_knockout#{index} rcc #{v[0]} #{v[1]} #{v[2]} #{v[0]} #{v[1]} #{v[2]} #{torus_ring_size* 1.2}.'`
+	`#{mged} 'r torus_shell#{index} u torus#{index} - torus_negative#{index} - cylinder_knockout#{index}'`
+	# `#{mged} 'kill torus_negative#{index} '`
+	# `#{mged} 'kill cylinder_knockout#{index}'`
+	# `#{mged} 'draw *'`
 end
+`#{mged} 'r polywell_tori u #{(0...12).map{|index| "torus_shell#{index}"}.join(" u ")}'`
+
 # `/usr/brlcad/bin/mged -f /Users/mark/Documents/edge/lib/test3.g`
