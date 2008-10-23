@@ -61,6 +61,7 @@ icosahedron.row_vectors().each_with_index do |v,index|
 	# `#{mged} 'kill cylinder_knockout#{index}'`
 	# `#{mged} 'draw *'`
 end
-`#{mged} 'r polywell_tori u #{(0...12).map{|index| "torus_shell#{index}"}.join(" u ")}'`
+`#{mged} 'r polywell_tori u #{(0...12).map{|index| "torus_shell#{index}"}.join(" u ")}'` 
+
 
 # `/usr/brlcad/bin/mged -f /Users/mark/Documents/edge/lib/test3.g`
