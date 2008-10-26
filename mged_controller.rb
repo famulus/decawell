@@ -52,13 +52,22 @@ def average(v1,v2)
 end
 
 def intersection(a,b,c,d) # find intersection of line segment ab and cd in 3D
-	    det=Matrix[a[0],a[1],a[2],b[0],b[1],b[2],c[0],c[1],c[2]].det
-     detx=Matrix[d[0],d[1],d[2],b[0],b[1],b[2],c[0],c[1],c[2]].det
-     dety=Matrix[a[0],a[1],a[2],d[0],d[1],d[2],c[0],c[1],c[2]].det
-     detz=Matrix[a[0],a[1],a[2],b[0],b[1],b[2],d[0],d[1],d[2]].det
-               
-	
-	
+	det=Matrix[a[0],a[1],a[2],b[0],b[1],b[2],c[0],c[1],c[2]].det
+	detx=Matrix[d[0],d[1],d[2],b[0],b[1],b[2],c[0],c[1],c[2]].det
+	dety=Matrix[a[0],a[1],a[2],d[0],d[1],d[2],c[0],c[1],c[2]].det
+	detz=Matrix[a[0],a[1],a[2],b[0],b[1],b[2],d[0],d[1],d[2]].det
+
+	if (d[0]==0 && d[1]==0 && d[2]==0 && det==0)                  
+		puts "Infinite Solutions"                               
+	elsif (d[0]==0 && d[1]==0 && d[2]==0 && det!=0)               
+		return Vector[0,0,0]                                    
+	elsif (det!=0)                                            
+		return Vector[(detx/det), (dety/det), (detz/det)]       
+	elsif (det==0 && detx==0 && dety==0 && detz==0)           
+		puts "Infinite Solutions"                               
+	else	                                                    
+		puts "No Solutions"                                     
+	end                                                       
 end
 
 
@@ -96,8 +105,8 @@ icosahedron.row_vectors().each_with_index do |v,index|
 			# `#{mged} 'in dot#{index}_#{index_in} sph #{b[0]} #{b[1]} #{b[2]} 0.1'` 
 			# `#{mged} 'in line2#{index}_#{index_in} rcc #{v[0]} #{v[1]} #{v[2]} #{a[0]} #{a[1]} #{a[2]} 0.1'` 
 			`#{mged} 'in line3#{index}_#{index_in} rcc #{v[0]} #{v[1]} #{v[2]} #{b[0]} #{b[1]} #{b[2]} 0.01'` 
-			e = average(b,d)
-			# `#{mged} 'in dot#{index}_#{index_in} sph #{e[0]} #{e[1]} #{e[2]} 0.1'` 
+			e = intersection(v,b,vin,d)
+			`#{mged} 'in dot#{index}_#{index_in} sph #{e[0]} #{e[1]} #{e[2]} 0.1'` 
 		end
 
 	end
