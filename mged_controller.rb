@@ -5,11 +5,14 @@ include Geometry
 
 DB = "test3.g"
 mged ="/usr/brlcad/rel-7.12.2/bin//mged -c  #{DB} "
+scale_factor = 0.9 # global scaling factor
+torus_ring_size = 0.65
 torus = 0.125
 torus_negative = 0.90 * torus
-torus_ring_size = 1
+connector_thickness = torus * 0.5
 
 `rm ./#{DB}`
+`#{mged} 'units dm'` # set mged's units to decimeter 
 
 Dodecahedron.icosahedron.each_with_index do |v,index|
 	`#{mged} 'in torus#{index} tor #{v[0]} #{v[1]} #{v[2]} #{v[0]} #{v[1]} #{v[2]} #{torus_ring_size} #{torus}'`
@@ -21,90 +24,20 @@ end
 # `#{mged} 'r polywell_tori u #{(0...12).map{|index| "torus_shell#{index}"}.join(" u ")}'` 
 
 
-Dodecahedron.vertices.each_with_index do |v,index|
-	`#{mged} 'in a_#{rand} sph #{v[0]} #{v[1]} #{v[2]} 0.2'`  
+
+Dodecahedron.edges.each_with_index do |edge,index| #insert the 30 connectors
+	a = average(*edge.map{|e|e}) # the ideal location of the connector
+	a = a * 0.95 # nudge the connector closer to the center
+
+	b =cross_product(a,(edge[1]-edge[0])) # this is the vector of the half connector
+	b = b*0.1 # scale the length of the connecter
+	`#{mged} 'in connector1_#{index} rcc #{a[0]} #{a[1]} #{a[2]} #{b[0]} #{b[1]} #{b[2]} #{connector_thickness}'` 
+	b = Vector[0,0,0]-b# scale the length of the connecter
+	`#{mged} 'in connector2_#{index} rcc #{a[0]} #{a[1]} #{a[2]} #{b[0]} #{b[1]} #{b[2]} #{connector_thickness}'` 
+
 end
 
-# pentagons = []
-# dodecahedron.each_with_index do |v,index|
-# 	dodecahedron.each_with_index do |v1,index1|
-# 		dodecahedron.each_with_index do |v2,index2|
-# 			dodecahedron.each_with_index do |v3,index3|
-# 				dodecahedron.each_with_index do |v4,index4|
-# 					if [v,v1,v2,v3,v4].uniq_by {|i|i.hash}.size == [v,v1,v2,v3,v4].size # skip vertice combination with the same vertice twice 
-# 						a = average(v,v1,v2,v3,v4)
-# 						# (	`#{mged} 'in a_#{rand} sph #{a[0]} #{a[1]} #{a[2]} 0.07'`  ) if a.r > 1.3
-# 						pentagons << [v,v1,v2,v3,v4] if a.r > 1.3
-# 						# puts pentagons.inspect
-# 						# break
-# 						
-# 					end
-# 					# dodecahedron.row_vectors().each_with_index do |vin,index_in|
-# 					# 	h = vin - v #vector connecting the point pairs
-# 					# 	i = v - vin #the inverse of h
-# 					# 	e = average(v,vin)
-# 					# `#{mged} 'in a_#{index}_#{index_in} sph #{e[0]} #{e[1]} #{e[2]} 0.06'`  rescue nil
-# 					# end
-# 				end
-# 
-# 			end
-# 		end
-# 	end
-# end
-# 
-# 
-#  p =pentagons.uniq_by {|p| p.sort_by{|a|a.hash}.map{|b|b.hash}}
-#  puts p.inspect
-#  puts p.size
-# q = p.map do |face|
-# 	# puts "OK#{face.size}"
-# 	face.map	do |vertex|
-# 		
-# 		dodecahedron.rindex(dodecahedron.select { |v| v == vertex   }.first) # find the reverse index
-# 
-# 		
-# 	end
-# end
-# 
-# puts q.inspect
-
-
- # puts pentagons.inspect
-
-# icosahedron.row_vectors().each_with_index do |v,index|
-# 	icosahedron.row_vectors().each_with_index do |vin,index_in|
-# 		h = vin - v #vector connecting the point pairs
-# 		i = v - vin #the inverse of h
-# 		if h.r == 2 && i.r ==2 # only render the outer most vertices
-# 			puts "index:#{index},index_in:#{index_in}"
-# 			# `#{mged} 'in line#{index}_#{index_in} rcc #{v[0]} #{v[1]} #{v[2]} #{h[0]} #{h[1]} #{h[2]} 0.1'` #the icosohedron
-# 			a =cross_product(h,v)
-# 			b =cross_product(v,a) 
-# 
-# 			c =cross_product(i,vin)
-# 			d =cross_product(vin,c)
-# 
-# 			b =b * 0.25 #shorten the vectors
-# 			d =d * 0.25
-# 			# `#{mged} 'in dot#{index}_#{index_in} sph #{b[0]} #{b[1]} #{b[2]} 0.1'` 
-# 			# `#{mged} 'in line2#{index}_#{index_in} rcc #{v[0]} #{v[1]} #{v[2]} #{a[0]} #{a[1]} #{a[2]} 0.1'` 
-# 			`#{mged} 'in line_right_#{index}_#{index_in} rcc #{v[0]} #{v[1]} #{v[2]} #{b[0]} #{b[1]} #{b[2]} 0.01'` 
-# 			`#{mged} 'in line_left_#{index}_#{index_in} rcc #{vin[0]} #{vin[1]} #{vin[2]} #{d[0]} #{d[1]} #{d[2]} 0.01'` 
-# 			
-# 			e = intersection(v,bv,vin,d+vin)
-# 			# puts "OKOK:#{e}"
-# 			# `#{mged} 'in dot#{index}_#{index_in} sph #{e[0]} #{e[1]} #{e[2]} 0.1'`  rescue nil
-# 			`#{mged} 'in a_#{index}_#{index_in} sph #{v[0]} #{v[1]} #{v[2]} 0.1'`  rescue nil
-# 			`#{mged} 'in b_#{index}_#{index_in} sph #{(b+v)[0]} #{(b+v)[1]} #{(b+v)[2]} 0.1'`  rescue nil
-# 			`#{mged} 'in c_#{index}_#{index_in} sph #{vin[0]} #{vin[1]} #{vin[2]} 0.1'`  rescue nil
-# 			`#{mged} 'in d_#{index}_#{index_in} sph #{(d+vin)[0]} #{(d+vin)[1]} #{(d+vin)[2]} 0.1'`  rescue nil
-# 			
-# 		end                                                            
-# 		
-# 	end
-# end
-
-# `#{mged} 'in cutaway rcc 1 1 1  2 2 2 3'`   #draw a cutaway sphere
-# `#{mged} 'r cutaway1 u polywell_tori - cutaway'` 
+`#{mged} 'r polywell u #{(0...12).map{|index| "torus#{index}"}.join(" u ")} u #{(0...29).map{|index| "connector1_#{index} u connector2_#{index}"}.join(" u ")}'` #union all the parts into a sings polywell object
+`g-stl -o polywell.stl  test3.g polywell`
 
 
