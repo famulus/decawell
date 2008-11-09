@@ -1,7 +1,8 @@
 require 'geometry'
+include Geometry
+
 require 'set'
 require 'facets'
-include Geometry
 
 DB = "test3.g"
 mged ="/usr/brlcad/rel-7.12.2/bin//mged -c  #{DB} "
@@ -28,7 +29,7 @@ Dodecahedron.edges.each_with_index do |edge,index| #insert the 30 connectors
 end
 
 
-Dodecahedron.icosahedron.each_with_index do |v,index|
+Dodecahedron.icosahedron.each_with_index do |v,index| # draw the 12 tori
 	v = v*scale_factor
 	`#{mged} 'in torus#{index} tor #{v[0]} #{v[1]} #{v[2]} #{v[0]} #{v[1]} #{v[2]} #{torus_ring_size} #{torus}'`
 	`#{mged} 'in torus_negative#{index} tor #{v[0]} #{v[1]} #{v[2]} #{v[0]} #{v[1]} #{v[2]} #{torus_ring_size} #{torus_negative}'`
