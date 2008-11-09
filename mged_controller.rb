@@ -39,6 +39,6 @@ end
 # `#{mged} 'r polywell_tori u #{(0...12).map{|index| "torus_shell#{index}"}.join(" u ")}'` 
 
 `#{mged} 'r polywell u #{(0...12).map{|index| "torus_shell#{index}"}.join(" u ")} u #{(0...29).map{|index| "connector1_#{index} u connector2_#{index}"}.join(" u ")}'` #union all the parts into a sings polywell object
-# `g-stl -o polywell_hollow.stl  test3.g polywell`
+# `g-stl -o polywell_holow.stl  test3.g polywell`
 
 
