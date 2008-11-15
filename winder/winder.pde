@@ -25,7 +25,7 @@ void loop()
 {
 	 int i, j;
 	Serial.print("Speed: ");
-	Serial.println(1650);
+	Serial.println(3600);
 	
 	for (j=0; j<2000; j++)
 	{
@@ -34,10 +34,10 @@ void loop()
 		digitalWrite(stepPin, LOW);
 		delayMicroseconds(i);
 
-		digitalWrite(spool_stepPin, HIGH);
-		delayMicroseconds(2);
-		digitalWrite(spool_stepPin, LOW);
-		delayMicroseconds(i);
+		// digitalWrite(spool_stepPin, HIGH);
+		// delayMicroseconds(2);
+		// digitalWrite(spool_stepPin, LOW);
+		// delayMicroseconds(i);
 	}
 
 	
