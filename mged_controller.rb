@@ -36,12 +36,12 @@ Dodecahedron.icosahedron.each_with_index do |v,index| # draw the 12 tori
 	`#{mged} 'in torus#{index} tor #{v[0]} #{v[1]} #{v[2]} #{v[0]} #{v[1]} #{v[2]} #{torus_ring_size} #{torus}'` #the torus solid
 	`#{mged} 'in torus_negative#{index} tor #{v[0]} #{v[1]} #{v[2]} #{v[0]} #{v[1]} #{v[2]} #{torus_ring_size} #{torus_negative}'` #this hollow center of the torus
 	# `#{mged} 'in cylinder_knockout#{index} rcc #{v[0]} #{v[1]} #{v[2]} #{v[0]} #{v[1]} #{v[2]} #{torus_ring_size* 1.2}.'` #this removed the face of the torus so we can install coils
-	`#{mged} 'r torus_shell#{index} u torus#{index} u joints - torus_negative#{index} - cylinder_knockout#{index}'` #combine the pieces
+	# `#{mged} 'r torus_shell#{index} u torus#{index} - torus_negative#{index} - cylinder_knockout#{index}'` #combine the pieces
 	`#{mged} 'r torus_shell#{index} u torus#{index} - torus_negative#{index} '`
 end
 # `#{mged} 'r polywell_tori u #{(0...12).map{|index| "torus_shell#{index}"}.join(" u ")}'` 
 
 `#{mged} 'r polywell u #{(0..11).map{|index| "torus_shell#{index}"}.join(" u ")} u #{(0..29).map{|index| "connector1_#{index} u connector2_#{index}"}.join(" u ")}'` #union all the parts into a sings polywell object
-# `g-stl -o polywell_holow.stl  test3.g polywell`
+`g-stl -o dodeca_holow.stl  test3.g polywell`
 
 
