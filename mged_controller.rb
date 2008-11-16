@@ -13,6 +13,8 @@ torus_negative = 0.83 * torus
 joint_radius = torus * 0.73
 joint_negative_radius = joint_radius * 0.35
 joint_nudge = 0.863 # this is a percentage scaling of the vector defining the ideal joint location
+coil_wire_diameter = 0.644 / 100 # dm
+pixels_across = ((torus_negative*2) /coil_wire_diameter).round
 
 derived_dimentions = {
 	:outside_radius => (Dodecahedron.vertices[0].r) ,
@@ -23,9 +25,13 @@ derived_dimentions = {
 	:torus_tube_hollow_radius => torus_negative,
 	:joint_radius => joint_radius,
 	:joint_negative_radius => joint_negative_radius,
+	# :pixels_across => pixels_across,
+	# :coil_wire_diameter => coil_wire_diameter,
 }
 
+
 puts "\n\n"
+puts "wire pixels:#{pixels_across}"
 derived_dimentions.sort_by{ |k,v| v }.reverse.each { |k,v| puts "#{k}: #{v*100} mm"  }
 puts "\n\n"
 
