@@ -56,8 +56,23 @@ end
 `#{mged} 'r negative_form u #{(0..29).map{|index| " joint_negative1_#{index} u joint_negative2_#{index}"}.join(" u ")} u #{(0..11).map{|index| "torus_negative#{index} u lid_knockout#{index}"}.join(" u ") } '` #combine the pieces
 `#{mged} 'r polywell u solid - negative_form'` #combine the pieces
 
+# (0..11).map do |index|
+# 	`#{mged} 'in torus#{index} tor #{Vector[0,0,index].mged} 0 0 1  #{torus_ring_size} #{torus}'` #the torus solid
+# 	# `#{mged} 'in torus_negative#{index} tor #{v.mged} #{v.mged} #{torus_ring_size} #{torus_negative}'` #this hollow center of the torus
+# 	# `#{mged} 'in lid_knockout#{index} rcc #{v.mged} #{v.mged} #{torus_ring_size+torus}'` #this removed the face of the torus so we can install coils
+# end
 
-
+`cat <<EOF | mged -c #{DB}
+B polywell
+ae 135 -35 180
+set perspective 20
+zoom .25
+saveview #{DB}.rt
+EOF
+`
+`./#{DB}.rt -s1024`
+`pix-png -s1024 < #{DB}.rt.pix > #{DB}.png`
+`open ./#{DB}.png`
 # `g-stl -o dodeca_holow.stl  test3.g polywell`
 
 
