@@ -29,7 +29,7 @@ puts "\n\n"
 derived_dimentions.sort_by{ |k,v| v }.reverse.each { |k,v| puts "#{k}: #{v*100} mm"  }
 puts "\n\n"
 
-`rm ./#{DB}`
+`rm -f ./#{DB.gsub(".g","")}.*`
 `#{mged} 'units dm'` # set mged's units to decimeter 
 
 Dodecahedron.icosahedron.each_with_index do |v,index| # draw the 12 tori
@@ -66,7 +66,7 @@ end
 B polywell
 ae 135 -35 180
 set perspective 20
-zoom .25
+zoom .40
 saveview #{DB}.rt
 EOF
 `
