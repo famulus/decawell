@@ -4,6 +4,8 @@ include Geometry
 require 'set'
 require 'facets'
 
+parts = %w(chassis bobbin_pair)
+
 DB = "test3.g"
 mged ="/usr/brlcad/rel-7.12.2/bin//mged -c  #{DB} "
 scale_factor = 0.75 # global scaling factor
@@ -28,6 +30,9 @@ derived_dimentions = {
 	# :pixels_across => pixels_across,
 	# :coil_wire_diameter => coil_wire_diameter,
 }
+
+
+# rasterCircle(pixels_across/2,pixels_across/2,pixels_across/2)
 
 
 puts "\n\n"
@@ -60,7 +65,7 @@ end
 
 `#{mged} 'r solid u #{(0..29).map{|index| " joint1_#{index} u joint2_#{index}"}.join(" u ")} u #{(0..11).map{|index| "torus#{index}"}.join(" u ")}'` #combine the pieces
 `#{mged} 'r negative_form u #{(0..29).map{|index| " joint_negative1_#{index} u joint_negative2_#{index}"}.join(" u ")} u #{(0..11).map{|index| "torus_negative#{index} u lid_knockout#{index}"}.join(" u ") } '` #combine the pieces
-`#{mged} 'r polywell u solid - negative_form'` #combine the pieces
+`#{mged} 'r chassis u solid - negative_form'` #combine the pieces
 
 # (0..11).map do |index|
 # 	`#{mged} 'in torus#{index} tor #{Vector[0,0,index].mged} 0 0 1  #{torus_ring_size} #{torus}'` #the torus solid
@@ -68,17 +73,42 @@ end
 # 	# `#{mged} 'in lid_knockout#{index} rcc #{v.mged} #{v.mged} #{torus_ring_size+torus}'` #this removed the face of the torus so we can install coils
 # end
 
+# the bobbin 
+
+
+
+ wall_thickness = (2.0 / 100.0) # dm
+shaft_radius = (6.35 /100.0) /2
+shaft_length = (16 /100.0)
+noth_origin = shaft_radius -((shaft_radius * 2) - (5.8 /100.0)) 
+puts "noth_origin#{noth_origin}"
+puts "wall_thickness: #{wall_thickness}"
+	`#{mged} 'in bobbin_torus tor 0 0 0.25 0 0 1 #{torus_ring_size} #{torus}'` #the torus solid
+	`#{mged} 'in bobbin_negative tor 0 0 .25  0 0 1 #{torus_ring_size} #{torus_negative}'` #this hollow center of the torus
+	`#{mged} 'in bobbin_half rcc 0 0 .25 0 0 0.25 #{torus_ring_size}'` #this defines half the torus, so the bobin splits apart
+	`#{mged} 'in support_plate rcc 0 0 .25  0 0 #{wall_thickness} #{torus_ring_size-torus + wall_thickness  }'` #the plate to the shaft
+	`#{mged} 'in shaft_negative rcc 0 0 .25  0 0 #{shaft_length} #{shaft_radius  }'` #the plate to the shaft
+	`#{mged} 'in shaft_notch rcc #{noth_origin} 0 .25  #{shaft_length} 0  0  #{shaft_length*2  }'` #the plate to the shaft
+	
+	`#{mged} 'r shaft_with_notch u shaft_negative - shaft_notch'` # form the first half of the bobbin
+	`#{mged} 'r bobbin u support_plate - shaft_with_notch u bobbin_torus + bobbin_half - bobbin_negative  '` # form the first half of the bobbin
+	`#{mged} 'mirror bobbin bobbin_twin z'` #combine the pieces
+	
+	`#{mged} 'r bobbin_pair u bobbin  u bobbin_twin'` #combine the pieces
+
+parts.each do |part|
+	
 `cat <<EOF | mged -c #{DB}
-B polywell
+B #{part}	
 ae 135 -35 180
 set perspective 20
 zoom .40
-saveview #{DB}.rt
+saveview #{part}.rt
 EOF
 `
-`./#{DB}.rt -s1024`
-`pix-png -s1024 < #{DB}.rt.pix > #{DB}.png`
-`open ./#{DB}.png`
-# `g-stl -o dodeca_holow.stl  test3.g polywell`
-
-
+`./#{part}.rt -s1024`
+`pix-png -s1024 < #{part}.rt.pix > #{part}.png`
+`open ./#{part}.png`
+`g-stl -o decawell.stl #{DB} #{part}`
+`rm  ./#{part}.rt #{part}.rt.pix #{part}.rt.log`
+end
