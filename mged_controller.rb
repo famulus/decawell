@@ -4,29 +4,32 @@ include Geometry
 require 'set'
 require 'facets'
 
-parts = %w(chassis bobbin_pair)
+# parts = %w(chassis bobbin_pair)
+parts = %w(chassis)
 
 DB = "test3.g"
 mged ="/usr/brlcad/rel-7.12.2/bin//mged -c  #{DB} "
-scale_factor = 0.75 # global scaling factor
+scale_factor = 1.4 # global scaling factor
 torus_ring_size = 0.55 *scale_factor
 torus = 0.22 *scale_factor
 torus_negative = 0.83 * torus
-joint_radius = torus * 0.73
+joint_radius = torus * 0.70
 joint_negative_radius = joint_radius * 0.35
 joint_nudge = 0.863 # this is a percentage scaling of the vector defining the ideal joint location
 coil_wire_diameter = 0.644 / 100 # dm
 pixels_across = ((torus_negative*2) /coil_wire_diameter).round
 
 derived_dimentions = {
-	:outside_radius => (Dodecahedron.vertices[0].r) ,
-	:torus_midplane_radius => (Dodecahedron.icosahedron[0].r),
+	:outside_radius => (Dodecahedron.vertices[0].r) *scale_factor ,
+	:torus_midplane_radius => (Dodecahedron.icosahedron[0].r) * scale_factor,
 	:torus_radius => torus_ring_size,
 	:torus_tube_radius => torus,
 	:torus_tube_wall_thickness => torus-torus_negative,
 	:torus_tube_hollow_radius => torus_negative,
 	:joint_radius => joint_radius,
 	:joint_negative_radius => joint_negative_radius,
+	:donut_exterier_radius => torus_ring_size +torus ,
+	:donut_hole_radius => torus_ring_size -torus,
 	# :pixels_across => pixels_across,
 	# :coil_wire_diameter => coil_wire_diameter,
 }
@@ -55,7 +58,7 @@ Dodecahedron.edges.each_with_index do |edge,index| #insert the 30 joints
 	a = average(*edge.map{|e|e}) # the ideal location of the joint
 	a = a * joint_nudge # nudge the joint closer to the center
 	b =cross_product(a,(edge[1]-edge[0])) # this is the vector of the half joint
-	b = b*0.25* scale_factor
+	b = b*0.08* scale_factor
 	`#{mged} 'in joint1_#{index} rcc #{a.mged} #{b.mged} #{joint_radius}'` 
 	`#{mged} 'in joint_negative1_#{index} rcc #{a.mged} #{b.mged} #{joint_negative_radius}'` 
 	b = Vector[0,0,0]-b # point the vector in the opposite direction 
@@ -109,6 +112,8 @@ EOF
 `./#{part}.rt -s1024`
 `pix-png -s1024 < #{part}.rt.pix > #{part}.png`
 `open ./#{part}.png`
-`g-stl -o decawell.stl #{DB} #{part}`
-`rm  ./#{part}.rt #{part}.rt.pix #{part}.rt.log`
+# `g-stl -o #{part}.stl #{DB} #{part}`
+`rm -f ./#{part}.rt `
+`rm -f ./#{part}.rt.pix `
+`rm -f ./#{part}.rt.log`
 end
