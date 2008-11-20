@@ -101,13 +101,17 @@ if parts.include?("bobbin_pair")
 	`#{mged} 'in shaft_negative rcc 0 0 0  #{(offset.normal*shaft_length).mged} #{shaft_radius  }'` #the plate to the shaft
 	`#{mged} 'in shaft_notch rcc #{(Vector[0,notch_origin,0]).mged} #{Vector[0,shaft_length,0].mged}  #{shaft_length*1.2  }'` #the plate to the shaft
 
-	`#{mged} 'r shaft_with_notch u shaft_negative - shaft_notch'` # form the shaft with notch
+	`#{mged} 'in screw_hole rcc 0 35 0  #{(offset.normal*shaft_length).mged} #{screw_hole_radius}'` #the screw hole to hold the halves together
+	`#{mged} 'in screw_hole2 rcc 0 0 35  #{(offset.normal*shaft_length).mged} #{screw_hole_radius}'` #the screw hole to hold the halves together
+		`#{mged} 'mirror screw_hole screw_hole3 y'` #combine the pieces
+		`#{mged} 'mirror screw_hole2 screw_hole4 y'` #combine the pieces
+
+	`#{mged} 'r shaft_with_notch u screw_hole4 u screw_hole3 u screw_hole2 u screw_hole u shaft_negative - shaft_notch '` # form the shaft with notch
 	`#{mged} 'r bobbin u support_plate - shaft_with_notch  u bobbin_torus + bobbin_half - bobbin_negative  '` # form the first half of the bobbin
 
 	`cat <<EOF | mged -c #{DB}
 	B bobbin	
-	oed / bobbin/bobbin_torus
-	
+	oed / bobbin/bobbin_torus	
 	translate #{offset.mged}
 	accept
 EOF`
