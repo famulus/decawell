@@ -21,8 +21,6 @@ module Geometry
 
 			c = (0..(radius*2)).to_a.map{|a|(0..(radius*2)).to_a.map{|b| 0}}
 
-
-
 			f = 1 - radius
 			ddF_x = 1
 			ddF_y = -2 * radius
