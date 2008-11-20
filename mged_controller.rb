@@ -1,11 +1,9 @@
 require 'geometry'
 include Geometry
-
-require 'set'
 require 'facets'
 
-parts = %w(chassis bobbin_pair lids)
-# parts = %w(bobbin_pair)
+# parts = %w(chassis bobbin_pair lids)
+parts = %w(bobbin_pair)
 
 DB = "test3.g"
 mged ="/usr/brlcad/rel-7.12.2/bin//mged -c  #{DB} "
@@ -92,6 +90,7 @@ if parts.include?("bobbin_pair")
 	wall_thickness = (2.5) # mm
 	shaft_radius = (6.35 ) /2.0
 	shaft_length = (16 )
+	screw_hole_radius = 2 #mm
 	notch_origin = shaft_radius -((shaft_radius * 2) - (5.8 )) 
 	puts "notch_origin#{notch_origin}"
 	puts "wall_thickness: #{wall_thickness}"
@@ -101,9 +100,9 @@ if parts.include?("bobbin_pair")
 	`#{mged} 'in support_plate rcc #{offset.mged} #{(offset.normal*wall_thickness).mged} #{torus_ring_size-torus + wall_thickness  }'` #the plate to the shaft
 	`#{mged} 'in shaft_negative rcc #{offset.mged}  #{(offset.normal*shaft_length).mged} #{shaft_radius  }'` #the plate to the shaft
 	`#{mged} 'in shaft_notch rcc #{(offset + Vector[0,notch_origin,0]).mged} #{Vector[0,shaft_length,0].mged}  #{shaft_length*1.2  }'` #the plate to the shaft
-                                
-	`#{mged} 'r shaft_with_notch u shaft_negative - shaft_notch'` # form the first half of the bobbin
-	`#{mged} 'r bobbin u support_plate - shaft_with_notch u bobbin_torus + bobbin_half - bobbin_negative  '` # form the first half of the bobbin
+
+	`#{mged} 'r shaft_with_notch u shaft_negative - shaft_notch'` # form the shaft with notch
+	`#{mged} 'r bobbin u support_plate - shaft_with_notch  u bobbin_torus + bobbin_half - bobbin_negative  '` # form the first half of the bobbin
 	`#{mged} 'mirror bobbin bobbin_twin x'` #combine the pieces
 
 	`#{mged} 'r bobbin_pair u bobbin  u bobbin_twin'` #combine the pieces
@@ -113,7 +112,7 @@ end
 parts.each do |part|
 
 `cat <<EOF | mged -c #{DB}
-B #{part}	
+B #{part}
 ae 135 -35 180
 set perspective 20
 zoom .30
