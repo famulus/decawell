@@ -5,7 +5,7 @@ require 'set'
 require 'facets'
 
 # parts = %w(chassis bobbin_pair)
-parts = %w(lids)
+parts = %w(bobbin_pair)
 
 DB = "test3.g"
 mged ="/usr/brlcad/rel-7.12.2/bin//mged -c  #{DB} "
@@ -75,10 +75,10 @@ if parts.include?("lids")
 	spacer = 40
 	step = Vector[40,0,0]
 	(0..11).map do |index|
-		
-		`#{mged} 'in lid_torus#{index} tor #{Vector[0,0,index*spacer].mged} 0 0 1  #{torus_ring_size} #{torus}'` #the torus solid
-		`#{mged} 'in lid_torus_negative#{index} tor #{Vector[0,0,index*spacer].mged}  0 0 1 #{torus_ring_size} #{torus_negative}'` #this hollow center of the torus
-		`#{mged} 'in lid_knockout#{index} rcc #{Vector[0,0,index*spacer].mged}  #{(Vector[0,0,1].normal)*torus} #{torus_ring_size+torus}'` #this removed the face of the torus so we can install coils
+		index1 = index+1
+		`#{mged} 'in lid_torus#{index} tor #{(step*index1).mged} #{(step*index1).mged}  #{torus_ring_size} #{torus}'` #the torus solid
+		`#{mged} 'in lid_torus_negative#{index} tor #{(step*index1).mged}  #{(step*index1).mged} #{torus_ring_size} #{torus_negative}'` #this hollow center of the torus
+		`#{mged} 'in lid_knockout#{index} rcc #{(step*index1).mged}  #{((step.normal)*torus).mged} #{torus_ring_size+torus}'` #this removed the face of the torus so we can install coils
 		
 	end
 			`#{mged} 'r lids u #{(0..11).map{|index| "lid_torus#{index} - lid_torus_negative#{index} - lid_knockout#{index}"}.join(" u ")}'` #combine the pieces
@@ -88,22 +88,23 @@ end
 # the bobbin 
 
 if parts.include?("bobbin_pair")
-	wall_thickness = (2.0 ) # dm
+	offset = Vector[40,0,0]
+	wall_thickness = (2.5) # mm
 	shaft_radius = (6.35 ) /2.0
 	shaft_length = (16 )
-	noth_origin = shaft_radius -((shaft_radius * 2) - (5.8 )) 
-	puts "noth_origin#{noth_origin}"
+	notch_origin = shaft_radius -((shaft_radius * 2) - (5.8 )) 
+	puts "notch_origin#{notch_origin}"
 	puts "wall_thickness: #{wall_thickness}"
-	`#{mged} 'in bobbin_torus tor 0 0 0.25 0 0 1 #{torus_ring_size} #{torus}'` #the torus solid
-	`#{mged} 'in bobbin_negative tor 0 0 .25  0 0 1 #{torus_ring_size} #{torus_negative}'` #this hollow center of the torus
-	`#{mged} 'in bobbin_half rcc 0 0 .25 0 0 0.25 #{torus_ring_size}'` #this defines half the torus, so the bobin splits apart
-	`#{mged} 'in support_plate rcc 0 0 .25  0 0 #{wall_thickness} #{torus_ring_size-torus + wall_thickness  }'` #the plate to the shaft
-	`#{mged} 'in shaft_negative rcc 0 0 .25  0 0 #{shaft_length} #{shaft_radius  }'` #the plate to the shaft
-	`#{mged} 'in shaft_notch rcc #{noth_origin} 0 .25  #{shaft_length} 0  0  #{shaft_length*2  }'` #the plate to the shaft
-
+	`#{mged} 'in bobbin_torus tor #{offset.mged} #{offset.mged} #{torus_ring_size} #{torus}'` #the torus solid
+	`#{mged} 'in bobbin_negative tor #{offset.mged}  #{offset.mged} #{torus_ring_size} #{torus_negative}'` #this hollow center of the torus
+	`#{mged} 'in bobbin_half rcc #{offset.mged} #{offset.mged} #{torus_ring_size}'` #this defines half the torus, so the bobin splits apart
+	`#{mged} 'in support_plate rcc #{offset.mged} #{(offset.normal*wall_thickness).mged} #{torus_ring_size-torus + wall_thickness  }'` #the plate to the shaft
+	`#{mged} 'in shaft_negative rcc #{offset.mged}  #{(offset.normal*shaft_length).mged} #{shaft_radius  }'` #the plate to the shaft
+	`#{mged} 'in shaft_notch rcc #{(offset + Vector[0,notch_origin,0]).mged} #{Vector[0,shaft_length,0].mged}  #{shaft_length*1.2  }'` #the plate to the shaft
+                                
 	`#{mged} 'r shaft_with_notch u shaft_negative - shaft_notch'` # form the first half of the bobbin
 	`#{mged} 'r bobbin u support_plate - shaft_with_notch u bobbin_torus + bobbin_half - bobbin_negative  '` # form the first half of the bobbin
-	`#{mged} 'mirror bobbin bobbin_twin z'` #combine the pieces
+	`#{mged} 'mirror bobbin bobbin_twin x'` #combine the pieces
 
 	`#{mged} 'r bobbin_pair u bobbin  u bobbin_twin'` #combine the pieces
 end
