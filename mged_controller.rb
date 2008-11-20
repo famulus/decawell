@@ -11,6 +11,7 @@ scale_factor = 140 # global scaling factor
 torus_ring_size = 0.55 *scale_factor
 torus = 0.22 *scale_factor
 torus_negative = 0.83 * torus
+
 joint_radius = torus * 0.70
 joint_negative_radius = joint_radius * 0.35
 joint_nudge = 0.863 # this is a percentage scaling of the vector defining the ideal joint location
@@ -107,12 +108,16 @@ if parts.include?("bobbin_pair")
 	`#{mged} 'mirror screw_hole screw_hole3 y'` #combine the pieces
 	`#{mged} 'mirror screw_hole2 screw_hole4 z'` #combine the pieces
 
+	`#{mged} 'in wire_access_notch rcc 0 #{torus_ring_size -torus_negative+5 } 0 #{(Vector[0,0,0] - Vector[0,torus_ring_size -torus_negative ,0]).normal*15} 3'` #combine the pieces
+
+
 	`#{mged} 'r shaft_with_notch u screw_hole4 u screw_hole3 u screw_hole2 u screw_hole u shaft_negative - shaft_notch '` # form the shaft with notch
-	`#{mged} 'r bobbin u support_plate - shaft_with_notch  u bobbin_torus + bobbin_half - bobbin_negative  '` # form the first half of the bobbin
+	`#{mged} 'r bobbin1 u support_plate - shaft_with_notch  u bobbin_torus + bobbin_half - bobbin_negative  '` # form the first half of the bobbin
+	`#{mged} 'r bobbin u bobbin1 - wire_access_notch  '` # form the first half of the bobbin
 
 	`cat <<EOF | mged -c #{DB}
 	B bobbin	
-	oed / bobbin/bobbin_torus	
+	oed / bobbin/bobbin1/bobbin_torus	
 	translate #{offset.mged}
 	accept
 EOF`
