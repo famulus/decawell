@@ -50,7 +50,7 @@ Dodecahedron.icosahedron.each_with_index do |v,index| # draw the 12 tori
 	v = v*scale_factor
 	`#{mged} 'in torus#{index} tor #{v.mged} #{v.mged} #{torus_ring_size} #{torus}'` #the torus solid
 	`#{mged} 'in torus_negative#{index} tor #{v.mged} #{v.mged} #{torus_ring_size} #{torus_negative}'` #this hollow center of the torus
-	`#{mged} 'in lid_knockout#{index} rcc #{v.mged} #{v.mged} #{torus_ring_size+torus}'` #this removed the face of the torus so we can install coils
+	`#{mged} 'in lid_knockout#{index} rcc #{v.mged} #{(v.normal*torus ).mged} #{torus_ring_size+torus}'` #this removed the face of the torus so we can install coils
 end
 
 Dodecahedron.edges.each_with_index do |edge,index| #insert the 30 joints
@@ -112,7 +112,7 @@ EOF`
 `./#{part}.rt -s1024`
 `pix-png -s1024 < #{part}.rt.pix > #{part}.png`
 `open ./#{part}.png`
-# `g-stl -o #{part}.stl #{DB} #{part}`
+# `g-stl -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 `rm -f ./#{part}.rt `
 `rm -f ./#{part}.rt.pix `
 `rm -f ./#{part}.rt.log`
