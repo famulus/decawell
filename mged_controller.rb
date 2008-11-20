@@ -86,7 +86,7 @@ end
 # the bobbin 
 
 if parts.include?("bobbin_pair")
-	offset = Vector[30,0,0]
+	offset = Vector[20,0,0]
 	wall_thickness = (2.5) # mm
 	shaft_radius = (6.35 ) /2.0
 	shaft_length = (16 )
@@ -94,16 +94,34 @@ if parts.include?("bobbin_pair")
 	notch_origin = shaft_radius -((shaft_radius * 2) - (5.8 )) 
 	puts "notch_origin#{notch_origin}"
 	puts "wall_thickness: #{wall_thickness}"
-	`#{mged} 'in bobbin_torus tor #{offset.mged} #{offset.mged} #{torus_ring_size} #{torus}'` #the torus solid
-	`#{mged} 'in bobbin_negative tor #{offset.mged}  #{offset.mged} #{torus_ring_size} #{torus_negative}'` #this hollow center of the torus
-	`#{mged} 'in bobbin_half rcc #{offset.mged} #{offset.mged} #{torus_ring_size}'` #this defines half the torus, so the bobin splits apart
-	`#{mged} 'in support_plate rcc #{offset.mged} #{(offset.normal*wall_thickness).mged} #{torus_ring_size-torus + wall_thickness  }'` #the plate to the shaft
-	`#{mged} 'in shaft_negative rcc #{offset.mged}  #{(offset.normal*shaft_length).mged} #{shaft_radius  }'` #the plate to the shaft
-	`#{mged} 'in shaft_notch rcc #{(offset + Vector[0,notch_origin,0]).mged} #{Vector[0,shaft_length,0].mged}  #{shaft_length*1.2  }'` #the plate to the shaft
+	`#{mged} 'in bobbin_torus tor 0 0 0 #{offset.mged} #{torus_ring_size} #{torus}'` #the torus solid
+	`#{mged} 'in bobbin_negative tor 0 0 0  #{offset.mged} #{torus_ring_size} #{torus_negative}'` #this hollow center of the torus
+	`#{mged} 'in bobbin_half rcc 0 0 0 #{(offset.normal*torus).mged} #{torus_ring_size}'` #this defines half the torus, so the bobin splits apart
+	`#{mged} 'in support_plate rcc 0 0 0 #{(offset.normal*wall_thickness).mged} #{torus_ring_size-torus + wall_thickness  }'` #the plate to the shaft
+	`#{mged} 'in shaft_negative rcc 0 0 0  #{(offset.normal*shaft_length).mged} #{shaft_radius  }'` #the plate to the shaft
+	`#{mged} 'in shaft_notch rcc #{(Vector[0,notch_origin,0]).mged} #{Vector[0,shaft_length,0].mged}  #{shaft_length*1.2  }'` #the plate to the shaft
 
 	`#{mged} 'r shaft_with_notch u shaft_negative - shaft_notch'` # form the shaft with notch
 	`#{mged} 'r bobbin u support_plate - shaft_with_notch  u bobbin_torus + bobbin_half - bobbin_negative  '` # form the first half of the bobbin
-	`#{mged} 'mirror bobbin bobbin_twin x'` #combine the pieces
+
+	`cat <<EOF | mged -c #{DB}
+	B bobbin	
+	oed / bobbin/bobbin_torus
+	
+	translate #{offset.mged}
+	accept
+EOF`
+	
+		`#{mged} 'mirror bobbin bobbin_twin x'` #combine the pieces
+
+
+# 	`cat <<EOF | mged -c #{DB}
+# 	B bobbin	
+# 	oed bobbin bobbin_twin
+# 	translate #{(Vector[0,0,0] -offset).mged}
+# 	accept
+# EOF`
+
 
 	`#{mged} 'r bobbin_pair u bobbin  u bobbin_twin'` #combine the pieces
 end
