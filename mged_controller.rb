@@ -78,10 +78,10 @@ if parts.include?("lids")
 		index1 = index+1
 		`#{mged} 'in lid_torus#{index} tor #{(step*index1).mged} #{(step*index1).mged}  #{torus_ring_size} #{torus}'` #the torus solid
 		`#{mged} 'in lid_torus_negative#{index} tor #{(step*index1).mged}  #{(step*index1).mged} #{torus_ring_size} #{torus_negative}'` #this hollow center of the torus
-		`#{mged} 'in lid_knockout#{index} rcc #{(step*index1).mged}  #{((step.normal)*torus).mged} #{torus_ring_size+torus}'` #this removed the face of the torus so we can install coils
+		`#{mged} 'in lid_lid_knockout#{index} rcc #{(step*index1).mged}  #{((step.normal)*torus).mged} #{torus_ring_size+torus}'` #this removed the face of the torus so we can install coils
 		
 	end
-			`#{mged} 'r lids u #{(0..11).map{|index| "lid_torus#{index} - lid_torus_negative#{index} - lid_knockout#{index}"}.join(" u ")}'` #combine the pieces
+			`#{mged} 'r lids u #{(0..11).map{|index| "lid_torus#{index} - lid_torus_negative#{index} - lid_lid_knockout#{index}"}.join(" u ")}'` #combine the pieces
 
 end
 
