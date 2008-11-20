@@ -4,8 +4,8 @@ include Geometry
 require 'set'
 require 'facets'
 
-# parts = %w(chassis bobbin_pair)
-parts = %w(bobbin_pair)
+parts = %w(chassis bobbin_pair lids)
+# parts = %w(bobbin_pair)
 
 DB = "test3.g"
 mged ="/usr/brlcad/rel-7.12.2/bin//mged -c  #{DB} "
@@ -88,7 +88,7 @@ end
 # the bobbin 
 
 if parts.include?("bobbin_pair")
-	offset = Vector[40,0,0]
+	offset = Vector[30,0,0]
 	wall_thickness = (2.5) # mm
 	shaft_radius = (6.35 ) /2.0
 	shaft_length = (16 )
