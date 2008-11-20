@@ -105,7 +105,7 @@ if parts.include?("bobbin_pair")
 	`#{mged} 'in screw_hole rcc 0 #{(screw_hole_position_radius)} 0  #{(offset.normal*shaft_length).mged} #{screw_hole_radius}'` #the screw hole to hold the halves together
 	`#{mged} 'in screw_hole2 rcc 0 0 #{screw_hole_position_radius}  #{(offset.normal*shaft_length).mged} #{screw_hole_radius}'` #the screw hole to hold the halves together
 	`#{mged} 'mirror screw_hole screw_hole3 y'` #combine the pieces
-	`#{mged} 'mirror screw_hole2 screw_hole4 y'` #combine the pieces
+	`#{mged} 'mirror screw_hole2 screw_hole4 z'` #combine the pieces
 
 	`#{mged} 'r shaft_with_notch u screw_hole4 u screw_hole3 u screw_hole2 u screw_hole u shaft_negative - shaft_notch '` # form the shaft with notch
 	`#{mged} 'r bobbin u support_plate - shaft_with_notch  u bobbin_torus + bobbin_half - bobbin_negative  '` # form the first half of the bobbin
