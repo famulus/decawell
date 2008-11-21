@@ -2,8 +2,8 @@ require 'geometry'
 include Geometry
 require 'facets'
 
-# parts = %w(chassis bobbin_pair lids)
-parts = %w(bobbin_pair)
+parts = %w(chassis bobbin_pair lids)
+# parts = %w(lids)
 
 DB = "test3.g"
 mged ="/usr/brlcad/rel-7.12.2/bin//mged -c  #{DB} "
@@ -136,6 +136,15 @@ EOF`
 	`#{mged} 'r bobbin_pair u bobbin  u bobbin_twin'` #combine the pieces
 end
 
+if parts.include?("lid_with_access")
+			`#{mged} 'in lid_with_access_torus#{index} tor #{(step*index1).mged} #{(step*index1).mged}  #{torus_ring_size} #{torus}'` #the torus solid
+		`#{mged} 'in lid_with_access_torus_negative#{index} tor #{(step*index1).mged}  #{(step*index1).mged} #{torus_ring_size} #{torus_negative}'` #this hollow center of the torus
+		`#{mged} 'in lid_with_access_knockout#{index} rcc #{(step*index1).mged}  #{((step.normal)*torus).mged} #{torus_ring_size+torus}'` #this removed the face of the torus so we can install coils
+
+	
+end
+
+
 
 parts.each do |part|
 
@@ -150,7 +159,7 @@ EOF`
 `./#{part}.rt -s1024`
 `pix-png -s1024 < #{part}.rt.pix > #{part}.png`
 `open ./#{part}.png`
-# `g-stl -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
+`g-stl -a 0.0001 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 `rm -f ./#{part}.rt `
 `rm -f ./#{part}.rt.pix `
 `rm -f ./#{part}.rt.log`
