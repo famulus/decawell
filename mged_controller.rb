@@ -2,8 +2,8 @@ require 'geometry'
 include Geometry
 require 'facets'
 
-parts = %w(chassis bobbin_pair lids)
-# parts = %w(lids)
+# parts = %w(chassis bobbin_pair lids)
+parts = %w(bobbin_left bobbin_right)
 
 DB = "test3.g"
 mged ="/usr/brlcad/rel-7.12.2/bin//mged -c  #{DB} "
@@ -44,6 +44,7 @@ puts "\n\n"
 
 `rm -f ./#{DB.gsub(".g","")}.*`
 `#{mged} 'units mm'` # set mged's units to decimeter 
+`#{mged} 'tol dist 0.0005'` # set mged's units to decimeter 
 
 if parts.include?("chassis")
 	Dodecahedron.icosahedron.each_with_index do |v,index| # draw the 12 tori
@@ -73,7 +74,7 @@ end
 if parts.include?("lids")
 	spacer = 40
 	step = Vector[40,0,0]
-	(0..11).map do |index|
+	(0..1).map do |index|
 		index1 = index+1
 		`#{mged} 'in lid_torus#{index} tor #{(step*index1).mged} #{(step*index1).mged}  #{torus_ring_size} #{torus}'` #the torus solid
 		`#{mged} 'in lid_torus_negative#{index} tor #{(step*index1).mged}  #{(step*index1).mged} #{torus_ring_size} #{torus_negative}'` #this hollow center of the torus
@@ -86,7 +87,7 @@ end
 
 # the bobbin 
 
-if parts.include?("bobbin_pair")
+if parts.include?("bobbin_left")
 	offset = Vector[20,0,0]
 	wall_thickness = (2.5) # mm
 	shaft_radius = (6.35 ) /2.0
@@ -113,16 +114,16 @@ if parts.include?("bobbin_pair")
 
 	`#{mged} 'r shaft_with_notch u screw_hole4 u screw_hole3 u screw_hole2 u screw_hole u shaft_negative - shaft_notch '` # form the shaft with notch
 	`#{mged} 'r bobbin1 u support_plate - shaft_with_notch  u bobbin_torus + bobbin_half - bobbin_negative  '` # form the first half of the bobbin
-	`#{mged} 'r bobbin u bobbin1 - wire_access_notch  '` # form the first half of the bobbin
+	`#{mged} 'r bobbin_left u bobbin1 - wire_access_notch  '` # form the first half of the bobbin
 
-	`cat <<EOF | mged -c #{DB}
-	B bobbin	
-	oed / bobbin/bobbin1/bobbin_torus	
-	translate #{offset.mged}
-	accept
-EOF`
+# 	`cat <<EOF | mged -c #{DB}
+# 	B bobbin	
+# 	oed / bobbin/bobbin1/bobbin_torus	
+# 	translate #{offset.mged}
+# 	accept
+# EOF`
 	
-		`#{mged} 'mirror bobbin bobbin_twin x'` #combine the pieces
+		`#{mged} 'mirror bobbin bobbin_right x'` #combine the pieces
 
 
 # 	`cat <<EOF | mged -c #{DB}
@@ -133,7 +134,7 @@ EOF`
 # EOF`
 
 
-	`#{mged} 'r bobbin_pair u bobbin  u bobbin_twin'` #combine the pieces
+	# `#{mged} 'r bobbin_pair u bobbin  u bobbin_twin'` #combine the pieces
 end
 
 if parts.include?("lid_with_access")
@@ -159,7 +160,8 @@ EOF`
 `./#{part}.rt -s1024`
 `pix-png -s1024 < #{part}.rt.pix > #{part}.png`
 `open ./#{part}.png`
-`g-stl -a 0.0001 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
+# `g-stl -a 0.005 -D 0.005 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
+`g-stl -a 0.01 -D 0.01 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 `rm -f ./#{part}.rt `
 `rm -f ./#{part}.rt.pix `
 `rm -f ./#{part}.rt.log`
