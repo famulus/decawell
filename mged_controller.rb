@@ -123,7 +123,7 @@ if parts.include?("bobbin_left")
 # 	accept
 # EOF`
 	
-		`#{mged} 'mirror bobbin bobbin_right x'` #combine the pieces
+		`#{mged} 'mirror bobbin_left bobbin_right x'` #combine the pieces
 
 
 # 	`cat <<EOF | mged -c #{DB}
