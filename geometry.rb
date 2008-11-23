@@ -20,15 +20,18 @@ module Geometry
 		
 		attr_accessor :grid
 
-		def wrap_radius_for_row(row = 0)
-			@grid[row]
-			
-			 @torus_ring_radius + (@coil_diameter/2) - (row+1)*@coil_wire_diameter
-			
-			
-			
+		def wrap_radius_for_row(row = 0)			
+			 @torus_ring_radius + (@coil_diameter/2) - (row+1)*@coil_wire_diameter			
 		end
-
+		
+		def get_positions_for_row(row = 0)			
+			first_edge = false
+			slots = []
+			@grid[row].each do |r|
+				first_edge = true if r
+				
+			end
+		end
 
 
 		def initialize(coil_diameter,coil_wire_diameter,torus_ring_radius)
@@ -41,37 +44,37 @@ module Geometry
 			radius = (diameter/2).to_i			
 			x0 = radius
 			y0 = radius
-			@grid = (0..(diameter)).to_a.map{|a|(0..(diameter)).to_a.map{|b| 0}} #make a 2D matrix of zeros the same diameter as circle
+			@grid = (0..(diameter)).to_a.map{|a|(0..(diameter)).to_a.map{|b| true}} #make a 2D matrix of zeros the same diameter as circle all set to false
 
 			f = 1 - radius
 			ddF_x = 1
 			ddF_y = -2 * radius
 			x = 0
 			y = radius
-
-			@grid[x0][y0 + radius]   =1
-			@grid[x0][ y0 - radius]  =1
-			@grid[x0 + radius][ y0]  =1
-			@grid[x0 - radius][ y0]  =1
-
-			while(x < y) do
-				if(f >= 0) 
-					y -=1
-					ddF_y += 2
-					f += ddF_y
-				end
-				x +=1
-				ddF_x += 2
-				f += ddF_x       
-				@grid[x0 + x][ y0 + y] =1
-				@grid[x0 - x][ y0 + y] =1
-				@grid[x0 + x][ y0 - y] =1
-				@grid[x0 - x][ y0 - y] =1
-				@grid[x0 + y][ y0 + x] =1
-				@grid[x0 - y][ y0 + x] =1
-				@grid[x0 + y][ y0 - x] =1
-				@grid[x0 - y][ y0 - x] =1
-			end
+                               
+			@grid[x0][y0 + radius]   =false
+			@grid[x0][ y0 - radius]  =false
+			@grid[x0 + radius][ y0]  =false
+			@grid[x0 - radius][ y0]  =false
+                               
+			while(x < y) do          
+				if(f >= 0)             
+					y -=1                
+					ddF_y += 2           
+					f += ddF_y           
+				end                    
+				x +=1                  
+				ddF_x += 2             
+				f += ddF_x             
+				@grid[x0 + x][ y0 + y] =false
+				@grid[x0 - x][ y0 + y] =false
+				@grid[x0 + x][ y0 - y] =false
+				@grid[x0 - x][ y0 - y] =false
+				@grid[x0 + y][ y0 + x] =false
+				@grid[x0 - y][ y0 + x] =false
+				@grid[x0 + y][ y0 - x] =false
+				@grid[x0 - y][ y0 - x] =false
+			end                      
 			return self
 		end
 	end
