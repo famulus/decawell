@@ -2,19 +2,20 @@ require 'geometry'
 include Geometry
 require 'facets'
 
-parts = %w(chassis lids)
+parts = %w(chassis lids )
 # parts = %w(bobbin_left bobbin_right)
 
 DB = "test3.g"
 mged ="/usr/brlcad/rel-7.12.2/bin//mged -c  #{DB} "
 scale_factor = 140 # global scaling factor
-torus_ring_size = 0.55 *scale_factor
-torus = 0.22 *scale_factor
-torus_negative = 0.83 * torus
+torus_ring_size = 0.6 *scale_factor
+torus = 0.17 *scale_factor
+torus_negative = 0.79 * torus
 
 joint_radius = torus * 0.70
 joint_negative_radius = joint_radius * 0.35
-joint_nudge = 0.863 # this is a percentage scaling of the vector defining the ideal joint location
+joint_nudge = 0.89 # this is a percentage scaling of the vector defining the ideal joint location
+joint_nudge_length = 0.22
 coil_wire_diameter = 2.053  # mm this 12 gauge AWS
 coil = Coil.new(torus_negative*2, coil_wire_diameter, torus_ring_size)
 
@@ -51,7 +52,7 @@ coil.grid.each_with_index {|row,index| puts coil.wrap_radius_for_row(index)}
 
 
 
-break
+
 
 
 
@@ -70,7 +71,7 @@ if parts.include?("chassis")
 		a = average(*edge.map{|e|e}) # the ideal location of the joint
 		a = a * joint_nudge # nudge the joint closer to the center
 		b =cross_product(a,(edge[1]-edge[0])) # this is the vector of the half joint
-		b = b.normal*scale_factor* 0.25 # get the unit vector for this direction and scale
+		b = b.normal*scale_factor* joint_nudge_length # get the unit vector for this direction and scale
 		`#{mged} 'in joint1_#{index} rcc #{a.mged} #{b.mged} #{joint_radius}'` 
 		`#{mged} 'in joint_negative1_#{index} rcc #{a.mged} #{b.mged} #{joint_negative_radius}'` 
 		b = Vector[0,0,0]-b # point the vector in the opposite direction 
@@ -173,7 +174,7 @@ EOF`
 `pix-png -s1024 < #{part}.rt.pix > #{part}.png`
 `open ./#{part}.png`
 # `g-stl -a 0.005 -D 0.005 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
-`g-stl -a 0.01 -D 0.01 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
+# `g-stl -a 0.01 -D 0.01 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 `rm -f ./#{part}.rt `
 `rm -f ./#{part}.rt.pix `
 `rm -f ./#{part}.rt.log`
