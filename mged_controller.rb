@@ -34,8 +34,9 @@ derived_dimentions = {
 }
 
 
-Coil.raster_circle(pixels_across)
+coil = Coil.new(pixels_across)
 
+puts coil.grid.size
 
 puts "\n\n"
 puts "wire pixels:#{pixels_across}"

@@ -17,12 +17,8 @@ end
 
 module Geometry
 	class Coil
-
-
-		def initialize
-
-
-		end
+		
+		attr_accessor :grid
 
 		def wrap_radius_for_row(row = 0)
 
@@ -30,7 +26,7 @@ module Geometry
 
 
 
-		def self.raster_circle(diameter = 1)
+		def initialize(diameter = 1)
 			diameter = diameter.to_i
 			radius = (diameter/2).to_i			
 			x0 = radius
@@ -66,8 +62,7 @@ module Geometry
 				@grid[x0 + y][ y0 - x] =1
 				@grid[x0 - y][ y0 - x] =1
 			end
-			@grid.each{|a|puts a.join(" ")}
-
+			return self
 		end
 	end
 
