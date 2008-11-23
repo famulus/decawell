@@ -34,9 +34,12 @@ derived_dimentions = {
 }
 
 
-coil = Coil.new(pixels_across)
+coil = Coil.new(torus_negative*2, coil_wire_diameter)
 
-puts coil.grid.size
+coil.grid.each {|row| puts row.map{|c|c}.join(" ")}
+
+puts coil.wrap_radius_for_row(0)
+break
 
 puts "\n\n"
 puts "wire pixels:#{pixels_across}"
