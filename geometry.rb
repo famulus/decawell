@@ -21,12 +21,18 @@ module Geometry
 		attr_accessor :grid
 
 		def wrap_radius_for_row(row = 0)
-
+			@grid[row]
+			
 		end
 
 
 
-		def initialize(diameter = 1)
+		def initialize(coil_diameter,coil_wire_diameter)
+			@coil_diameter = coil_diameter
+			@coil_wire_diameter = coil_wire_diameter
+			
+			diameter = (coil_diameter /coil_wire_diameter).round
+			
 			diameter = diameter.to_i
 			radius = (diameter/2).to_i			
 			x0 = radius
