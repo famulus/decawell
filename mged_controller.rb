@@ -33,14 +33,6 @@ derived_dimentions = {
 	# :coil_wire_diameter => coil_wire_diameter,
 }
 
-
-coil = Coil.new(torus_negative*2, coil_wire_diameter)
-
-coil.grid.each {|row| puts row.map{|c|c}.join(" ")}
-
-puts coil.wrap_radius_for_row(0)
-break
-
 puts "\n\n"
 puts "wire pixels:#{pixels_across}"
 derived_dimentions.sort_by{ |k,v| v }.reverse.each { |k,v| puts "#{k}: #{v} mm"  }
@@ -49,6 +41,22 @@ puts "\n\n"
 `rm -f ./#{DB.gsub(".g","")}.*`
 `#{mged} 'units mm'` # set mged's units to decimeter 
 `#{mged} 'tol dist 0.0005'` # set mged's units to decimeter 
+
+
+
+coil = Coil.new(torus_negative*2, coil_wire_diameter, torus_ring_size)
+
+coil.grid.each {|row| puts row.map{|c|c}.join(" ")}
+coil.grid.each_with_index {|row,index| puts coil.wrap_radius_for_row(index)}
+
+
+
+break
+
+
+
+
+
 
 if parts.include?("chassis")
 	Dodecahedron.icosahedron.each_with_index do |v,index| # draw the 12 tori
