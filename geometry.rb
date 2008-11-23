@@ -24,15 +24,46 @@ module Geometry
 			 @torus_ring_radius + (@coil_diameter/2) - (row+1)*@coil_wire_diameter			
 		end
 		
+		def wrap_circumfrence_for_row(row = 0)
+			wrap_radius_for_row(row)*2*Math::PI
+		end
+		
+		def wraps
+			self.grid.inject(0){|sum,n| sum+ n.select{|o|o}.size } 
+		end
+		
+		def coil_length
+			length = 0
+			self.grid.each_with_index	do |row,index|
+				length = length +(row.select{|o|o}.size * wrap_circumfrence_for_row(index))		
+			end				
+			length
+	end
+
+		
 		def get_positions_for_row(row = 0)			
 			first_edge = false
 			slots = []
 			@grid[row].each do |r|
-				first_edge = true if r
-				
+				first_edge = true if r				
 			end
 		end
 
+		def fill_in_corners
+			@grid.each_with_index do |row,r_index|
+				row.each_with_index do |cell,c_index|
+					break unless cell
+					@grid[r_index][c_index] = false					
+				end
+			end
+			@grid.reverse.each_with_index do |row,r_index|
+				row.reverse.each_with_index do |cell,c_index|
+					break unless cell
+					@grid[@grid.size-r_index-1][@grid.size - c_index-1] = false					
+				end
+			end
+		end
+		
 
 		def initialize(coil_diameter,coil_wire_diameter,torus_ring_radius)
 			#set instance variables
@@ -74,7 +105,8 @@ module Geometry
 				@grid[x0 - y][ y0 + x] =false
 				@grid[x0 + y][ y0 - x] =false
 				@grid[x0 - y][ y0 - x] =false
-			end                      
+			end 
+			fill_in_corners                     
 			return self
 		end
 	end
