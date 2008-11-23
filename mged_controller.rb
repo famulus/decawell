@@ -94,7 +94,7 @@ if parts.include?("lids")
 		`#{mged} 'in lid_lid_knockout#{index} rcc #{(step*index1).mged}  #{((step.normal)*torus).mged} #{torus_ring_size+torus}'` #this removed the face of the torus so we can install coils
 		
 	end
-			`#{mged} 'r lids u #{(0..11).map{|index| "lid_torus#{index} - lid_torus_negative#{index} - lid_lid_knockout#{index}"}.join(" u ")}'` #combine the pieces
+			`#{mged} 'r lids u #{(0..0).map{|index| "lid_torus#{index} - lid_torus_negative#{index} - lid_lid_knockout#{index}"}.join(" u ")}'` #combine the pieces
 
 end
 
