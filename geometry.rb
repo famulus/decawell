@@ -17,20 +17,33 @@ end
 
 module Geometry
 	class Coil
+		
+		
+		def initialize
+			
+
+		end
+		
+		def wrap_radius_for_row(row = 0)
+			
+		end
+
+		
+		
 		def rasterCircle( x0, y0, radius)
-
-			c = (0..(radius*2)).to_a.map{|a|(0..(radius*2)).to_a.map{|b| 0}}
-
+			
+			@grid = (0..(radius*2)).to_a.map{|a|(0..(radius*2)).to_a.map{|b| 0}}
+			
 			f = 1 - radius
 			ddF_x = 1
 			ddF_y = -2 * radius
 			x = 0
 			y = radius
 
-			c[x0][y0 + radius]   =1
-			c[x0][ y0 - radius]  =1
-			c[x0 + radius][ y0]  =1
-			c[x0 - radius][ y0]  =1
+			@grid[x0][y0 + radius]   =1
+			@grid[x0][ y0 - radius]  =1
+			@grid[x0 + radius][ y0]  =1
+			@grid[x0 - radius][ y0]  =1
 
 			while(x < y) do
 				if(f >= 0) 
@@ -41,16 +54,16 @@ module Geometry
 				x +=1
 				ddF_x += 2
 				f += ddF_x       
-				c[x0 + x][ y0 + y] =1
-				c[x0 - x][ y0 + y] =1
-				c[x0 + x][ y0 - y] =1
-				c[x0 - x][ y0 - y] =1
-				c[x0 + y][ y0 + x] =1
-				c[x0 - y][ y0 + x] =1
-				c[x0 + y][ y0 - x] =1
-				c[x0 - y][ y0 - x] =1
+				@grid[x0 + x][ y0 + y] =1
+				@grid[x0 - x][ y0 + y] =1
+				@grid[x0 + x][ y0 - y] =1
+				@grid[x0 - x][ y0 - y] =1
+				@grid[x0 + y][ y0 + x] =1
+				@grid[x0 - y][ y0 + x] =1
+				@grid[x0 + y][ y0 - x] =1
+				@grid[x0 - y][ y0 - x] =1
 			end
-			c.each{|a|puts a.join(" ")}
+			@grid.each{|a|puts a.join(" ")}
 
 		end
 	end
