@@ -43,20 +43,9 @@ puts "\n\n"
 `#{mged} 'units mm'` # set mged's units to decimeter 
 `#{mged} 'tol dist 0.0005'` # set mged's units to decimeter 
 
-
-
-
 coil.grid.each {|row| puts row.map{|c|  c ? 1 : 0}.join(" ")}
 # coil.grid.each {|row|  row.split(false).each{|a| puts a.size}}
 coil.grid.each_with_index {|row,index| puts coil.wrap_radius_for_row(index)}
-
-
-
-
-
-
-
-
 
 
 if parts.include?("chassis")
