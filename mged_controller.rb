@@ -110,7 +110,7 @@ if parts.include?("bobbin_left")
 	notch_origin = shaft_radius -((shaft_radius * 2) - (5.8 )) 
 	puts "notch_origin#{notch_origin}"
 	puts "wall_thickness: #{wall_thickness}"
-	`#{mged} 'in bobbin_torus tor 0 0 0 #{offset.mged} #{torus_ring_size} #{torus}'` #the torus solid
+	`#{mged} 'in bobbin_torus tor 0 0 0 #{offset.mged} #{torus_ring_size} #{torus_negative+wall_thickness}'` #the torus solid
 	`#{mged} 'in bobbin_negative tor 0 0 0  #{offset.mged} #{torus_ring_size} #{torus_negative}'` #this hollow center of the torus
 	`#{mged} 'in bobbin_half rcc 0 0 0 #{(offset.normal*torus).mged} #{torus_ring_size}'` #this defines half the torus, so the bobin splits apart
 	`#{mged} 'in support_plate rcc 0 0 0 #{(offset.normal*wall_thickness).mged} #{torus_ring_size-torus + wall_thickness  }'` #the plate to the shaft
