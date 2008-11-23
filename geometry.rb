@@ -17,23 +17,26 @@ end
 
 module Geometry
 	class Coil
-		
-		
+
+
 		def initialize
-			
+
 
 		end
-		
+
 		def wrap_radius_for_row(row = 0)
-			
+
 		end
 
-		
-		
-		def rasterCircle( x0, y0, radius)
-			
-			@grid = (0..(radius*2)).to_a.map{|a|(0..(radius*2)).to_a.map{|b| 0}}
-			
+
+
+		def self.raster_circle(diameter = 1)
+			diameter = diameter.to_i
+			radius = (diameter/2).to_i			
+			x0 = radius
+			y0 = radius
+			@grid = (0..(diameter)).to_a.map{|a|(0..(diameter)).to_a.map{|b| 0}} #make a 2D matrix of zeros the same diameter as circle
+
 			f = 1 - radius
 			ddF_x = 1
 			ddF_y = -2 * radius

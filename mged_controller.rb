@@ -2,8 +2,8 @@ require 'geometry'
 include Geometry
 require 'facets'
 
-# parts = %w(chassis bobbin_pair lids)
-parts = %w(bobbin_left bobbin_right)
+parts = %w(chassis lids)
+# parts = %w(bobbin_left bobbin_right)
 
 DB = "test3.g"
 mged ="/usr/brlcad/rel-7.12.2/bin//mged -c  #{DB} "
@@ -15,7 +15,7 @@ torus_negative = 0.83 * torus
 joint_radius = torus * 0.70
 joint_negative_radius = joint_radius * 0.35
 joint_nudge = 0.863 # this is a percentage scaling of the vector defining the ideal joint location
-coil_wire_diameter = 0.644  # dm
+coil_wire_diameter = 2.053  # dm
 pixels_across = ((torus_negative*2) /coil_wire_diameter).round
 
 derived_dimentions = {
@@ -34,7 +34,7 @@ derived_dimentions = {
 }
 
 
-# rasterCircle(pixels_across/2,pixels_across/2,pixels_across/2)
+Coil.raster_circle(pixels_across)
 
 
 puts "\n\n"
@@ -74,7 +74,7 @@ end
 if parts.include?("lids")
 	spacer = 40
 	step = Vector[40,0,0]
-	(0..1).map do |index|
+	(0..0).map do |index| # originallty we needed many lids, but now we only need one
 		index1 = index+1
 		`#{mged} 'in lid_torus#{index} tor #{(step*index1).mged} #{(step*index1).mged}  #{torus_ring_size} #{torus}'` #the torus solid
 		`#{mged} 'in lid_torus_negative#{index} tor #{(step*index1).mged}  #{(step*index1).mged} #{torus_ring_size} #{torus_negative}'` #this hollow center of the torus
@@ -138,7 +138,7 @@ if parts.include?("bobbin_left")
 end
 
 if parts.include?("lid_with_access")
-			`#{mged} 'in lid_with_access_torus#{index} tor #{(step*index1).mged} #{(step*index1).mged}  #{torus_ring_size} #{torus}'` #the torus solid
+		`#{mged} 'in lid_with_access_torus#{index} tor #{(step*index1).mged} #{(step*index1).mged}  #{torus_ring_size} #{torus}'` #the torus solid
 		`#{mged} 'in lid_with_access_torus_negative#{index} tor #{(step*index1).mged}  #{(step*index1).mged} #{torus_ring_size} #{torus_negative}'` #this hollow center of the torus
 		`#{mged} 'in lid_with_access_knockout#{index} rcc #{(step*index1).mged}  #{((step.normal)*torus).mged} #{torus_ring_size+torus}'` #this removed the face of the torus so we can install coils
 
