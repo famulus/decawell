@@ -15,8 +15,9 @@ torus_negative = 0.83 * torus
 joint_radius = torus * 0.70
 joint_negative_radius = joint_radius * 0.35
 joint_nudge = 0.863 # this is a percentage scaling of the vector defining the ideal joint location
-coil_wire_diameter = 2.053  # dm
-pixels_across = ((torus_negative*2) /coil_wire_diameter).round
+coil_wire_diameter = 2.053  # mm this 12 gauge AWS
+coil = Coil.new(torus_negative*2, coil_wire_diameter, torus_ring_size)
+
 
 derived_dimentions = {
 	:outside_radius => (Dodecahedron.vertices[0].r) *scale_factor ,
@@ -29,12 +30,11 @@ derived_dimentions = {
 	:joint_negative_radius => joint_negative_radius,
 	:donut_exterier_radius => torus_ring_size +torus ,
 	:donut_hole_radius => torus_ring_size -torus,
-	# :pixels_across => pixels_across,
-	# :coil_wire_diameter => coil_wire_diameter,
+	:wraps => coil.wraps,
+	:coil_length => coil.coil_length
 }
 
 puts "\n\n"
-puts "wire pixels:#{pixels_across}"
 derived_dimentions.sort_by{ |k,v| v }.reverse.each { |k,v| puts "#{k}: #{v} mm"  }
 puts "\n\n"
 
@@ -44,9 +44,9 @@ puts "\n\n"
 
 
 
-coil = Coil.new(torus_negative*2, coil_wire_diameter, torus_ring_size)
 
-coil.grid.each {|row| puts row.map{|c|c}.join(" ")}
+coil.grid.each {|row| puts row.map{|c|  c ? 1 : 0}.join(" ")}
+# coil.grid.each {|row|  row.split(false).each{|a| puts a.size}}
 coil.grid.each_with_index {|row,index| puts coil.wrap_radius_for_row(index)}
 
 
