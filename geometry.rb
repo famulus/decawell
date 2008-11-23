@@ -23,17 +23,21 @@ module Geometry
 		def wrap_radius_for_row(row = 0)
 			@grid[row]
 			
+			 @torus_ring_radius + (@coil_diameter/2) - (row+1)*@coil_wire_diameter
+			
+			
+			
 		end
 
 
 
-		def initialize(coil_diameter,coil_wire_diameter)
+		def initialize(coil_diameter,coil_wire_diameter,torus_ring_radius)
+			#set instance variables
 			@coil_diameter = coil_diameter
 			@coil_wire_diameter = coil_wire_diameter
+			@torus_ring_radius =torus_ring_radius
 			
 			diameter = (coil_diameter /coil_wire_diameter).round
-			
-			diameter = diameter.to_i
 			radius = (diameter/2).to_i			
 			x0 = radius
 			y0 = radius
