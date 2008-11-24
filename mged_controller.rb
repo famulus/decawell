@@ -18,7 +18,7 @@ joint_nudge = 0.89 # this is a percentage scaling of the vector defining the ide
 joint_nudge_length = 0.22
 coil_wire_diameter = 2.053  # mm this 12 gauge AWS
 coil = Coil.new(torus_negative*2, coil_wire_diameter, torus_ring_size)
-
+drive_amps = 20000.0
 
 derived_dimentions = {
 	:outside_radius => (Dodecahedron.vertices[0].r) *scale_factor ,
@@ -32,7 +32,9 @@ derived_dimentions = {
 	:donut_exterier_radius => torus_ring_size +torus ,
 	:donut_hole_radius => torus_ring_size -torus,
 	:wraps => coil.wraps,
-	:coil_length => coil.coil_length
+	:coil_length => coil.coil_length,
+	:drive_amps => drive_amps, 
+	:ampere_turns => (drive_amps*coil.wraps), 
 }
 
 puts "\n\n"
