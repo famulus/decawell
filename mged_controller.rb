@@ -5,7 +5,7 @@ require 'facets'
 parts = %w(chassis lids bobbin_left bobbin_right)
 # parts = %w(bobbin_left bobbin_right)
 
-DB = "test3.g"
+DB = "decawell.g"
 mged ="/usr/brlcad/rel-7.12.2/bin//mged -c  #{DB} "
 scale_factor = 140 # global scaling factor
 torus_ring_size = 0.6 *scale_factor
