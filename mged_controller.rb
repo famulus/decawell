@@ -2,13 +2,13 @@ require 'geometry'
 include Geometry
 require 'facets'
 
-parts = %w(chassis lids bobbin_left bobbin_right)
-# parts = %w(bobbin_left bobbin_right)
+# parts = %w(chassis lids bobbin_left bobbin_right)
+parts = %w(bobbin_left bobbin_right)
 
 DB = "decawell.g"
 mged ="/usr/brlcad/rel-7.12.2/bin//mged -c  #{DB} "
 scale_factor = 140 # global scaling factor
-torus_ring_size = 0.6 *scale_factor
+torus_ring_size = 0.601 *scale_factor
 torus = 0.17 *scale_factor
 torus_negative = 0.79 * torus
 
@@ -93,7 +93,7 @@ end
 
 if parts.include?("bobbin_left")
 	offset = Vector[20,0,0]
-	wall_thickness = (2.5) # mm
+	wall_thickness = (2.6) # mm
 	shaft_radius = (6.35 ) /2.0
 	shaft_length = (16 )
 	screw_hole_radius = 2 #mm
@@ -120,12 +120,12 @@ if parts.include?("bobbin_left")
 	`#{mged} 'r bobbin1 u support_plate - shaft_with_notch  u bobbin_torus + bobbin_half - bobbin_negative  '` # form the first half of the bobbin
 	`#{mged} 'r bobbin_left u bobbin1 - wire_access_notch  '` # form the first half of the bobbin
 
-# 	`cat <<EOF | mged -c #{DB}
-# 	B bobbin	
-# 	oed / bobbin/bobbin1/bobbin_torus	
-# 	translate #{offset.mged}
-# 	accept
-# EOF`
+	`cat <<EOF | mged -c #{DB}
+	B bobbin	
+	oed / bobbin/bobbin1/bobbin_torus	
+	translate #{offset.mged}
+	accept
+EOF`
 	
 		`#{mged} 'mirror bobbin_left bobbin_right x'` #combine the pieces
 
@@ -163,7 +163,7 @@ EOF`
 `pix-png -s1024 < #{part}.rt.pix > #{part}.png`
 `open ./#{part}.png`
 # `g-stl -a 0.005 -D 0.005 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
-# `g-stl -a 0.01 -D 0.01 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
+`g-stl -a 0.01 -D 0.01 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 `rm -f ./#{part}.rt `
 `rm -f ./#{part}.rt.pix `
 `rm -f ./#{part}.rt.log`
