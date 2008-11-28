@@ -51,8 +51,14 @@ derived_dimentions = {
 
 
 puts "\n\n"
-derived_dimentions.each { |k,v| puts "#{k}: #{v}"  }
+derived_dimentions.select{|k,v| v.class != Unit}.each { |k,v| puts "#{k}: #{v} mm"  }
 puts "\n\n"
+
+puts "\n\n"
+derived_dimentions.select{|k,v| v.class == Unit}.each { |k,v| puts "#{k}: #{v}"  }
+puts "\n\n"
+
+break
 
 `rm -f ./#{DB.gsub(".g","")}.*`
 `#{mged} 'units mm'` # set mged's units to decimeter 
