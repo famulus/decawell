@@ -54,21 +54,22 @@ derived_dimentions = {
 	:coil_resistance => coil_resistance, 
 	:specific_heat_of_copper => specific_heat_of_copper, 
 	:atomic_weight_of_copper => atomic_weight_of_copper, 
-		:joule_heating => joule_heating, 
-:coil_weight_in_moles => coil_weight_in_moles, 
+	:joule_heating => joule_heating >> Unit("degF"), 
+	:coil_weight_in_moles => coil_weight_in_moles, 
 	:coil_weight => coil_weight, 
 }
 
 
 
 puts "\n\n"
-derived_dimentions.select{|k,v| v.class != Unit}.each { |k,v| puts "#{k}: #{v} mm"  }
+derived_dimentions.select{|k,v| v.class != Unit}.sort_by{|k,v| v}.reverse.each { |k,v| puts "#{k}: #{v} mm"  }
 puts "\n\n"
 
 puts "\n\n"
 derived_dimentions.select{|k,v| v.class == Unit}.each { |k,v| puts "#{k}: #{v}"  }
 puts "\n\n"
 
+break
 
 `rm -f ./#{DB.gsub(".g","")}.*`
 `#{mged} 'units mm'` # set mged's units to decimeter 
