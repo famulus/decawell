@@ -1,28 +1,37 @@
 require 'geometry'
 include Geometry
 require 'facets'
+require 'ruby-units'
+
+
 
 # parts = %w(chassis lids bobbin_left bobbin_right)
 parts = %w(bobbin_left bobbin_right)
 
 DB = "decawell.g"
 mged ="/usr/brlcad/rel-7.12.2/bin//mged -c  #{DB} "
+
+mm = Unit.new("mm")
+amp = Unit.new("amp")
+ohm = Unit.new("ohm")
+
 scale_factor = 140 # global scaling factor
 torus_ring_size = 0.601 *scale_factor
-torus = 0.17 *scale_factor
-torus_negative = 0.79 * torus
+torus = 0.17 *scale_factor 
+torus_negative = 0.79 * torus 
 
 joint_radius = torus * 0.70
 joint_negative_radius = joint_radius * 0.35
 joint_nudge = 0.89 # this is a percentage scaling of the vector defining the ideal joint location
 joint_nudge_length = 0.22
 coil_wire_diameter = 2.053  # mm this 12 gauge AWS
-coil = Coil.new(torus_negative*2, coil_wire_diameter, torus_ring_size)
-drive_amps = 20000.0
+coil = Coil.new((torus_negative*2), coil_wire_diameter, torus_ring_size)
+drive_amps = 2000.0 * amp
+wire_resistance = (1.5883/304800.0) * ohm  # ohms per mm
 
 derived_dimentions = {
-	:outside_radius => (Dodecahedron.vertices[0].r) *scale_factor ,
-	:torus_midplane_radius => (Dodecahedron.icosahedron[0].r) * scale_factor,
+	:outside_radius => (Dodecahedron.vertices[0].r) *scale_factor *mm ,
+	:torus_midplane_radius => (Dodecahedron.icosahedron[0].r) * scale_factor *mm,
 	:torus_radius => torus_ring_size,
 	:torus_tube_radius => torus,
 	:torus_tube_wall_thickness => torus-torus_negative,
@@ -32,13 +41,17 @@ derived_dimentions = {
 	:donut_exterier_radius => torus_ring_size +torus ,
 	:donut_hole_radius => torus_ring_size -torus,
 	:wraps => coil.wraps,
-	:coil_length => coil.coil_length,
+	:coil_length => (coil.coil_length)*mm,
 	:drive_amps => drive_amps, 
 	:ampere_turns => (drive_amps*coil.wraps), 
+	:ohms => wire_resistance *coil.coil_length, 
+	:joule_heating => ((wire_resistance *coil.coil_length)* (drive_amps**2)), 
 }
 
+
+
 puts "\n\n"
-derived_dimentions.sort_by{ |k,v| v }.reverse.each { |k,v| puts "#{k}: #{v} mm"  }
+derived_dimentions.each { |k,v| puts "#{k}: #{v}"  }
 puts "\n\n"
 
 `rm -f ./#{DB.gsub(".g","")}.*`
@@ -121,11 +134,12 @@ if parts.include?("bobbin_left")
 	`#{mged} 'r bobbin_left u bobbin1 - wire_access_notch  '` # form the first half of the bobbin
 
 	`cat <<EOF | mged -c #{DB}
-	B bobbin	
-	oed / bobbin/bobbin1/bobbin_torus	
+	B bobbin_left	
+	oed / bobbin_left/bobbin1/bobbin_torus	
 	translate #{offset.mged}
 	accept
 EOF`
+	
 	
 		`#{mged} 'mirror bobbin_left bobbin_right x'` #combine the pieces
 
@@ -163,7 +177,7 @@ EOF`
 `pix-png -s1024 < #{part}.rt.pix > #{part}.png`
 `open ./#{part}.png`
 # `g-stl -a 0.005 -D 0.005 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
-`g-stl -a 0.01 -D 0.01 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
+# `g-stl -a 0.01 -D 0.01 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 `rm -f ./#{part}.rt `
 `rm -f ./#{part}.rt.pix `
 `rm -f ./#{part}.rt.log`
