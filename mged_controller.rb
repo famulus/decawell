@@ -27,11 +27,11 @@ joint_nudge_length = 0.22
 coil_wire_diameter = 2.053  # mm this 12 gauge AWS
 coil = Coil.new((torus_negative*2), coil_wire_diameter, torus_ring_size)
 drive_amps = 2000.0 * amp
-wire_resistance = (1.5883/304800.0) * ohm  # ohms per mm
+wire_resistance = (1.5883/304800.0) * ohm  # ohms per mm  derived from http://www.eskimo.com/~billb/tesla/wire1.txt
 
 derived_dimentions = {
-	:outside_radius => (Dodecahedron.vertices[0].r) *scale_factor *mm ,
-	:torus_midplane_radius => (Dodecahedron.icosahedron[0].r) * scale_factor *mm,
+	:outside_radius => (Dodecahedron.vertices[0].r) *scale_factor ,
+	:torus_midplane_radius => (Dodecahedron.icosahedron[0].r) * scale_factor ,
 	:torus_radius => torus_ring_size,
 	:torus_tube_radius => torus,
 	:torus_tube_wall_thickness => torus-torus_negative,
@@ -44,7 +44,7 @@ derived_dimentions = {
 	:coil_length => (coil.coil_length)*mm,
 	:drive_amps => drive_amps, 
 	:ampere_turns => (drive_amps*coil.wraps), 
-	:ohms => wire_resistance *coil.coil_length, 
+	:coil_resistance => wire_resistance *coil.coil_length, 
 	:joule_heating => ((wire_resistance *coil.coil_length)* (drive_amps**2)), 
 }
 
