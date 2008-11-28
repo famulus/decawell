@@ -11,9 +11,9 @@ parts = %w(bobbin_left bobbin_right)
 DB = "decawell.g"
 mged ="/usr/brlcad/rel-7.12.2/bin//mged -c  #{DB} "
 
-mm = Unit.new("mm")
-amp = Unit.new("amp")
-ohm = Unit.new("ohm")
+mm = Unit("mm")
+amp = Unit("amp")
+ohm = Unit("ohm")
 
 scale_factor = 140 # global scaling factor
 torus_ring_size = 0.601 *scale_factor
@@ -27,8 +27,14 @@ joint_nudge_length = 0.22
 coil_wire_diameter = 2.053  # mm this 12 gauge AWS
 coil = Coil.new((torus_negative*2), coil_wire_diameter, torus_ring_size)
 drive_amps = 2000.0 * amp
-wire_resistance = (1.5883/304800.0) * ohm  # ohms per mm  derived from http://www.eskimo.com/~billb/tesla/wire1.txt
+wire_resistance = (Unit("1.5883 ohm")/Unit("1000 ft"))  >> Unit("ohm/mm")  # ohms per mm  derived from http://www.eskimo.com/~billb/tesla/wire1.txt
+coil_resistance = wire_resistance *(coil.coil_length*mm)
+specific_heat_of_copper = (Unit("24.440 J")/Unit("1 mole")/Unit("1 kelvin")).inverse
+atomic_weight_of_copper = (Unit("63.546 g")/Unit("mole")).inverse
+coil_weight = ((Unit("19.765 lb")/Unit("1000 ft") >> Unit("g/mm"))*(coil.coil_length*mm)) 
+coil_weight_in_moles = (coil_weight * atomic_weight_of_copper).inverse
 
+joule_heating = ((coil_resistance * (drive_amps.scalar**2)).scalar * Unit("J")) * specific_heat_of_copper *coil_weight_in_moles
 derived_dimentions = {
 	:outside_radius => (Dodecahedron.vertices[0].r) *scale_factor ,
 	:torus_midplane_radius => (Dodecahedron.icosahedron[0].r) * scale_factor ,
@@ -44,8 +50,13 @@ derived_dimentions = {
 	:coil_length => (coil.coil_length)*mm,
 	:drive_amps => drive_amps, 
 	:ampere_turns => (drive_amps*coil.wraps), 
-	:coil_resistance => wire_resistance *coil.coil_length, 
-	:joule_heating => ((wire_resistance *coil.coil_length)* (drive_amps**2)), 
+	:wire_resistance => wire_resistance, 
+	:coil_resistance => coil_resistance, 
+	:specific_heat_of_copper => specific_heat_of_copper, 
+	:atomic_weight_of_copper => atomic_weight_of_copper, 
+		:joule_heating => joule_heating, 
+:coil_weight_in_moles => coil_weight_in_moles, 
+	:coil_weight => coil_weight, 
 }
 
 
@@ -58,7 +69,6 @@ puts "\n\n"
 derived_dimentions.select{|k,v| v.class == Unit}.each { |k,v| puts "#{k}: #{v}"  }
 puts "\n\n"
 
-break
 
 `rm -f ./#{DB.gsub(".g","")}.*`
 `#{mged} 'units mm'` # set mged's units to decimeter 
