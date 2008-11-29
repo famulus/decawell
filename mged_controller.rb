@@ -19,22 +19,22 @@ scale_factor = 140 # global scaling factor
 torus_ring_size = 0.601 *scale_factor
 torus = 0.17 *scale_factor 
 torus_negative = 0.79 * torus 
-
 joint_radius = torus * 0.70
 joint_negative_radius = joint_radius * 0.35
 joint_nudge = 0.89 # this is a percentage scaling of the vector defining the ideal joint location
 joint_nudge_length = 0.22
 coil_wire_diameter = 2.053  # mm this 12 gauge AWS
 coil = Coil.new((torus_negative*2), coil_wire_diameter, torus_ring_size)
+
 drive_amps = 2000.0 * amp
 wire_resistance = (Unit("1.5883 ohm")/Unit("1000 ft"))  >> Unit("ohm/mm")  # ohms per mm  derived from http://www.eskimo.com/~billb/tesla/wire1.txt
 coil_resistance = wire_resistance *(coil.coil_length*mm)
 specific_heat_of_copper = (Unit("24.440 J")/Unit("1 mole")/Unit("1 kelvin")).inverse
-atomic_weight_of_copper = (Unit("63.546 g")/Unit("mole")).inverse
+atomic_weight_of_copper = (Unit("63.546 g")/Unit("mole"))
 coil_weight = ((Unit("19.765 lb")/Unit("1000 ft") >> Unit("g/mm"))*(coil.coil_length*mm)) 
-coil_weight_in_moles = (coil_weight * atomic_weight_of_copper).inverse
+coil_weight_in_moles = (coil_weight * atomic_weight_of_copper.inverse)
 
-joule_heating = ((coil_resistance * (drive_amps.scalar**2)).scalar * Unit("J")) * specific_heat_of_copper *coil_weight_in_moles
+joule_heating = ((coil_resistance * (drive_amps.scalar**2)).scalar * Unit("J")) * specific_heat_of_copper *coil_weight_in_moles.inverse
 derived_dimentions = {
 	:outside_radius => (Dodecahedron.vertices[0].r) *scale_factor ,
 	:torus_midplane_radius => (Dodecahedron.icosahedron[0].r) * scale_factor ,
