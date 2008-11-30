@@ -59,7 +59,10 @@ derived_dimentions = {
 	:joint_negative_radius => joint_negative_radius,
 	:donut_exterier_radius => torus_ring_size +torus ,
 	:donut_hole_radius => torus_ring_size -torus,
-	:wraps => coil.wraps,
+}
+
+joule_heating = {
+		:wraps => coil.wraps,
 	:coil_length => (coil.coil_length)*mm,
 	:drive_amps => drive_amps, 
 	:wire_resistance => wire_resistance, 
@@ -69,23 +72,30 @@ derived_dimentions = {
 	:joule_heating => joule_heating , 
 	:coil_weight_in_moles => coil_weight_in_moles, 
 	:coil_weight => coil_weight, 
-	:magnetic_constant => magnetic_constant, 
+
+	
+}
+
+amperes_force = {
+		:magnetic_constant => magnetic_constant, 
 	:magnetic_force_constant => magnetic_force_constant, 
 	:seperation_of_wires => seperation_of_wires, 
 	:coil_force_per_meter => coil_force_per_meter, 
 	:coil_force => coil_force, 
+
 }
-
-
 
 puts "\n\n"
 derived_dimentions.select{|k,v| v.class != Unit}.sort_by{|k,v| v}.reverse.each { |k,v| puts "#{k}: #{v} mm"  }
 puts "\n\n"
 
-puts "\n\n"
-derived_dimentions.select{|k,v| v.class == Unit}.each { |k,v| puts "#{k}: #{v}"  }
-puts "\n\n"
+[joule_heating,amperes_force].each do |topic|
 
+
+	puts "\n\n"
+	topic.select{|k,v| v.class == Unit}.each { |k,v| puts "#{k}: #{v}"  }
+	puts "\n\n"
+end
 break
 
 `rm -f ./#{DB.gsub(".g","")}.*`
