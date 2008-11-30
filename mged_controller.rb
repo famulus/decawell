@@ -2,11 +2,13 @@ require 'geometry'
 include Geometry
 require 'facets'
 require 'ruby-units'
-
+# require 'constants'
+# include Constants::Libraries
 
 
 # parts = %w(chassis lids bobbin_left bobbin_right)
 parts = %w(bobbin_left bobbin_right)
+parts = %w(chassis)
 
 DB = "decawell.g"
 mged ="/usr/brlcad/rel-7.12.2/bin//mged -c  #{DB} "
@@ -16,6 +18,8 @@ amp = Unit("amp")
 ohm = Unit("ohm")
 
 scale_factor = 140 # global scaling factor
+outside_radius = (Dodecahedron.vertices[0].r) *scale_factor 
+torus_midplane_radius = (Dodecahedron.icosahedron[0].r) * scale_factor
 torus_ring_size = 0.601 *scale_factor
 torus = 0.17 *scale_factor 
 torus_negative = 0.79 * torus 
@@ -26,6 +30,7 @@ joint_nudge_length = 0.22
 coil_wire_diameter = 2.053  # mm this 12 gauge AWS
 coil = Coil.new((torus_negative*2), coil_wire_diameter, torus_ring_size)
 
+#Joule heating calculations
 drive_amps = 2000.0 * amp
 wire_resistance = (Unit("1.5883 ohm")/Unit("1000 ft"))  >> Unit("ohm/mm")  # ohms per mm  derived from http://www.eskimo.com/~billb/tesla/wire1.txt
 coil_resistance = wire_resistance *(coil.coil_length*mm)
@@ -33,11 +38,19 @@ specific_heat_of_copper = (Unit("24.440 J")/Unit("1 mole")/Unit("1 kelvin"))
 atomic_weight_of_copper = (Unit("63.546 g")/Unit("mole"))
 coil_weight = ((Unit("19.765 lb")/Unit("1000 ft") >> Unit("g/mm"))*(coil.coil_length*mm)) 
 coil_weight_in_moles = (coil_weight * atomic_weight_of_copper.inverse)
-
 joule_heating = ((coil_resistance * (drive_amps.scalar**2)).scalar * Unit("J")) * (specific_heat_of_copper.inverse) *coil_weight_in_moles.inverse
+
+
+# Ampère's force law calculations  http://en.wikipedia.org/wiki/Ampère%27s_force_law
+magnetic_constant = (4*Math::PI * (10.0**-7)) * Unit("newton/ampere**2")
+magnetic_force_constant = magnetic_constant / (2*Math::PI)
+seperation_of_wires = (torus_midplane_radius*mm) >> Unit("m") # in m
+coil_force_per_meter = magnetic_force_constant * ((drive_amps**2)/seperation_of_wires)
+coil_force = coil_force_per_meter * (((coil.coil_length)*mm) >> Unit('m'))
+
 derived_dimentions = {
-	:outside_radius => (Dodecahedron.vertices[0].r) *scale_factor ,
-	:torus_midplane_radius => (Dodecahedron.icosahedron[0].r) * scale_factor ,
+	:outside_radius => outside_radius,
+	:torus_midplane_radius => torus_midplane_radius,
 	:torus_radius => torus_ring_size,
 	:torus_tube_radius => torus,
 	:torus_tube_wall_thickness => torus-torus_negative,
@@ -49,14 +62,18 @@ derived_dimentions = {
 	:wraps => coil.wraps,
 	:coil_length => (coil.coil_length)*mm,
 	:drive_amps => drive_amps, 
-	:ampere_turns => (drive_amps*coil.wraps), 
 	:wire_resistance => wire_resistance, 
 	:coil_resistance => coil_resistance, 
 	:specific_heat_of_copper => specific_heat_of_copper, 
 	:atomic_weight_of_copper => atomic_weight_of_copper, 
-	:joule_heating => joule_heating >> Unit("degF"), 
+	:joule_heating => joule_heating , 
 	:coil_weight_in_moles => coil_weight_in_moles, 
 	:coil_weight => coil_weight, 
+	:magnetic_constant => magnetic_constant, 
+	:magnetic_force_constant => magnetic_force_constant, 
+	:seperation_of_wires => seperation_of_wires, 
+	:coil_force_per_meter => coil_force_per_meter, 
+	:coil_force => coil_force, 
 }
 
 
