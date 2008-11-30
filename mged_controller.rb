@@ -62,7 +62,7 @@ derived_dimentions = {
 }
 
 joule_heating = {
-		:wraps => coil.wraps,
+	:wraps => coil.wraps,
 	:coil_length => (coil.coil_length)*mm,
 	:drive_amps => drive_amps, 
 	:wire_resistance => wire_resistance, 
@@ -77,7 +77,7 @@ joule_heating = {
 }
 
 amperes_force = {
-		:magnetic_constant => magnetic_constant, 
+	:magnetic_constant => magnetic_constant, 
 	:magnetic_force_constant => magnetic_force_constant, 
 	:seperation_of_wires => seperation_of_wires, 
 	:coil_force_per_meter => coil_force_per_meter, 
@@ -90,8 +90,6 @@ derived_dimentions.select{|k,v| v.class != Unit}.sort_by{|k,v| v}.reverse.each {
 puts "\n\n"
 
 [joule_heating,amperes_force].each do |topic|
-
-
 	puts "\n\n"
 	topic.select{|k,v| v.class == Unit}.each { |k,v| puts "#{k}: #{v}"  }
 	puts "\n\n"
