@@ -7,7 +7,7 @@ require 'ruby-units'
 
 
 # parts = %w(chassis lids bobbin_left bobbin_right)
-parts = %w(bobbin_left bobbin_right)
+# parts = %w(bobbin_left bobbin_right)
 parts = %w(chassis)
 
 DB = "decawell.g"
@@ -48,6 +48,19 @@ seperation_of_wires = (torus_midplane_radius*mm) >> Unit("m") # in m
 coil_force_per_meter = magnetic_force_constant * ((drive_amps**2)/seperation_of_wires)
 coil_force = coil_force_per_meter * (((coil.coil_length)*mm) >> Unit('m'))
 
+#Superconductor critical current 
+ybco_critical_current = Unit('200 ampere/mm**2') #http://www.theva.com/downloads/en/Datasheet_CC.pdf
+single_turn = 2*torus_ring_size*Math::PI*mm
+ybco_current_density_per_turn = (single_turn * (4*mm)) * ybco_critical_current
+
+superconducting = {
+	:ybco_critical_current => ybco_critical_current, 
+	:single_turn => single_turn, 
+	:single_turn_12 => single_turn*12 >> Unit('m'), 
+	:ybco_current_density_per_turn => ybco_current_density_per_turn, 
+}
+
+
 derived_dimentions = {
 	:outside_radius => outside_radius,
 	:torus_midplane_radius => torus_midplane_radius,
@@ -64,6 +77,7 @@ derived_dimentions = {
 joule_heating = {
 	:wraps => coil.wraps,
 	:coil_length => (coil.coil_length)*mm,
+	:amp_turn => drive_amps*coil.wraps * Unit("count"),
 	:drive_amps => drive_amps, 
 	:wire_resistance => wire_resistance, 
 	:coil_resistance => coil_resistance, 
@@ -85,11 +99,12 @@ amperes_force = {
 
 }
 
+
 puts "\n\n"
 derived_dimentions.select{|k,v| v.class != Unit}.sort_by{|k,v| v}.reverse.each { |k,v| puts "#{k}: #{v} mm"  }
 puts "\n\n"
 
-[joule_heating,amperes_force].each do |topic|
+[joule_heating,amperes_force,superconducting].each do |topic|
 	puts "\n\n"
 	topic.select{|k,v| v.class == Unit}.each { |k,v| puts "#{k}: #{v}"  }
 	puts "\n\n"
