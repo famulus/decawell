@@ -17,6 +17,14 @@ mm = Unit("mm")
 amp = Unit("amp")
 ohm = Unit("ohm")
 
+class Unit < Numeric
+	UNIT_DEFINITIONS = {
+		'<watt>'  => [%w{watt}, 1.0, :power, %w{<Joule>} , %w{<second>} ]
+	}
+end
+Unit.setup
+
+
 scale_factor = 140 # global scaling factor
 outside_radius = (Dodecahedron.vertices[0].r) *scale_factor 
 torus_midplane_radius = (Dodecahedron.icosahedron[0].r) * scale_factor
@@ -38,7 +46,7 @@ specific_heat_of_copper = (Unit("24.440 J")/Unit("1 mole")/Unit("1 kelvin"))
 atomic_weight_of_copper = (Unit("63.546 g")/Unit("mole"))
 coil_weight = ((Unit("19.765 lb")/Unit("1000 ft") >> Unit("g/mm"))*(coil.coil_length*mm)) 
 coil_weight_in_moles = (coil_weight * atomic_weight_of_copper.inverse)
-joule_heating = ((coil_resistance * (drive_amps.scalar**2)).scalar * Unit("J")) * (specific_heat_of_copper.inverse) *coil_weight_in_moles.inverse
+joule_heating = ((coil_resistance * (drive_amps**2))>>Unit('watt')   )* (specific_heat_of_copper.inverse) *coil_weight_in_moles.inverse
 
 
 # Ampère's force law calculations  http://en.wikipedia.org/wiki/Ampère%27s_force_law
@@ -48,10 +56,18 @@ seperation_of_wires = (torus_midplane_radius*mm) >> Unit("m") # in m
 coil_force_per_meter = magnetic_force_constant * ((drive_amps**2)/seperation_of_wires)
 coil_force = coil_force_per_meter * (((coil.coil_length)*mm) >> Unit('m'))
 
+#check out wiki: technology applications of superconductors
 #Superconductor critical current 
-ybco_critical_current = Unit('200 ampere/mm**2') #http://www.theva.com/downloads/en/Datasheet_CC.pdf
+ybco_critical_current = Unit('200 ampere/cm') >>Unit('ampere/mm') #http://www.theva.com/downloads/en/Datasheet_CC.pdf
 single_turn = 2*torus_ring_size*Math::PI*mm
-ybco_current_density_per_turn = (single_turn * (4*mm)) * ybco_critical_current
+ybco_current_density_per_turn = (single_turn * ybco_critical_current)
+
+
+#test coil
+# puts (Unit('5 volts')/(Unit('22 kohm')>>Unit('ohm'))) 
+puts (Unit('1 Joule')/Unit('2 sec')) >> Unit('watt')  
+
+
 
 superconducting = {
 	:ybco_critical_current => ybco_critical_current, 
