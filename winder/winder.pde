@@ -1,7 +1,7 @@
-#define stepPin 8
-#define dirPin 9
-#define spool_stepPin 8
-#define spool_dirPin 9
+#define stepPin 6
+#define dirPin 7
+#define winder_stepPin 8
+#define winder_dirPin 9
 
 void setup()
 {
@@ -10,66 +10,49 @@ void setup()
 
   pinMode(stepPin, OUTPUT);
   pinMode(dirPin, OUTPUT);
+  pinMode(winder_stepPin, OUTPUT);
+  pinMode(winder_dirPin, OUTPUT);
 
-  digitalWrite(dirPin, HIGH);
+  digitalWrite(winder_stepPin, HIGH);
   digitalWrite(stepPin, LOW);
-
-  pinMode(spool_stepPin, OUTPUT);
-  pinMode(spool_dirPin, OUTPUT);
-
-  digitalWrite(spool_dirPin, HIGH);
-  digitalWrite(spool_stepPin, LOW);
+  digitalWrite(winder_dirPin, LOW);
+  digitalWrite(dirPin, HIGH);
 }
 
 void loop()
 {
-	 int i, j;
-	Serial.print("Speed: ");
-	Serial.println(3600);
-	
-	for (j=0; j<2000; j++)
-	{
-		digitalWrite(stepPin, HIGH);
-		delayMicroseconds(2);
-		digitalWrite(stepPin, LOW);
-		delayMicroseconds(i);
+    int i, j;
+    
+ 
+      
+        digitalWrite(stepPin, HIGH);
+        delayMicroseconds(2);
+        digitalWrite(stepPin, LOW);
+        delayMicroseconds(10000);
+      // Serial.println("Switching directions."); 
+      // digitalWrite(dirPin, !digitalRead(dirPin));
+      //   delayMicroseconds(2);
+      // 
+      //   digitalWrite(winder_stepPin, HIGH);
+      //   delayMicroseconds(2);
+      //   digitalWrite(winder_stepPin, LOW);
+		
+		
 
-		// digitalWrite(spool_stepPin, HIGH);
-		// delayMicroseconds(2);
-		// digitalWrite(spool_stepPin, LOW);
-		// delayMicroseconds(i);
-	}
-
-	
-  //   int i, j;
-  //   
-  //   for (i=1650; i>=600; i-=150)
-  //   {
-  //     Serial.print("Speed: ");
-  //     Serial.println(i);
-  //     
-  //     for (j=0; j<2000; j++)
-  //     {
-  //       digitalWrite(stepPin, HIGH);
-  //       delayMicroseconds(2);
-  //       digitalWrite(stepPin, LOW);
-  //       delayMicroseconds(i);
-  //     }
-  // 
-  //     delay(500);
-  //     Serial.println("Switching directions.");
-  //     digitalWrite(dirPin, !digitalRead(dirPin));
-  // 
-  //     for (j=0; j<2000; j++)
-  //     {
-  //       digitalWrite(stepPin, HIGH);
-  //       delayMicroseconds(2);
-  //       digitalWrite(stepPin, LOW);
-  //       delayMicroseconds(i);
-  //     }
-  // 
-  //     delay(1000);
-  //     Serial.println("Switching directions."); 
-  //     digitalWrite(dirPin, !digitalRead(dirPin));
-  // }
+      // delay(500);
+      // Serial.println("Switching directions.");
+      // digitalWrite(dirPin, !digitalRead(dirPin));
+      // 
+      // for (j=0; j<2000; j++)
+      // {
+      //   digitalWrite(stepPin, HIGH);
+      //   delayMicroseconds(2);
+      //   digitalWrite(stepPin, LOW);
+      //   delayMicroseconds(i);
+      // }
+      // 
+      // // delay(1000);
+      // Serial.println("Switching directions."); 
+      // digitalWrite(dirPin, !digitalRead(dirPin));
+  
 }
