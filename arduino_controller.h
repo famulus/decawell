@@ -11,6 +11,8 @@ void setup() {
   }
 
   digitalWrite(8,LOW); // turn motors off by default
+    digitalWrite(13,LOW); // turn motors off by default
+  digitalWrite(7,LOW); // turn motors off by default
 }
 
 
@@ -40,11 +42,9 @@ void loop() {
       delay(2);
     }
     if(incomingByte == 3){
-      digitalWrite(7,HIGH);
+      digitalWrite(7,!digitalRead(7));
     }
-    if(incomingByte ==4){
-      digitalWrite(7,LOW);
-    }
+
 
 
 
@@ -57,11 +57,10 @@ void loop() {
       delay(2);
     }
     if(incomingByte == 6){
-      digitalWrite(13,HIGH);
+      digitalWrite(13,!digitalRead(13));
+      delay(2);
     }
-    if(incomingByte == 7){
-      digitalWrite(13,LOW);
-    }
+
 
 
 
