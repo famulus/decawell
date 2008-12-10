@@ -21,7 +21,7 @@ void loop() {
     incomingByte = Serial.read();
     incomingByte = incomingByte - '0'; 
 
-
+    Serial.println(incomingByte);
     // global power off/on
     if(incomingByte == 0){
       digitalWrite(8,LOW);
