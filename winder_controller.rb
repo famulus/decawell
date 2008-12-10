@@ -17,7 +17,7 @@ input = ""
 
 
 class Motor
-	attr_accessor :serial_port,:name,:step_key, :reverse,:off_key,:on_key
+	attr_accessor :serial_port,:name,:step_key, :direction,:off_key,:on_key
 	def step(times = 1)
 		times.times do |step|
 			@serial_port.putc @step_key.to_s
@@ -26,11 +26,11 @@ class Motor
 		end
 	end
 
-	def reverse
-		@serial_port.putc @reverse.to_s
+	def direction
+		@serial_port.putc @direction.to_s
 	end
-	def reverse=(pin)
-		@reverse = pin
+	def direction=(pin)
+		@direction = pin
 	end
 
 
@@ -47,7 +47,7 @@ m = Motor.new
 m.name = 'winder'
 m.serial_port = sp
 m.step_key = 2
-m.reverse = 3
+m.direction = 3
 
 
 
@@ -56,14 +56,12 @@ wg = Motor.new
 wg.name = 'wire_guide'
 wg.serial_port = sp
 wg.step_key = 5
-wg.reverse = 6
+wg.direction = 6
 
-10.times do |rev|
-	m.step(400)
-	sleep 2 # seconds
+400.times do |rev|
+	m.step(10)
 
-	wg.step(400)
-	wg.reverse
+	wg.step(2)
 
 
 end
