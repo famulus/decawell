@@ -2,6 +2,7 @@ require 'geometry'
 include Geometry
 require 'facets'
 require 'ruby-units'
+require 'winder'
 # require 'constants'
 # include Constants::Libraries
 
@@ -28,14 +29,15 @@ Unit.setup
 scale_factor = 140 # global scaling factor
 outside_radius = (Dodecahedron.vertices[0].r) *scale_factor 
 torus_midplane_radius = (Dodecahedron.icosahedron[0].r) * scale_factor
-torus_ring_size = 0.601 *scale_factor
+torus_ring_size = 0.600 *scale_factor
 torus = 0.17 *scale_factor 
 torus_negative = 0.79 * torus 
 joint_radius = torus * 0.70
 joint_negative_radius = joint_radius * 0.35
 joint_nudge = 0.89 # this is a percentage scaling of the vector defining the ideal joint location
 joint_nudge_length = 0.22
-coil_wire_diameter = 2.053  # mm this 12 gauge AWS
+# coil_wire_diameter = 2.053  # mm this 12 gauge AWS
+coil_wire_diameter = 1.1  # mm test wire
 coil = Coil.new((torus_negative*2), coil_wire_diameter, torus_ring_size)
 
 #Joule heating calculations
@@ -125,16 +127,18 @@ puts "\n\n"
 	topic.select{|k,v| v.class == Unit}.each { |k,v| puts "#{k}: #{v}"  }
 	puts "\n\n"
 end
-break
 
 `rm -f ./#{DB.gsub(".g","")}.*`
 `#{mged} 'units mm'` # set mged's units to decimeter 
 `#{mged} 'tol dist 0.0005'` # set mged's units to decimeter 
 
-coil.grid.each {|row| puts row.map{|c|  c ? 1 : 0}.join(" ")}
+coil.grid.each {|row| puts row.map{|c|  c ? 1 : 0}.join("")}
 # coil.grid.each {|row|  row.split(false).each{|a| puts a.size}}
 coil.grid.each_with_index {|row,index| puts coil.wrap_radius_for_row(index)}
 
+puts "coil start#{coil.truth_array.inspect}"
+coil.wind
+break
 
 if parts.include?("chassis")
 	Dodecahedron.icosahedron.each_with_index do |v,index| # draw the 12 tori
