@@ -9,7 +9,7 @@ require 'winder'
 
 # parts = %w(chassis lids bobbin_left bobbin_right)
 # parts = %w(bobbin_left bobbin_right)
-parts = %w(chassis)
+parts = %w(chassis lids)
 
 DB = "decawell.g"
 mged ="/usr/brlcad/rel-7.12.2/bin//mged -c  #{DB} "
@@ -137,8 +137,8 @@ coil.grid.each {|row| puts row.map{|c|  c ? 1 : 0}.join("")}
 coil.grid.each_with_index {|row,index| puts coil.wrap_radius_for_row(index)}
 
 puts "coil start#{coil.truth_array.inspect}"
-coil.wind
-break
+# coil.wind
+
 
 if parts.include?("chassis")
 	Dodecahedron.icosahedron.each_with_index do |v,index| # draw the 12 tori
@@ -254,7 +254,7 @@ EOF`
 `pix-png -s1024 < #{part}.rt.pix > #{part}.png`
 `open ./#{part}.png`
 # `g-stl -a 0.005 -D 0.005 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
-# `g-stl -a 0.01 -D 0.01 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
+`g-stl -a 0.01 -D 0.01 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 `rm -f ./#{part}.rt `
 `rm -f ./#{part}.rt.pix `
 `rm -f ./#{part}.rt.log`
