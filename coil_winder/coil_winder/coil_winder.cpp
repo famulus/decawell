@@ -16,8 +16,8 @@ void setup();
 // sketch signatures
 int main();
 int led();
+SoftwareSerial& gps();
 // plugin signatures
-
 
 //////////////////////////////////////////////////////////////////////////
 // plugin structs
@@ -45,10 +45,30 @@ void loop();
 // variable and accessors
 //////////////////////////////////////////////////////////////////////////
 int _led = 13;
+SoftwareSerial _gps = SoftwareSerial(6, 7);
 
 int led() {
 	return _led;
 }
+        SoftwareSerial& gps() {
+        return _gps;
+        }
+        int read(SoftwareSerial& s) {
+          return s.read();
+        }
+        void println( SoftwareSerial& s, char* str ) {
+          return s.println( str );
+        }
+        void print( SoftwareSerial& s, char* str ) {
+          return s.print( str );
+        }
+        void println( SoftwareSerial& s, int i ) {
+          return s.println( i );
+        }
+        void print( SoftwareSerial& s, int i ) {
+          return s.print( i );
+        }
+
 
 //////////////////////////////////////////////////////////////////////////
 // assembler declarations
@@ -59,7 +79,12 @@ int led() {
 //////////////////////////////////////////////////////////////////////////
 void setup() {
 	// pin modes
+	pinMode(6, INPUT);
 	pinMode(13, OUTPUT);
+	pinMode(7, OUTPUT);
+	// other setup
+	_gps.begin(9600);
+Serial.begin(9600);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -72,12 +97,55 @@ void setup() {
 //////////////////////////////////////////////////////////////////////////
 // plugin methods
 //////////////////////////////////////////////////////////////////////////
-void blink(int pin, int ms) {
-  	digitalWrite( pin, HIGH );
-  	delay( ms );
-  	digitalWrite( pin, LOW );
-  	delay( ms );
-  }
+
+// serial helpers
+int serial_available() {
+          return (Serial.available() > 0);
+        }
+        
+        char serial_read() {
+          return (char) Serial.read();
+        }
+        
+        void serial_flush() {
+          return Serial.flush();
+        }
+
+        void serial_print( char str ) {
+          return Serial.print( str );
+        }
+
+        void serial_print( char* str ) {
+          return Serial.print( str );
+        }
+
+        void serial_print( int i ) {
+          return Serial.print( i );
+        }
+
+        void serial_print( long i ) {
+          return Serial.print( i );
+        }
+
+      	void serial_println( char* str ) {
+          return Serial.println( str );
+        }
+
+        void serial_println( char str ) {
+          return Serial.println( str );
+        }
+
+      	void serial_println( int i ) {
+          return Serial.println( i );
+        }
+
+        void serial_println( long i ) {
+          return Serial.println( i );
+        }
+
+        void serial_print( unsigned long i ) {
+          return Serial.print( i );
+        }
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -95,5 +163,6 @@ int main() {
 //////////////////////////////////////////////////////////////////////////
 void
 loop() {
-blink(led(), 500);
+digitalWrite(led(), 1);
+serial_print(read(gps()));
 }

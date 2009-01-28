@@ -78,19 +78,19 @@ require 'facets'
 		@sp = SerialPort.new(port_str, baud_rate, data_bits, stop_bits, parity)
 		
 		@sp.putc '1' #turn the motors on
-		sleep 0.5 # seconds
+		sleep 1 # seconds
 		m = Motor.new
 		m.name = 'winder'
 		m.serial_port = @sp
 		m.step_key = 2
 		m.direction = 3
+		m.direction 
 
 		wg = Motor.new
 		wg.name = 'wire_guide'
 		wg.serial_port = @sp
 		wg.step_key = 5
 		wg.direction = 6
-
 		distance =0
 
 
@@ -101,10 +101,10 @@ require 'facets'
 			puts "step:#{distance*10}"
 			puts "direction" if cell[1] != truth_array[index-1][1] unless index == 0
 			m.step(400)
-			wg.step(distance)
+			wg.step(distance*10) if distance > 0
 			wg.direction if cell[1] != truth_array[index-1][1] unless index == 0
 
-			sleep 0.01
+			# sleep 1
 
 		end
 		@sp.putc '0' # turn off the motors
@@ -181,7 +181,7 @@ class Motor
 	def step(times = 1)
 		times.times do |step|
 			@serial_port.putc @step_key.to_s
-			puts "#{ @step_key}"
+			# puts "#{ @step_key}"
 
 			sleep 0.005
 			if @current_direction

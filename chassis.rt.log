@@ -1,0 +1,513 @@
+BRL-CAD Release 7.12.2  The BRL-CAD Raytracer RT
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Ray-Tracing Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Numerical Computation Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Utility Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+
+Compile-time debug symbols are available
+Running on MSuppes.local
+Planning to run with 2 processors
+rt -M -p20 -o chassis.rt.pix -s1024
+opendb decawell.g;
+tree chassis;
+db title:  Untitled BRL-CAD Database
+DIRBUILD: cpu = 0.000863 sec, elapsed = 0.013216 sec
+    parent: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=292, #free=211, #realloc=4 (81 retained)
+0680a228 TOL 5.000000e-04 (sq=2.500000e-07) perp=1.000000e-06, para=9.999990e-01
+BRL-CAD Release 7.12.2  The BRL-CAD Optical Shader Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+Additional mem=0., #malloc=2050, #free=2, #realloc=1 (2048 retained)
+Warning:  region unioned into region at '/chassis/solid', lower region info ignored
+GETTREE: cpu = 0.006502 sec, elapsed = 0.032795 sec
+    parent: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=5247, #free=4450, #realloc=3 (797 retained)
+
+...................Frame     0...................
+PREP: cpu = 0.003981 sec, elapsed = 0.004447 sec
+    parent: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=2355, #free=1156, #realloc=3 (1199 retained)
+NUBSP: 0 nu, 1151 cut, 1152 box (1152 empty)
+Tree: 156 solids in 1 regions
+Model: X(-232,232), Y(-232,232), Z(-232,232)
+View: 135 azimuth, -35 elevation off of front view
+Orientation: 0.819491, 0.339444, -0.176704, -0.4266
+Eye_pos: -752.297, 752.297, -744.956
+Size: 2597.58mm
+Grid: (2.5367, 2.5367) mm, (1024, 1024) pixels
+Beam: radius=0 mm, divergence=0.000170442 mm/1mm
+Output file is 'chassis.rt.pix' 1024x1024 pixels
+Low overhead scanline-per-CPU buffering
+
+SHOT: cpu = 17.0165 sec, elapsed = 9.08595 sec
+    parent: 17.0user 0.1sys 0:09real 188% 0i+0d 0maxrss 0+0pf 0+0csw
+  children: 0.0user 0.0sys 0:09real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=1116, #free=1040, #realloc=3 (76 retained)
+8090497 solid/ray intersections: 3290986 hits + 4799511 miss
+pruned 40.7%:  0 model RPP, 20608959 dups skipped, 5142400 solid RPP
+Frame  0:    1048576 pixels in      8.51 sec =    123242.25 pixels/sec
+Frame  0:    1048576 rays   in      8.51 sec =    123242.25 rays/sec (RTFM)
+Frame  0:    1048576 rays   in     17.02 sec =     61621.13 rays/CPU_sec
+Frame  0:    1048576 rays   in      9.09 sec =    115406.33 rays/sec (wallclock)
+
+BRL-CAD Release 7.12.2  The BRL-CAD Raytracer RT
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Ray-Tracing Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Numerical Computation Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Utility Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+
+Compile-time debug symbols are available
+Running on MSuppes.local
+Planning to run with 2 processors
+rt -M -p20 -o chassis.rt.pix -s1024
+opendb decawell.g;
+tree chassis;
+db title:  Untitled BRL-CAD Database
+DIRBUILD: cpu = 0.000895 sec, elapsed = 0.016654 sec
+    parent: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=292, #free=211, #realloc=4 (81 retained)
+0680a228 TOL 5.000000e-04 (sq=2.500000e-07) perp=1.000000e-06, para=9.999990e-01
+BRL-CAD Release 7.12.2  The BRL-CAD Optical Shader Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+Additional mem=0., #malloc=2050, #free=2, #realloc=1 (2048 retained)
+Warning:  region unioned into region at '/chassis/solid', lower region info ignored
+GETTREE: cpu = 0.004474 sec, elapsed = 0.005388 sec
+    parent: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=5247, #free=4450, #realloc=3 (797 retained)
+
+...................Frame     0...................
+PREP: cpu = 0.002403 sec, elapsed = 0.003697 sec
+    parent: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=2355, #free=1156, #realloc=3 (1199 retained)
+NUBSP: 0 nu, 1151 cut, 1152 box (1152 empty)
+Tree: 156 solids in 1 regions
+Model: X(-232,232), Y(-232,232), Z(-232,232)
+View: 135 azimuth, -35 elevation off of front view
+Orientation: 0.819491, 0.339444, -0.176704, -0.4266
+Eye_pos: -752.297, 752.297, -744.956
+Size: 2597.58mm
+Grid: (2.5367, 2.5367) mm, (1024, 1024) pixels
+Beam: radius=0 mm, divergence=0.000170442 mm/1mm
+chassis.rt.pix: Permission denied
+BRL-CAD Release 7.12.2  The BRL-CAD Raytracer RT
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Ray-Tracing Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Numerical Computation Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Utility Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+
+Compile-time debug symbols are available
+Running on MSuppes.local
+Planning to run with 2 processors
+rt -M -p20 -o chassis.rt.pix -s1024
+opendb decawell.g;
+tree chassis;
+db title:  Untitled BRL-CAD Database
+DIRBUILD: cpu = 0.00042 sec, elapsed = 0.000662 sec
+    parent: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=292, #free=211, #realloc=4 (81 retained)
+0680a228 TOL 5.000000e-04 (sq=2.500000e-07) perp=1.000000e-06, para=9.999990e-01
+BRL-CAD Release 7.12.2  The BRL-CAD Optical Shader Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+Additional mem=0., #malloc=2050, #free=2, #realloc=1 (2048 retained)
+Warning:  region unioned into region at '/chassis/solid', lower region info ignored
+GETTREE: cpu = 0.004703 sec, elapsed = 0.006678 sec
+    parent: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=5247, #free=4450, #realloc=3 (797 retained)
+
+...................Frame     0...................
+PREP: cpu = 0.002224 sec, elapsed = 0.002482 sec
+    parent: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=2355, #free=1156, #realloc=3 (1199 retained)
+NUBSP: 0 nu, 1151 cut, 1152 box (1152 empty)
+Tree: 156 solids in 1 regions
+Model: X(-232,232), Y(-232,232), Z(-232,232)
+View: 135 azimuth, -35 elevation off of front view
+Orientation: 0.819491, 0.339444, -0.176704, -0.4266
+Eye_pos: -752.297, 752.297, -744.956
+Size: 2597.58mm
+Grid: (2.5367, 2.5367) mm, (1024, 1024) pixels
+Beam: radius=0 mm, divergence=0.000170442 mm/1mm
+chassis.rt.pix: Permission denied
+BRL-CAD Release 7.12.2  The BRL-CAD Raytracer RT
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Ray-Tracing Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Numerical Computation Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Utility Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+
+Compile-time debug symbols are available
+Running on MSuppes.local
+Planning to run with 2 processors
+rt -M -p20 -o chassis.rt.pix -s1024
+opendb decawell.g;
+tree chassis;
+db title:  Untitled BRL-CAD Database
+DIRBUILD: cpu = 0.000879 sec, elapsed = 0.001351 sec
+    parent: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=292, #free=211, #realloc=4 (81 retained)
+0680a228 TOL 5.000000e-04 (sq=2.500000e-07) perp=1.000000e-06, para=9.999990e-01
+BRL-CAD Release 7.12.2  The BRL-CAD Optical Shader Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+Additional mem=0., #malloc=2050, #free=2, #realloc=1 (2048 retained)
+Warning:  region unioned into region at '/chassis/solid', lower region info ignored
+GETTREE: cpu = 0.006001 sec, elapsed = 0.035962 sec
+    parent: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=5247, #free=4450, #realloc=3 (797 retained)
+
+...................Frame     0...................
+PREP: cpu = 0.003847 sec, elapsed = 0.004298 sec
+    parent: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=2355, #free=1156, #realloc=3 (1199 retained)
+NUBSP: 0 nu, 1151 cut, 1152 box (1152 empty)
+Tree: 156 solids in 1 regions
+Model: X(-232,232), Y(-232,232), Z(-232,232)
+View: 135 azimuth, -35 elevation off of front view
+Orientation: 0.819491, 0.339444, -0.176704, -0.4266
+Eye_pos: -752.297, 752.297, -744.956
+Size: 2597.58mm
+Grid: (2.5367, 2.5367) mm, (1024, 1024) pixels
+Beam: radius=0 mm, divergence=0.000170442 mm/1mm
+chassis.rt.pix: Permission denied
+BRL-CAD Release 7.12.2  The BRL-CAD Raytracer RT
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Ray-Tracing Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Numerical Computation Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Utility Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+
+Compile-time debug symbols are available
+Running on MSuppes.local
+Planning to run with 2 processors
+rt -M -p20 -o chassis.rt.pix -s1024
+opendb decawell.g;
+tree chassis;
+db title:  Untitled BRL-CAD Database
+DIRBUILD: cpu = 0.000417 sec, elapsed = 0.000674 sec
+    parent: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=292, #free=211, #realloc=4 (81 retained)
+0680a228 TOL 5.000000e-04 (sq=2.500000e-07) perp=1.000000e-06, para=9.999990e-01
+BRL-CAD Release 7.12.2  The BRL-CAD Optical Shader Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+Additional mem=0., #malloc=2050, #free=2, #realloc=1 (2048 retained)
+Warning:  region unioned into region at '/chassis/solid', lower region info ignored
+GETTREE: cpu = 0.00251 sec, elapsed = 0.002839 sec
+    parent: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=5247, #free=4450, #realloc=3 (797 retained)
+
+...................Frame     0...................
+PREP: cpu = 0.002215 sec, elapsed = 0.002445 sec
+    parent: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=2355, #free=1156, #realloc=3 (1199 retained)
+NUBSP: 0 nu, 1151 cut, 1152 box (1152 empty)
+Tree: 156 solids in 1 regions
+Model: X(-232,232), Y(-232,232), Z(-232,232)
+View: 135 azimuth, -35 elevation off of front view
+Orientation: 0.819491, 0.339444, -0.176704, -0.4266
+Eye_pos: -752.297, 752.297, -744.956
+Size: 2597.58mm
+Grid: (2.5367, 2.5367) mm, (1024, 1024) pixels
+Beam: radius=0 mm, divergence=0.000170442 mm/1mm
+chassis.rt.pix: Permission denied
+BRL-CAD Release 7.12.2  The BRL-CAD Raytracer RT
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Ray-Tracing Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Numerical Computation Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Utility Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+
+Compile-time debug symbols are available
+Running on MSuppes.local
+Planning to run with 2 processors
+rt -M -p20 -o chassis.rt.pix -s1024
+opendb decawell.g;
+tree chassis;
+db title:  Untitled BRL-CAD Database
+DIRBUILD: cpu = 0.000414 sec, elapsed = 0.000628 sec
+    parent: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=292, #free=211, #realloc=4 (81 retained)
+0680a228 TOL 5.000000e-04 (sq=2.500000e-07) perp=1.000000e-06, para=9.999990e-01
+BRL-CAD Release 7.12.2  The BRL-CAD Optical Shader Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+Additional mem=0., #malloc=2050, #free=2, #realloc=1 (2048 retained)
+Warning:  region unioned into region at '/chassis/solid', lower region info ignored
+GETTREE: cpu = 0.002532 sec, elapsed = 0.002888 sec
+    parent: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=5247, #free=4450, #realloc=3 (797 retained)
+
+...................Frame     0...................
+PREP: cpu = 0.002213 sec, elapsed = 0.002465 sec
+    parent: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=2355, #free=1156, #realloc=3 (1199 retained)
+NUBSP: 0 nu, 1151 cut, 1152 box (1152 empty)
+Tree: 156 solids in 1 regions
+Model: X(-232,232), Y(-232,232), Z(-232,232)
+View: 135 azimuth, -35 elevation off of front view
+Orientation: 0.819491, 0.339444, -0.176704, -0.4266
+Eye_pos: -752.297, 752.297, -744.956
+Size: 2597.58mm
+Grid: (2.5367, 2.5367) mm, (1024, 1024) pixels
+Beam: radius=0 mm, divergence=0.000170442 mm/1mm
+chassis.rt.pix: Permission denied
+BRL-CAD Release 7.12.2  The BRL-CAD Raytracer RT
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Ray-Tracing Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Numerical Computation Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Utility Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+
+Compile-time debug symbols are available
+Running on MSuppes.local
+Planning to run with 2 processors
+rt -M -p20 -o chassis.rt.pix -s1024
+opendb decawell.g;
+tree chassis;
+db title:  Untitled BRL-CAD Database
+DIRBUILD: cpu = 0.000875 sec, elapsed = 0.001338 sec
+    parent: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=292, #free=211, #realloc=4 (81 retained)
+0680a228 TOL 5.000000e-04 (sq=2.500000e-07) perp=1.000000e-06, para=9.999990e-01
+BRL-CAD Release 7.12.2  The BRL-CAD Optical Shader Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+Additional mem=0., #malloc=2050, #free=2, #realloc=1 (2048 retained)
+Warning:  region unioned into region at '/chassis/solid', lower region info ignored
+GETTREE: cpu = 0.005373 sec, elapsed = 0.095075 sec
+    parent: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=5247, #free=4450, #realloc=3 (797 retained)
+
+...................Frame     0...................
+PREP: cpu = 0.003983 sec, elapsed = 0.00442 sec
+    parent: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=2355, #free=1156, #realloc=3 (1199 retained)
+NUBSP: 0 nu, 1151 cut, 1152 box (1152 empty)
+Tree: 156 solids in 1 regions
+Model: X(-232,232), Y(-232,232), Z(-232,232)
+View: 135 azimuth, -35 elevation off of front view
+Orientation: 0.819491, 0.339444, -0.176704, -0.4266
+Eye_pos: -752.297, 752.297, -744.956
+Size: 2597.58mm
+Grid: (2.5367, 2.5367) mm, (1024, 1024) pixels
+Beam: radius=0 mm, divergence=0.000170442 mm/1mm
+chassis.rt.pix: Permission denied
+BRL-CAD Release 7.12.2  The BRL-CAD Raytracer RT
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Ray-Tracing Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Numerical Computation Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Utility Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+
+Compile-time debug symbols are available
+Running on MSuppes.local
+Planning to run with 2 processors
+rt -M -p20 -o chassis.rt.pix -s1024
+opendb decawell.g;
+tree chassis;
+db title:  Untitled BRL-CAD Database
+DIRBUILD: cpu = 0.000461 sec, elapsed = 0.001069 sec
+    parent: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=292, #free=211, #realloc=4 (81 retained)
+0680a228 TOL 5.000000e-04 (sq=2.500000e-07) perp=1.000000e-06, para=9.999990e-01
+BRL-CAD Release 7.12.2  The BRL-CAD Optical Shader Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+Additional mem=0., #malloc=2050, #free=2, #realloc=1 (2048 retained)
+Warning:  region unioned into region at '/chassis/solid', lower region info ignored
+GETTREE: cpu = 0.002621 sec, elapsed = 0.003017 sec
+    parent: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=5247, #free=4450, #realloc=3 (797 retained)
+
+...................Frame     0...................
+PREP: cpu = 0.002229 sec, elapsed = 0.00251 sec
+    parent: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=2355, #free=1156, #realloc=3 (1199 retained)
+NUBSP: 0 nu, 1151 cut, 1152 box (1152 empty)
+Tree: 156 solids in 1 regions
+Model: X(-232,232), Y(-232,232), Z(-232,232)
+View: 135 azimuth, -35 elevation off of front view
+Orientation: 0.819491, 0.339444, -0.176704, -0.4266
+Eye_pos: -752.297, 752.297, -744.956
+Size: 2597.58mm
+Grid: (2.5367, 2.5367) mm, (1024, 1024) pixels
+Beam: radius=0 mm, divergence=0.000170442 mm/1mm
+chassis.rt.pix: Permission denied
+BRL-CAD Release 7.12.2  The BRL-CAD Raytracer RT
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Ray-Tracing Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Numerical Computation Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Utility Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+
+Compile-time debug symbols are available
+Running on MSuppes.local
+Planning to run with 2 processors
+rt -M -p20 -o chassis.rt.pix -s1024
+opendb decawell.g;
+tree chassis;
+db title:  Untitled BRL-CAD Database
+DIRBUILD: cpu = 0.000434 sec, elapsed = 0.000678 sec
+    parent: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=292, #free=211, #realloc=4 (81 retained)
+0680a228 TOL 5.000000e-04 (sq=2.500000e-07) perp=1.000000e-06, para=9.999990e-01
+BRL-CAD Release 7.12.2  The BRL-CAD Optical Shader Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+Additional mem=0., #malloc=2050, #free=2, #realloc=1 (2048 retained)
+Warning:  region unioned into region at '/chassis/solid', lower region info ignored
+GETTREE: cpu = 0.003014 sec, elapsed = 0.003957 sec
+    parent: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=5247, #free=4450, #realloc=3 (797 retained)
+
+...................Frame     0...................
+PREP: cpu = 0.00224 sec, elapsed = 0.00271 sec
+    parent: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=2355, #free=1156, #realloc=3 (1199 retained)
+NUBSP: 0 nu, 1151 cut, 1152 box (1152 empty)
+Tree: 156 solids in 1 regions
+Model: X(-232,232), Y(-232,232), Z(-232,232)
+View: 135 azimuth, -35 elevation off of front view
+Orientation: 0.819491, 0.339444, -0.176704, -0.4266
+Eye_pos: -752.297, 752.297, -744.956
+Size: 2597.58mm
+Grid: (2.5367, 2.5367) mm, (1024, 1024) pixels
+Beam: radius=0 mm, divergence=0.000170442 mm/1mm
+chassis.rt.pix: Permission denied
+BRL-CAD Release 7.12.2  The BRL-CAD Raytracer RT
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Ray-Tracing Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Numerical Computation Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Utility Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+
+Compile-time debug symbols are available
+Running on MSuppes.local
+Planning to run with 2 processors
+rt -M -p20 -o chassis.rt.pix -s1024
+opendb decawell.g;
+tree chassis;
+db title:  Untitled BRL-CAD Database
+DIRBUILD: cpu = 0.000485 sec, elapsed = 0.001762 sec
+    parent: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=292, #free=211, #realloc=4 (81 retained)
+0680a228 TOL 5.000000e-04 (sq=2.500000e-07) perp=1.000000e-06, para=9.999990e-01
+BRL-CAD Release 7.12.2  The BRL-CAD Optical Shader Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+Additional mem=0., #malloc=2050, #free=2, #realloc=1 (2048 retained)
+Warning:  region unioned into region at '/chassis/solid', lower region info ignored
+GETTREE: cpu = 0.002521 sec, elapsed = 0.002865 sec
+    parent: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=5247, #free=4450, #realloc=3 (797 retained)
+
+...................Frame     0...................
+PREP: cpu = 0.002264 sec, elapsed = 0.002821 sec
+    parent: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=2355, #free=1156, #realloc=3 (1199 retained)
+NUBSP: 0 nu, 1151 cut, 1152 box (1152 empty)
+Tree: 156 solids in 1 regions
+Model: X(-232,232), Y(-232,232), Z(-232,232)
+View: 135 azimuth, -35 elevation off of front view
+Orientation: 0.819491, 0.339444, -0.176704, -0.4266
+Eye_pos: -752.297, 752.297, -744.956
+Size: 2597.58mm
+Grid: (2.5367, 2.5367) mm, (1024, 1024) pixels
+Beam: radius=0 mm, divergence=0.000170442 mm/1mm
+chassis.rt.pix: Permission denied
