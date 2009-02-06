@@ -9,7 +9,7 @@ require 'winder'
 
 # parts = %w(chassis lids bobbin_left bobbin_right)
 # parts = %w(bobbin_left bobbin_right)
-parts = %w(chassis lids)
+parts = %w( lids)
 
 DB = "decawell.g"
 mged ="/usr/brlcad/rel-7.12.2/bin//mged -c  #{DB} "
@@ -26,7 +26,7 @@ end
 Unit.setup
 
 
-scale_factor = 140 # global scaling factor
+scale_factor = 57.7 # global scaling factor
 outside_radius = (Dodecahedron.vertices[0].r) *scale_factor 
 torus_midplane_radius = (Dodecahedron.icosahedron[0].r) * scale_factor
 torus_ring_size = 0.600 *scale_factor
@@ -138,7 +138,7 @@ coil.grid.each_with_index {|row,index| puts coil.wrap_radius_for_row(index)}
 
 puts "coil start#{coil.truth_array.inspect}"
 # coil.wind
-
+# break
 
 if parts.include?("chassis")
 	Dodecahedron.icosahedron.each_with_index do |v,index| # draw the 12 tori
@@ -255,6 +255,7 @@ EOF`
 `open ./#{part}.png`
 # `g-stl -a 0.005 -D 0.005 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 `g-stl -a 0.01 -D 0.01 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
+# `g-stl -a 0.08 -D 0.08 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 `rm -f ./#{part}.rt `
 `rm -f ./#{part}.rt.pix `
 `rm -f ./#{part}.rt.log`
