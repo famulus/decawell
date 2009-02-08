@@ -9,7 +9,7 @@ require 'winder'
 
 # parts = %w(chassis lids bobbin_left bobbin_right)
 # parts = %w(bobbin_left bobbin_right)
-parts = %w( lids)
+parts = %w( chassis )
 
 DB = "decawell.g"
 mged ="/usr/brlcad/rel-7.12.2/bin//mged -c  #{DB} "
@@ -18,27 +18,30 @@ mm = Unit("mm")
 amp = Unit("amp")
 ohm = Unit("ohm")
 
-class Unit < Numeric
-	UNIT_DEFINITIONS = {
-		'<watt>'  => [%w{watt}, 1.0, :power, %w{<Joule>} , %w{<second>} ]
-	}
-end
-Unit.setup
+# class Unit < Numeric
+# 	UNIT_DEFINITIONS = {
+# 		'<watt>'  => [%w{watt}, 1.0, :power, %w{<Joule>} , %w{<second>} ]
+# 	}
+# end
+# Unit.setup
 
 
 scale_factor = 57.7 # global scaling factor
 outside_radius = (Dodecahedron.vertices[0].r) *scale_factor 
 torus_midplane_radius = (Dodecahedron.icosahedron[0].r) * scale_factor
-torus_ring_size = 0.600 *scale_factor
+torus_ring_size = 0.600 *scale_factor # the main torus shape
 torus = 0.17 *scale_factor 
 torus_negative = 0.79 * torus 
 joint_radius = torus * 0.70
 joint_negative_radius = joint_radius * 0.35
-joint_nudge = 0.89 # this is a percentage scaling of the vector defining the ideal joint location
-joint_nudge_length = 0.22
+joint_nudge = 0.87 # this is a percentage scaling of the vector defining the ideal joint location
+joint_nudge_length = 0.20
 # coil_wire_diameter = 2.053  # mm this 12 gauge AWS
 coil_wire_diameter = 1.1  # mm test wire
 coil = Coil.new((torus_negative*2), coil_wire_diameter, torus_ring_size)
+ribbon_width = 4
+ribbon_thickness = 0.095 #TODO: this needs to be thicker to allow for insulation
+
 
 #Joule heating calculations
 drive_amps = 2000.0 * amp
@@ -143,8 +146,10 @@ puts "coil start#{coil.truth_array.inspect}"
 if parts.include?("chassis")
 	Dodecahedron.icosahedron.each_with_index do |v,index| # draw the 12 tori
 		v = v*scale_factor
-		`#{mged} 'in torus#{index} tor #{v.mged} #{v.mged} #{torus_ring_size} #{torus}'` #the torus solid
-		`#{mged} 'in torus_negative#{index} tor #{v.mged} #{v.mged} #{torus_ring_size} #{torus_negative}'` #this hollow center of the torus
+		# `#{mged} 'in torus#{index} tor #{v.mged} #{v.mged} #{torus_ring_size} #{torus}'` #the torus solid
+		# in okko eto 0 0 0   1 0 0   3  1 0 0   .6
+		`#{mged} 'in torus#{index} eto #{v.mged} #{v.mged} #{torus_ring_size}  #{((v.normal)*torus).mged}   #{torus/3} '` #the torus solid
+		`#{mged} 'in torus_negative#{index} eto #{v.mged} #{v.mged} #{torus_ring_size}  #{((v.normal)*torus_negative).mged}   #{torus/3}'` #this hollow center of the torus
 		`#{mged} 'in lid_knockout#{index} rcc #{v.mged} #{(v.normal*torus ).mged} #{torus_ring_size+torus}'` #this removed the face of the torus so we can install coils
 	end
 	Dodecahedron.edges.each_with_index do |edge,index| #insert the 30 joints
@@ -251,10 +256,10 @@ saveview #{part}.rt
 EOF`
 	
 `./#{part}.rt -s1024`
-`pix-png -s1024 < #{part}.rt.pix > #{part}.png`
-`open ./#{part}.png`
+`pix-png -s1024 < #{part}.rt.pix > #{part}.png` #generate a png from the rt file
+`open ./#{part}.png` # open the png in preview
 # `g-stl -a 0.005 -D 0.005 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
-`g-stl -a 0.01 -D 0.01 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
+# `g-stl -a 0.01 -D 0.01 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 # `g-stl -a 0.08 -D 0.08 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 `rm -f ./#{part}.rt `
 `rm -f ./#{part}.rt.pix `
