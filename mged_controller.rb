@@ -27,21 +27,25 @@ ohm = Unit("ohm")
 
 
 scale_factor = 57.7 # global scaling factor
+
+ribbon_width = 4
+ribbon_thickness = 0.095 #TODO: this needs to be thicker to allow for insulation
+turns = 4
+minimum_wall_thickness = 4 #mm
+
+
 outside_radius = (Dodecahedron.vertices[0].r) *scale_factor 
 torus_midplane_radius = (Dodecahedron.icosahedron[0].r) * scale_factor
 torus_ring_size = 0.600 *scale_factor # the main torus shape
 torus = 0.17 *scale_factor 
 torus_negative = 0.72 * torus 
-joint_radius = torus * 0.55
-joint_negative_radius = joint_radius * 0.5
-joint_nudge = 0.89 # this is a percentage scaling of the vector defining the ideal joint location
-joint_nudge_length = 0.18
+joint_radius = (ribbon_width/2) + minimum_wall_thickness
+joint_negative_radius = (ribbon_width/2) + 0.5
+joint_nudge = 0.91 # this is a percentage scaling of the vector defining the ideal joint location
+joint_nudge_length = 0.17
 # coil_wire_diameter = 2.053  # mm this 12 gauge AWS
 coil_wire_diameter = 1.1  # mm test wire
 coil = Coil.new((torus_negative*2), coil_wire_diameter, torus_ring_size)
-ribbon_width = 4
-ribbon_thickness = 0.095 #TODO: this needs to be thicker to allow for insulation
-turns = 4
 
 #Joule heating calculations
 drive_amps = 2000.0 * amp
@@ -148,9 +152,11 @@ if parts.include?("chassis")
 		v = v*scale_factor
 		# `#{mged} 'in torus#{index} tor #{v.mged} #{v.mged} #{torus_ring_size} #{torus}'` #the torus solid
 		# in okko eto 0 0 0   1 0 0   3  1 0 0   .6
-		`#{mged} 'in torus#{index} eto #{v.mged} #{v.mged} #{torus_ring_size}  #{((v.normal)*torus).mged}   #{torus/3} '` #the torus solid
+		`#{mged} 'in torus#{index} eto #{v.mged} #{v.mged} #{torus_ring_size}  #{((v.normal)*(ribbon_width/2+minimum_wall_thickness)).mged}   #{(ribbon_thickness/2+minimum_wall_thickness)} '` #the torus solid
 		`#{mged} 'in torus_negative_outer#{index} rcc #{v.mged} #{(v.inverse.normal*(ribbon_width/2)).mged} #{torus_ring_size} '` #this hollow center of the torus
 		`#{mged} 'in torus_negative_inner#{index} rcc #{v.mged} #{(v.inverse.normal*(ribbon_width/2)).mged} #{torus_ring_size-(ribbon_thickness*turns)}'` #this hollow center of the torus
+		`#{mged} 'in cooling_channel#{index} tor #{v.mged} #{v.mged} #{torus_ring_size} #{ribbon_width/4}'` #the torus solid
+
 		`#{mged} 'r torus_negative#{index} u torus_negative_outer#{index} -  torus_negative_inner#{index} '` #this hollow center of the torus
 		
 		`#{mged} 'in lid_knockout#{index} rcc #{v.mged} #{(v.normal*torus ).mged} #{torus_ring_size+torus}'` #this removed the face of the torus so we can install coils
@@ -161,14 +167,14 @@ if parts.include?("chassis")
 		a = a * joint_nudge # nudge the joint closer to the center
 		b =cross_product(a,(edge[1]-edge[0])) # this is the vector of the half joint
 		b = b.normal*scale_factor* joint_nudge_length # get the unit vector for this direction and scale
-		`#{mged} 'in joint1_#{index} rcc #{a.mged} #{b.mged} #{joint_radius}'` 
-		`#{mged} 'in joint_negative1_#{index} rcc #{a.mged} #{b.mged} #{joint_negative_radius}'` 
-		b = Vector[0,0,0]-b # point the vector in the opposite direction 
-		`#{mged} 'in joint2_#{index} rcc #{a.mged} #{b.mged} #{joint_radius}'` 
-		`#{mged} 'in joint_negative2_#{index} rcc #{a.mged} #{b.mged} #{joint_negative_radius}'` 
+		[b,b.inverse].each_with_index do |bi,i|
+			`#{mged} 'in joint#{i+1}_#{index} rcc #{a.mged} #{bi.mged} #{joint_radius}'` 
+			`#{mged} 'in joint_negative#{i+1}_#{index} rcc #{a.mged} #{(bi*1.4).mged} #{joint_negative_radius}'` 
+			`#{mged} 'in junction_box#{i+1}_#{index} sph #{(a+(bi*1.15)).mged} 3'` 
+		end
 	end
 	`#{mged} 'r solid u #{(0..29).map{|index| " joint1_#{index} u joint2_#{index}"}.join(" u ")} u #{(0..11).map{|index| "torus#{index}"}.join(" u ")}'` #combine the pieces
-	`#{mged} 'r negative_form u #{(0..29).map{|index| " joint_negative1_#{index} u joint_negative2_#{index}"}.join(" u ")} u #{(0..11).map{|index| "torus_negative#{index} u lid_knockout#{index}"}.join(" u ") } '` #combine the pieces
+	`#{mged} 'r negative_form u #{(0..29).map{|index| " joint_negative1_#{index} u joint_negative2_#{index} u junction_box1_#{index} u junction_box2_#{index}"}.join(" u ")} u #{(0..11).map{|index| "torus_negative#{index} u lid_knockout#{index} u cooling_channel#{index}"}.join(" u ") } '` #combine the pieces
 	`#{mged} 'r chassis u solid - negative_form'` #combine the pieces
 end
 
