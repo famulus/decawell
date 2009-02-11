@@ -8,6 +8,7 @@ mm = Unit("mm")
 amp = Unit("amp")
 ohm = Unit("ohm")
 
+ic = Unit("100 ampere") # the critical current of the superconducting cable
 
 torus_radius = 34.62 * Unit("mm")
 
@@ -24,7 +25,7 @@ puts ybco_area = (torus_circumference>>Unit("cm")) * ybco_width
 
 puts engineering_current_density =  Unit("21 kA/cm^2") >> Unit("ampere/cm**2")
 
-puts current_density = ybco_area * engineering_current_density
+puts current_density = turns * ic # 
 
 torus_midplane_radius = 79.4172368111867 
 # Ampère's force law calculations  http://en.wikipedia.org/wiki/Ampère%27s_force_law
