@@ -35,6 +35,4 @@ puts magnetic_force_constant = magnetic_constant / (2*Math::PI)
 puts seperation_of_wires = (torus_midplane_radius*mm) >> Unit("m") # in m
 puts coil_force_per_meter = magnetic_force_constant * ((current_density**2)/seperation_of_wires)
 puts coil_force = coil_force_per_meter * (torus_circumference >> Unit('m'))
-puts  ((coil_force_per_meter * (torus_circumference >> Unit('m')))/9.8).scalar # Kg of force
-puts  ((coil_force_per_meter * (torus_circumference >> Unit('m')))/9.8).scalar / 816 # number of honda civics of force
-puts (turns )*current_density
+puts  ((coil_force_per_meter * (torus_circumference >> Unit('m')))/9.8).scalar*1000 # grams of force
