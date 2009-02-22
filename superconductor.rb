@@ -6,7 +6,7 @@ require 'ruby-units'
 
 class Unit < Numeric
   @@USER_DEFINITIONS =
-    {'<eV>'=>[%w{eV electron_volt electronvolt},  1.60217653*(10.0**-19), :energy, %w{J} ]}
+    {'<eV>'=>[%w{eV electron_volt electronvolt},  1.60217653e-19, :energy, %w{joule} ]}
   Unit.setup
 end
 
@@ -15,7 +15,7 @@ amp = Unit("amp")
 ohm = Unit("ohm")
 
 ic = Unit("100 ampere") # the critical current of the superconducting cable
-eo = Unit("1 electronvolt")
+eo = Unit("1000 electronvolt")
 torus_radius = 34.62 * Unit("mm")
 torus_midplane_radius = 79.4172368111867 * Unit("mm")
 
@@ -48,7 +48,7 @@ puts b_field =  u*(ic*turns)/(torus_radius >> Unit("meter"))
 puts b_field >> Unit('G')
 puts gwb = (((b_field >> Unit('G')) * (torus_midplane_radius >> Unit('cm')))**2) / 110*eo
 
-
+# puts Unit('1 eV') >> Unit('joule') 
 
 
 # bb=2*Math.PI*Math.pow(10,-7)*ii/rr;
