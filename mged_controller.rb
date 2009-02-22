@@ -9,7 +9,7 @@ require 'winder'
 
 # parts = %w(chassis lids bobbin_left bobbin_right)
 # parts = %w(bobbin_left bobbin_right)
-parts = %w( chassis )
+parts = %w( chassis cutout)
 
 DB = "decawell.g"
 mged ="/usr/brlcad/rel-7.12.2/bin//mged -c  #{DB} "
@@ -177,6 +177,14 @@ if parts.include?("chassis")
 	`#{mged} 'r negative_form u #{(0..29).map{|index| " joint_negative1_#{index} u joint_negative2_#{index} u junction_box1_#{index} u junction_box2_#{index}"}.join(" u ")} u #{(0..11).map{|index| "torus_negative#{index} u lid_knockout#{index} u cooling_channel#{index}"}.join(" u ") } '` #combine the pieces
 	`#{mged} 'r chassis u solid - negative_form'` #combine the pieces
 end
+
+if parts.include?("cutout")
+	cutout_vector = Dodecahedron.icosahedron[0]
+	`#{mged} 'in cutout_shape rcc #{((cutout_vector*scale_factor*0.8).mged)} #{(cutout_vector*scale_factor).mged} #{outside_radius}'` #this hollow center of the torus
+	`#{mged} 'r cutout u chassis + cutout_shape'` #combine the pieces
+
+end
+
 
 
 if parts.include?("lids")
