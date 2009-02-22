@@ -13,6 +13,12 @@ class Vector
 		end
 		Vector[*v]
 	end	
+	
+	def inverse
+		Vector[0,0,0] - self
+	end
+	
+	
 end
 
 module Geometry
