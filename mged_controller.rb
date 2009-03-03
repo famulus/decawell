@@ -31,15 +31,22 @@ scale_factor = 57.7 # global scaling factor
 ribbon_width = 4
 ribbon_thickness = 0.095 #TODO: this needs to be thicker to allow for insulation
 turns = 4
-minimum_wall_thickness = 4 #mm
+minimum_wall_thickness = 2.5 #mm
 
 
 outside_radius = (Dodecahedron.vertices[0].r) *scale_factor 
 torus_midplane_radius = (Dodecahedron.icosahedron[0].r) * scale_factor
-torus_ring_size = 0.600 *scale_factor # the main torus shape
+
+edge = Dodecahedron.edges.first.map{|e|e *scale_factor} # find first edge
+a = average(*edge.map{|e|e}) # find midpoint of edge
+b = average(*Dodecahedron.faces_for_edge.first.first.map{|e|e *scale_factor}) #find center of abutting face
+puts "max ring"
+puts max_torus = (a-b).r
+
+torus_ring_size = max_torus/1.305 #0.700 *scale_factor # the main torus shape
 torus = 0.17 *scale_factor 
 torus_negative = 0.72 * torus 
-joint_radius = (ribbon_width/2) + minimum_wall_thickness
+joint_radius = (ribbon_width/2) + (minimum_wall_thickness*0.8)
 joint_negative_radius = (ribbon_width/2) + 0.5
 joint_nudge = 0.91 # this is a percentage scaling of the vector defining the ideal joint location
 joint_nudge_length = 0.17
@@ -148,13 +155,15 @@ puts "coil start#{coil.truth_array.inspect}"
 # break
 
 if parts.include?("chassis")
+	channel_thickness = (ribbon_thickness*turns)+1
+	
 	Dodecahedron.icosahedron.each_with_index do |v,index| # draw the 12 tori
 		v = v*scale_factor
 		# `#{mged} 'in torus#{index} tor #{v.mged} #{v.mged} #{torus_ring_size} #{torus}'` #the torus solid
 		# in okko eto 0 0 0   1 0 0   3  1 0 0   .6
-		`#{mged} 'in torus#{index} eto #{v.mged} #{v.mged} #{torus_ring_size}  #{((v.normal)*(ribbon_width/2+minimum_wall_thickness)).mged}   #{(ribbon_thickness/2+minimum_wall_thickness)} '` #the torus solid
-		`#{mged} 'in torus_negative_outer#{index} rcc #{v.mged} #{(v.inverse.normal*(ribbon_width/2)).mged} #{torus_ring_size} '` #the outside radious of the ribbon channel
-		`#{mged} 'in torus_negative_inner#{index} rcc #{v.mged} #{(v.inverse.normal*(ribbon_width/2)).mged} #{torus_ring_size-(ribbon_thickness*turns)}'` #the inside radious of the ribbon channel
+		`#{mged} 'in torus#{index} eto #{v.mged} #{v.mged} #{torus_ring_size}  #{((v.normal)*(ribbon_width/2+minimum_wall_thickness)).mged}   #{((channel_thickness/2)+minimum_wall_thickness)} '` #the eto solid
+		`#{mged} 'in torus_negative_outer#{index} rcc #{v.mged} #{(v.inverse.normal*(ribbon_width/2)).mged} #{torus_ring_size+(channel_thickness/2)} '` #the outside radious of the ribbon channel
+		`#{mged} 'in torus_negative_inner#{index} rcc #{v.mged} #{(v.inverse.normal*(ribbon_width/2)).mged} #{torus_ring_size-(channel_thickness/2)}'` #the inside radious of the ribbon channel
 		`#{mged} 'in cooling_channel#{index} tor #{v.mged} #{v.mged} #{torus_ring_size} #{ribbon_width/4}'` #cooling channel
 
 		`#{mged} 'r torus_negative#{index} u torus_negative_outer#{index} -  torus_negative_inner#{index} '` #this hollow center of the torus
@@ -170,7 +179,7 @@ if parts.include?("chassis")
 		[b,b.inverse].each_with_index do |bi,i|
 			`#{mged} 'in joint#{i+1}_#{index} rcc #{a.mged} #{bi.mged} #{joint_radius}'` 
 			`#{mged} 'in joint_negative#{i+1}_#{index} rcc #{a.mged} #{(bi*1.4).mged} #{joint_negative_radius}'` 
-			`#{mged} 'in junction_box#{i+1}_#{index} sph #{(a+(bi*1.15)).mged} 3'` 
+			`#{mged} 'in junction_box#{i+1}_#{index} sph #{(a+(bi*1.20)).mged} 3'` 
 		end
 	end
 	`#{mged} 'r solid u #{(0..29).map{|index| " joint1_#{index} u joint2_#{index}"}.join(" u ")} u #{(0..11).map{|index| "torus#{index}"}.join(" u ")}'` #combine the pieces
