@@ -9,7 +9,7 @@ require 'winder'
 
 # parts = %w(chassis lids bobbin_left bobbin_right)
 # parts = %w(bobbin_left bobbin_right)
-parts = %w( lids)
+parts = %w( chassis)
 
 DB = "decawell.g"
 mged ="/usr/brlcad/rel-7.12.2/bin//mged -c  #{DB} "
@@ -30,12 +30,12 @@ scale_factor = 57.7 # global scaling factor
 
 ribbon_width = 4
 ribbon_thickness = 0.095 #TODO: this needs to be thicker to allow for insulation
-turns = 4
+turns = 40
 minimum_wall_thickness = 2.5 #mm
 
 
-outside_radius = (Dodecahedron.vertices[0].r) *scale_factor 
-torus_midplane_radius = (Dodecahedron.icosahedron[0].r) * scale_factor
+outside_radius = (Dodecahedron.vertices[0].r) *scale_factor #the distance from the center of the machine to the furthest edge of the core
+torus_midplane_radius = (Dodecahedron.icosahedron[0].r) * scale_factor #distance from the center of the machine to the center of a coil
 
 edge = Dodecahedron.edges.first.map{|e|e *scale_factor} # find first edge
 a = average(*edge.map{|e|e}) # find midpoint of edge
@@ -54,7 +54,7 @@ joint_nudge_length = 0.13
 coil_wire_diameter = 1.1  # mm test wire
 coil = Coil.new((torus_negative*2), coil_wire_diameter, torus_ring_size)
 
-	channel_thickness = (ribbon_thickness*turns)+1
+channel_thickness = (ribbon_thickness*turns)+1
 
 
 #Joule heating calculations
@@ -163,12 +163,13 @@ if parts.include?("chassis")
 		v = v*scale_factor
 		# `#{mged} 'in torus#{index} tor #{v.mged} #{v.mged} #{torus_ring_size} #{torus}'` #the torus solid
 		# in okko eto 0 0 0   1 0 0   3  1 0 0   .6
-		`#{mged} 'in torus#{index} eto #{v.mged} #{v.mged} #{torus_ring_size}  #{((v.normal)*(ribbon_width/2+minimum_wall_thickness)).mged}   #{((channel_thickness/2)+minimum_wall_thickness)} '` #the eto solid
+		`#{mged} 'in torus#{index} eto #{v.mged} #{v.mged} #{torus_ring_size}  #{((v.normal)*((channel_thickness/2)+minimum_wall_thickness)).mged}   #{((channel_thickness/2)+minimum_wall_thickness)} '` #the eto solid
+		
 		`#{mged} 'in torus_negative_outer#{index} rcc #{v.mged} #{(v.inverse.normal*(ribbon_width/2)).mged} #{torus_ring_size+(channel_thickness/2)} '` #the outside radious of the ribbon channel
 		`#{mged} 'in torus_negative_inner#{index} rcc #{v.mged} #{(v.inverse.normal*(ribbon_width/2)).mged} #{torus_ring_size-(channel_thickness/2)}'` #the inside radious of the ribbon channel
 		`#{mged} 'in cooling_channel#{index} tor #{v.mged} #{v.mged} #{torus_ring_size} #{ribbon_width/4}'` #cooling channel
 
-		`#{mged} 'r torus_negative#{index} u torus_negative_outer#{index} -  torus_negative_inner#{index} '` #this hollow center of the torus
+		`#{mged} 'r torus_negative#{index} u torus_negative_outer#{index} - torus_negative_inner#{index} '` #this hollow center of the torus
 		
 		`#{mged} 'in lid_knockout#{index} rcc #{v.mged} #{(v.normal*torus ).mged} #{torus_ring_size+torus}'` #this removed the face of the torus so we can install coils
 	end
@@ -185,7 +186,7 @@ if parts.include?("chassis")
 		end
 	end
 	`#{mged} 'r solid u #{(0..29).map{|index| " joint1_#{index} u joint2_#{index}"}.join(" u ")} u #{(0..11).map{|index| "torus#{index}"}.join(" u ")}'` #combine the pieces
-	`#{mged} 'r negative_form u #{(0..29).map{|index| " joint_negative1_#{index} u joint_negative2_#{index} u junction_box1_#{index} u junction_box2_#{index}"}.join(" u ")} u #{(0..11).map{|index| "torus_negative#{index} u lid_knockout#{index} u cooling_channel#{index}"}.join(" u ") } '` #combine the pieces
+	`#{mged} 'r negative_form u #{(0..29).map{|index| " joint_negative1_#{index} u joint_negative2_#{index} u junction_box1_#{index} u junction_box2_#{index}"}.join(" u ")} u #{(0..11).map{|index| "torus_negative#{index} u lid_knockout#{index}"}.join(" u ") } '` #combine the pieces
 	`#{mged} 'r chassis u solid - negative_form'` #combine the pieces
 end
 
@@ -286,7 +287,7 @@ parts.each do |part|
 
 `cat <<EOF | mged -c #{DB}
 B #{part}
-ae 135 180 -35 
+ae 135 -35 180
 set perspective 20
 zoom .30
 saveview #{part}.rt
