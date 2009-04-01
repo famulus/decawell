@@ -206,7 +206,6 @@ if parts.include?("lids")
 		index1 = index+1
 		v = Dodecahedron.icosahedron.first
 		v = v*scale_factor
-		`#{mged} 'in lid_torus#{index} eto #{v.mged} #{v.mged} #{torus_ring_size}  #{((v.normal)*((channel_thickness/2)+minimum_wall_thickness)).mged}   #{((channel_thickness/2)+minimum_wall_thickness)} '` #the eto solid
 
 		`#{mged} 'in torus_negative_outer#{index} rcc #{v.mged} #{(v.inverse.normal*(ribbon_width/2)).mged} #{torus_ring_size+(channel_thickness/2)} '` #the outside radious of the ribbon channel
 		`#{mged} 'in torus_negative_inner#{index} rcc #{v.mged} #{(v.inverse.normal*(ribbon_width/2)).mged} #{torus_ring_size-(channel_thickness/2)}'` #the inside radious of the ribbon channel
@@ -218,7 +217,7 @@ if parts.include?("lids")
 		`#{mged} 'in lid_lid_knockout#{index} rcc #{v.mged}  #{(v*2).mged} #{torus_ring_size+torus}'` #this removed the face of the torus so we can install coils
 		
 	end
-			`#{mged} 'r lids u #{(0..0).map{|index| "lid_torus#{index} - lid_torus_negative#{index} - lid_lid_knockout#{index}"}.join(" u ")}'` #combine the pieces
+			`#{mged} 'r lids u #{(0..0).map{|index| "torus#{index} - lid_torus_negative#{index} - lid_lid_knockout#{index}"}.join(" u ")}'` #combine the pieces
 
 end
 
@@ -298,7 +297,7 @@ EOF`
 `open ./#{part}.png` # open the png in preview
 # `g-stl -a 0.005 -D 0.005 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 # `g-stl -a 0.01 -D 0.01 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
-`g-stl -a 0.08 -D 0.08 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
+# `g-stl -a 0.08 -D 0.08 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 `rm -f ./#{part}.rt `
 `rm -f ./#{part}.rt.pix `
 `rm -f ./#{part}.rt.log`
