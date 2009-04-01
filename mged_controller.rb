@@ -199,7 +199,7 @@ end
 
 
 
-if parts.include?("lids")
+if parts.include?("lids") 
 	spacer = 40
 	step = Vector[40,0,0]
 	(0..0).map do |index| # originallty we needed many lids, but now we only need one
