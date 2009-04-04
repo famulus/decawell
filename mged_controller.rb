@@ -157,7 +157,7 @@ puts "coil start#{coil.truth_array.inspect}"
 # coil.wind
 # break
 
-if parts.include?("chassis")
+if true #parts.include?("chassis")
 	
 	Dodecahedron.icosahedron.each_with_index do |v,index| # draw the 12 tori
 		v = v*scale_factor
