@@ -297,7 +297,7 @@ EOF`
 `open ./#{part}.png` # open the png in preview.app
 # `g-stl -a 0.005 -D 0.005 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 # `g-stl -a 0.01 -D 0.01 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
-# `g-stl -a 0.08 -D 0.08 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
+`g-stl -a 0.08 -D 0.8 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 `rm -f ./#{part}.rt `
 `rm -f ./#{part}.rt.pix `
 `rm -f ./#{part}.rt.log`
