@@ -1,4 +1,4 @@
-		Kernel::require "serialport"
+		# Kernel::require "serialport"
 
 class Coil
 require 'facets'
