@@ -9,7 +9,7 @@ require 'winder'
 
 # parts = %w(chassis lids bobbin_left bobbin_right)
 # parts = %w(bobbin_left bobbin_right)
-parts = %w( chassis cutout lids)
+parts = %w(   lids)
 
 DB = "decawell.g"
 mged ="/usr/brlcad/rel-7.12.2/bin//mged -c  #{DB} "
@@ -145,9 +145,11 @@ puts "\n\n"
 	puts "\n\n"
 end
 
+tolerace_distance = 0.5
+
 `rm -f ./#{DB.gsub(".g","")}.*`
 `#{mged} 'units mm'` # set mged's units to decimeter 
-`#{mged} 'tol dist 0.0005'` # set mged's units to decimeter 
+`#{mged} 'tol dist #{tolerace_distance}'` # set mged's units to decimeter 
 
 coil.grid.each {|row| puts row.map{|c|  c ? 1 : 0}.join("")}
 # coil.grid.each {|row|  row.split(false).each{|a| puts a.size}}
@@ -297,7 +299,7 @@ EOF`
 `open ./#{part}.png` # open the png in preview.app
 # `g-stl -a 0.005 -D 0.005 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 # `g-stl -a 0.01 -D 0.01 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
-`g-stl -a 0.08 -D 0.8 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
+`g-stl -a #{tolerace_distance} -D #{tolerace_distance} -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 `rm -f ./#{part}.rt `
 `rm -f ./#{part}.rt.pix `
 `rm -f ./#{part}.rt.log`
