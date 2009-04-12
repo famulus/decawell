@@ -9,7 +9,7 @@ require 'winder'
 
 # parts = %w(chassis lids bobbin_left bobbin_right)
 # parts = %w(bobbin_left bobbin_right)
-parts = %w(   lids)
+parts = %w( cutout  lids)
 
 DB = "decawell.g"
 mged ="/usr/brlcad/rel-7.12.2/bin//mged -c  #{DB} "
@@ -145,9 +145,10 @@ puts "\n\n"
 	puts "\n\n"
 end
 
-tolerace_distance = 0.05
+tolerace_distance = 0.01
 
 `rm -f ./#{DB.gsub(".g","")}.*`
+# `rm ./*.png`
 `#{mged} 'units mm'` # set mged's units to decimeter 
 `#{mged} 'tol dist #{tolerace_distance}'` #  
 
@@ -289,29 +290,27 @@ end
 
 parts.each do |part|
 
-`cat <<EOF | mged -c #{DB}
-B #{part}
-ae 135 -35 180
-set perspective 20
-zoom .30
-saveview #{part}.rt
-EOF`
-	
-`./#{part}.rt -s1024`
-`pix-png -s1024 < #{part}.rt.pix > #{part}.png` #generate a png from the rt file
-`open ./#{part}.png` # open the png in preview.app
+# `cat <<EOF | mged -c #{DB}
+# B #{part}
+# ae 135 -35 180
+# set perspective 20
+# zoom .30
+# saveview #{part}.rt
+# EOF`
+# 	
+# `./#{part}.rt -s1024`
+# `pix-png -s1024 < #{part}.rt.pix > #{part}.png` #generate a png from the rt file
+# `open ./#{part}.png` # open the png in preview.app
+
 # `g-stl -a 0.005 -D 0.005 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 # `g-stl -a 0.01 -D 0.01 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 # `g-stl -a #{tolerace_distance} -D #{tolerace_distance} -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 `g-stl -a #{tolerace_distance} -D #{tolerace_distance} -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 # `g-stl -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
-`rm -f ./#{part}.rt `
-`rm -f ./#{part}.rt.pix `
-`rm -f ./#{part}.rt.log`
 
-`stl-g -b #{part}.stl #{part}_proof.g`
+`stl-g #{part}.stl #{part}_proof.g`
 `cat <<EOF | mged -c #{part}_proof.g
-B #{part}
+B s.#{part}
 ae 135 -35 180
 set perspective 20
 zoom .30
@@ -321,5 +320,9 @@ EOF`
 `./#{part}.rt -s1024`
 `pix-png -s1024 < #{part}.rt.pix > #{part}.png` #generate a png from the rt file
 `open ./#{part}.png` # open the png in preview.app
+
+`rm -f ./#{part}.rt `
+`rm -f ./#{part}.rt.pix `
+`rm -f ./#{part}.rt.log`
 
 end
