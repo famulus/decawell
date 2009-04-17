@@ -9,7 +9,7 @@ require 'winder'
 
 # parts = %w(chassis lids bobbin_left bobbin_right)
 # parts = %w(bobbin_left bobbin_right)
-parts = %w( cutout  lids)
+parts = %w( chassis)
 
 DB = "decawell.g"
 mged ="/usr/brlcad/bin//mged -c  #{DB} "
@@ -26,7 +26,7 @@ ohm = Unit("ohm")
 # Unit.setup
 
 
-scale_factor = 57.7 # global scaling factor
+scale_factor = 50 # global scaling factor
 
 ribbon_width = 4
 ribbon_thickness = 0.3 # mm 
@@ -46,9 +46,9 @@ puts max_torus = (a-b).r
 torus_ring_size = max_torus/1.305 #0.700 *scale_factor # the main torus shape
 torus = 0.17 *scale_factor 
 torus_negative = 0.72 * torus 
-joint_radius = (ribbon_width/2) + (minimum_wall_thickness*0.8)
+joint_radius = ((ribbon_width/2) + (minimum_wall_thickness*0.8))*0.7
 joint_negative_radius = (ribbon_width/2) + 0.5
-joint_nudge = 0.925 # this is a percentage scaling of the vector defining the ideal joint location
+joint_nudge = 20 #0.940 # this is a percentage scaling of the vector defining the ideal joint location
 joint_nudge_length = 0.13
 # coil_wire_diameter = 2.053  # mm this 12 gauge AWS
 coil_wire_diameter = 1.1  # mm test wire
@@ -194,7 +194,7 @@ if true #parts.include?("chassis")
 	end
 	`#{mged} 'r solid u #{(0..29).map{|index| " joint1_#{index} u joint2_#{index}"}.join(" u ")} u #{(0..11).map{|index| "torus#{index}"}.join(" u ")}'` #combine the pieces
 	`#{mged} 'r negative_form u #{(0..29).map{|index| " joint_negative1_#{index} u joint_negative2_#{index} u junction_box1_#{index} u junction_box2_#{index}"}.join(" u ")} u #{(0..11).map{|index| "torus_negative#{index} u lid_knockout#{index}"}.join(" u ") } '` #combine the pieces
-	`#{mged} 'r chassis u solid - negative_form'` #combine the pieces
+	`#{mged} 'r chassis u solid '` #combine the pieces
 end
 
 if parts.include?("cutout")
@@ -291,27 +291,8 @@ end
 
 parts.each do |part|
 
-# `cat <<EOF | mged -c #{DB}
-# B #{part}
-# ae 135 -35 180
-# set perspective 20
-# zoom .30
-# saveview #{part}.rt
-# EOF`
-# 	
-# `./#{part}.rt -s1024`
-# `pix-png -s1024 < #{part}.rt.pix > #{part}.png` #generate a png from the rt file
-# `open ./#{part}.png` # open the png in preview.app
-
-# `g-stl -a 0.005 -D 0.005 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
-# `g-stl -a 0.01 -D 0.01 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
-# `g-stl -a #{tolerace_distance} -D #{tolerace_distance} -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
-`g-stl -a #{tolerace_distance} -D #{tolerace_distance} -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
-# `g-stl -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
-
-`stl-g #{part}.stl #{part}_proof.g`
-`cat <<EOF | mged -c #{part}_proof.g
-B s.#{part}
+`cat <<EOF | mged -c #{DB}
+B #{part}
 ae 135 -35 180
 set perspective 20
 zoom .30
@@ -322,8 +303,27 @@ EOF`
 `pix-png -s1024 < #{part}.rt.pix > #{part}.png` #generate a png from the rt file
 `open ./#{part}.png` # open the png in preview.app
 
-`rm -f ./#{part}.rt `
-`rm -f ./#{part}.rt.pix `
-`rm -f ./#{part}.rt.log`
+# `g-stl -a 0.005 -D 0.005 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
+# `g-stl -a 0.01 -D 0.01 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
+# `g-stl -a #{tolerace_distance} -D #{tolerace_distance} -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
+# `g-stl -a #{tolerace_distance} -D #{tolerace_distance} -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
+# `g-stl -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
+
+# `stl-g #{part}.stl #{part}_proof.g`
+# `cat <<EOF | mged -c #{part}_proof.g
+# B s.#{part}
+# ae 135 -35 180
+# set perspective 20
+# zoom .30
+# saveview #{part}.rt
+# EOF`
+# 	
+# `./#{part}.rt -s1024`
+# `pix-png -s1024 < #{part}.rt.pix > #{part}.png` #generate a png from the rt file
+# `open ./#{part}.png` # open the png in preview.app
+# 
+# `rm -f ./#{part}.rt `
+# `rm -f ./#{part}.rt.pix `
+# `rm -f ./#{part}.rt.log`
 
 end
