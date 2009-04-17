@@ -26,12 +26,12 @@ ohm = Unit("ohm")
 # Unit.setup
 
 
-scale_factor = 50 # global scaling factor
+scale_factor = 25 # global scaling factor
 
 ribbon_width = 4
 ribbon_thickness = 0.3 # mm 
 turns = 4
-minimum_wall_thickness = 2.5 #mm
+minimum_wall_thickness = 1 #mm
 
 
 outside_radius = (Dodecahedron.vertices[0].r) *scale_factor #the distance from the center of the machine to the furthest edge of the core
@@ -48,8 +48,8 @@ torus = 0.17 *scale_factor
 torus_negative = 0.72 * torus 
 joint_radius = ((ribbon_width/2) + (minimum_wall_thickness*0.8))*0.7
 joint_negative_radius = (ribbon_width/2) + 0.5
-joint_nudge = 20 #0.940 # this is a percentage scaling of the vector defining the ideal joint location
-joint_nudge_length = 0.13
+joint_nudge = 0.94 #0.940 # this is a percentage scaling of the vector defining the ideal joint location
+joint_nudge_length = 0.18
 # coil_wire_diameter = 2.053  # mm this 12 gauge AWS
 coil_wire_diameter = 1.1  # mm test wire
 coil = Coil.new((torus_negative*2), coil_wire_diameter, torus_ring_size)
@@ -100,6 +100,7 @@ superconducting = {
 
 derived_dimentions = {
 	:outside_radius => outside_radius,
+	:outside_diameter => outside_radius*2,
 	:torus_midplane_radius => torus_midplane_radius,
 	:torus_radius => torus_ring_size,
 	:torus_tube_radius => torus,
@@ -307,7 +308,7 @@ EOF`
 # `g-stl -a 0.01 -D 0.01 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 # `g-stl -a #{tolerace_distance} -D #{tolerace_distance} -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 # `g-stl -a #{tolerace_distance} -D #{tolerace_distance} -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
-# `g-stl -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
+`g-stl -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 
 # `stl-g #{part}.stl #{part}_proof.g`
 # `cat <<EOF | mged -c #{part}_proof.g
@@ -322,8 +323,8 @@ EOF`
 # `pix-png -s1024 < #{part}.rt.pix > #{part}.png` #generate a png from the rt file
 # `open ./#{part}.png` # open the png in preview.app
 # 
-# `rm -f ./#{part}.rt `
-# `rm -f ./#{part}.rt.pix `
-# `rm -f ./#{part}.rt.log`
+`rm -f ./#{part}.rt `
+`rm -f ./#{part}.rt.pix `
+`rm -f ./#{part}.rt.log`
 
 end
