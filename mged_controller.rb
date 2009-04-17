@@ -12,7 +12,7 @@ require 'winder'
 parts = %w( cutout  lids)
 
 DB = "decawell.g"
-mged ="/usr/brlcad/rel-7.12.2/bin//mged -c  #{DB} "
+mged ="/usr/brlcad/bin//mged -c  #{DB} "
 
 mm = Unit("mm")
 amp = Unit("amp")
@@ -56,6 +56,8 @@ coil = Coil.new((torus_negative*2), coil_wire_diameter, torus_ring_size)
 
 channel_thickness = (ribbon_thickness*turns)+1
 
+# tolerace_distance = 0.01
+tolerace_distance = 0.1
 
 #Joule heating calculations
 drive_amps = 2000.0 * amp
@@ -145,7 +147,6 @@ puts "\n\n"
 	puts "\n\n"
 end
 
-tolerace_distance = 0.01
 
 `rm -f ./#{DB.gsub(".g","")}.*`
 # `rm ./*.png`
