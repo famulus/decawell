@@ -12,7 +12,7 @@ require 'winder'
 parts = %w( chassis)
 
 DB = "decawell.g"
-mged ="/usr/brlcad/bin//mged -c  #{DB} "
+mged ="mged -c  #{DB} "
 
 mm = Unit("mm")
 amp = Unit("amp")
@@ -56,8 +56,7 @@ coil = Coil.new((torus_negative*2), coil_wire_diameter, torus_ring_size)
 
 channel_thickness = (ribbon_thickness*turns)+1
 
-# tolerace_distance = 0.01
-tolerace_distance = 0.1
+tolerace_distance = 0.01
 
 #Joule heating calculations
 drive_amps = 2000.0 * amp
@@ -296,7 +295,7 @@ parts.each do |part|
 B #{part}
 ae 135 -35 180
 set perspective 20
-zoom .30
+zoom .20
 saveview #{part}.rt
 EOF`
 	
@@ -308,7 +307,7 @@ EOF`
 # `g-stl -a 0.01 -D 0.01 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 # `g-stl -a #{tolerace_distance} -D #{tolerace_distance} -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 # `g-stl -a #{tolerace_distance} -D #{tolerace_distance} -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
-`g-stl -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
+# `g-stl -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 
 # `stl-g #{part}.stl #{part}_proof.g`
 # `cat <<EOF | mged -c #{part}_proof.g
