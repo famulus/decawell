@@ -56,7 +56,7 @@ coil = Coil.new((torus_negative*2), coil_wire_diameter, torus_ring_size)
 
 channel_thickness = (ribbon_thickness*turns)+1
 
-tolerace_distance = 0.01
+tolerace_distance = 0.001
 
 #Joule heating calculations
 drive_amps = 2000.0 * amp
@@ -163,38 +163,10 @@ puts "coil start#{coil.truth_array.inspect}"
 
 if true #parts.include?("chassis")
 	
-	Dodecahedron.icosahedron.each_with_index do |v,index| # draw the 12 tori
-		v = v*scale_factor
-		# `#{mged} 'in torus#{index} tor #{v.mged} #{v.mged} #{torus_ring_size} #{torus}'` #the torus solid
-		# in okko eto 0 0 0   1 0 0   3  1 0 0   .6
-		
-		# `#{mged} 'in torus#{index} eto #{v.mged} #{v.mged} #{torus_ring_size}  #{((v.normal)*((channel_thickness/2)+minimum_wall_thickness)).mged}   #{((channel_thickness/2)+minimum_wall_thickness)} '` #the eto solid
-
-		`#{mged} 'in torus#{index} eto #{v.mged} #{v.mged} #{torus_ring_size}  #{((v.normal)*(ribbon_width/2+minimum_wall_thickness)).mged}   #{((channel_thickness/2)+minimum_wall_thickness)} '` #the eto solid
-		
-		`#{mged} 'in torus_negative_outer#{index} rcc #{v.mged} #{(v.inverse.normal*(ribbon_width/2)).mged} #{torus_ring_size+(channel_thickness/2)} '` #the outside radious of the ribbon channel
-		`#{mged} 'in torus_negative_inner#{index} rcc #{v.mged} #{(v.inverse.normal*(ribbon_width/2)).mged} #{torus_ring_size-(channel_thickness/2)}'` #the inside radious of the ribbon channel
-		`#{mged} 'in cooling_channel#{index} tor #{v.mged} #{v.mged} #{torus_ring_size} #{ribbon_width/4}'` #cooling channel
-
-		`#{mged} 'r torus_negative#{index} u torus_negative_outer#{index} - torus_negative_inner#{index} '` #this hollow center of the torus
-		
-		`#{mged} 'in lid_knockout#{index} rcc #{v.mged} #{(v.normal*torus ).mged} #{torus_ring_size+torus}'` #this removed the face of the torus so we can install coils
+	Tetrahedron.vertices.each_with_index do |v,index| 
+		`#{mged} 'in torus#{index} tor 0 0 0 #{v.mged} #{40	} #{1}'` #the torus solid
 	end
-	Dodecahedron.edges.each_with_index do |edge,index| #insert the 30 joints
-		edge = edge.map{|e|e *scale_factor} # scale the edges
-		a = average(*edge.map{|e|e}) # the ideal location of the joint
-		a = a * joint_nudge # nudge the joint closer to the center
-		b =cross_product(a,(edge[1]-edge[0])) # this is the vector of the half joint
-		b = b.normal*scale_factor* joint_nudge_length # get the unit vector for this direction and scale
-		[b,b.inverse].each_with_index do |bi,i|
-			`#{mged} 'in joint#{i+1}_#{index} rcc #{a.mged} #{bi.mged} #{joint_radius}'` 
-			`#{mged} 'in joint_negative#{i+1}_#{index} rcc #{a.mged} #{(bi*1.4).mged} #{joint_negative_radius}'` 
-			`#{mged} 'in junction_box#{i+1}_#{index} sph #{(a+(bi*1.20)).mged} 3'` 
-		end
-	end
-	`#{mged} 'r solid u #{(0..29).map{|index| " joint1_#{index} u joint2_#{index}"}.join(" u ")} u #{(0..11).map{|index| "torus#{index}"}.join(" u ")}'` #combine the pieces
-	`#{mged} 'r negative_form u #{(0..29).map{|index| " joint_negative1_#{index} u joint_negative2_#{index} u junction_box1_#{index} u junction_box2_#{index}"}.join(" u ")} u #{(0..11).map{|index| "torus_negative#{index} u lid_knockout#{index}"}.join(" u ") } '` #combine the pieces
-	`#{mged} 'r chassis u solid '` #combine the pieces
+	`#{mged} 'r chassis u  #{(0..3).map{|index| "torus#{index}"}.join(" u ")} '` #combine the pieces
 end
 
 if parts.include?("cutout")
@@ -295,7 +267,7 @@ parts.each do |part|
 B #{part}
 ae 135 -35 180
 set perspective 20
-zoom .20
+zoom .25
 saveview #{part}.rt
 EOF`
 	
@@ -306,24 +278,24 @@ EOF`
 # `g-stl -a 0.005 -D 0.005 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 # `g-stl -a 0.01 -D 0.01 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 # `g-stl -a #{tolerace_distance} -D #{tolerace_distance} -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
-# `g-stl -a #{tolerace_distance} -D #{tolerace_distance} -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
+`g-stl -a #{tolerace_distance} -D #{tolerace_distance} -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 # `g-stl -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 
-# `stl-g #{part}.stl #{part}_proof.g`
-# `cat <<EOF | mged -c #{part}_proof.g
-# B s.#{part}
-# ae 135 -35 180
-# set perspective 20
-# zoom .30
-# saveview #{part}.rt
-# EOF`
-# 	
-# `./#{part}.rt -s1024`
-# `pix-png -s1024 < #{part}.rt.pix > #{part}.png` #generate a png from the rt file
-# `open ./#{part}.png` # open the png in preview.app
+`stl-g #{part}.stl #{part}_proof.g`
+`cat <<EOF | mged -c #{part}_proof.g
+B s.#{part}
+ae 135 -35 180
+set perspective 20
+zoom .30
+saveview #{part}_proof.rt
+EOF`
+	
+`./#{part}_proof.rt -s1024`
+`pix-png -s1024 < #{part}_proof.rt.pix > #{part}_proof.png` #generate a png from the rt file
+`open ./#{part}_proof.png` # open the png in preview.app
 # 
-`rm -f ./#{part}.rt `
-`rm -f ./#{part}.rt.pix `
-`rm -f ./#{part}.rt.log`
+`rm -f ./*.rt `
+`rm -f ./*.rt.pix `
+`rm -f ./*.rt.log`
 
 end
