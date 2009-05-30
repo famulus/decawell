@@ -12,7 +12,7 @@ require 'winder'
 parts = %w( cutout  lids)
 
 DB = "decawell.g"
-mged ="/usr/brlcad/bin//mged -c  #{DB} "
+mged ="mged -c  #{DB} "
 
 mm = Unit("mm")
 amp = Unit("amp")
