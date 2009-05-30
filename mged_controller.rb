@@ -7,9 +7,9 @@ require 'winder'
 # include Constants::Libraries
 
 
-# parts = %w(chassis lids bobbin_left bobbin_right)
+parts = %w(chassis)
 # parts = %w(bobbin_left bobbin_right)
-parts = %w( cutout  lids)
+# parts = %w( cutout  lids)
 
 DB = "decawell.g"
 mged ="mged -c  #{DB} "
@@ -57,7 +57,7 @@ coil = Coil.new((torus_negative*2), coil_wire_diameter, torus_ring_size)
 channel_thickness = (ribbon_thickness*turns)+1
 
 # tolerace_distance = 0.01
-tolerace_distance = 0.1
+tolerace_distance = 0.08
 
 #Joule heating calculations
 drive_amps = 2000.0 * amp
