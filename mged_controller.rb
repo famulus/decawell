@@ -56,8 +56,8 @@ coil = Coil.new((torus_negative*2), coil_wire_diameter, torus_ring_size)
 
 channel_thickness = (ribbon_thickness*turns)+1
 
-# tolerace_distance = 0.01
-tolerace_distance = 0.08
+# tolerance_distance = 0.01
+tolerance_distance = 0.08
 
 #Joule heating calculations
 drive_amps = 2000.0 * amp
@@ -151,7 +151,7 @@ end
 `rm -f ./#{DB.gsub(".g","")}.*`
 # `rm ./*.png`
 `#{mged} 'units mm'` # set mged's units to decimeter 
-`#{mged} 'tol dist #{tolerace_distance}'` #  
+`#{mged} 'tol dist #{tolerance_distance}'` #  
 
 coil.grid.each {|row| puts row.map{|c|  c ? 1 : 0}.join("")}
 # coil.grid.each {|row|  row.split(false).each{|a| puts a.size}}
@@ -305,8 +305,8 @@ parts.each do |part|
 
 # `g-stl -a 0.005 -D 0.005 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 # `g-stl -a 0.01 -D 0.01 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
-# `g-stl -a #{tolerace_distance} -D #{tolerace_distance} -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
-`g-stl -a #{tolerace_distance} -D #{tolerace_distance} -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
+# `g-stl -a #{tolerance_distance} -D #{tolerance_distance} -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
+`g-stl -a #{tolerance_distance} -D #{tolerance_distance} -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 # `g-stl -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 
 `stl-g #{part}.stl #{part}_proof.g`
