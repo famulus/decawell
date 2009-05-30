@@ -176,7 +176,7 @@ if true #parts.include?("chassis")
 		`#{mged} 'in torus_negative_inner#{index} rcc #{v.mged} #{(v.inverse.normal*(ribbon_width/2)).mged} #{torus_ring_size-(channel_thickness/2)}'` #the inside radious of the ribbon channel
 		`#{mged} 'in cooling_channel#{index} tor #{v.mged} #{v.mged} #{torus_ring_size} #{ribbon_width/4}'` #cooling channel
 
-		`#{mged} 'r torus_negative#{index} u torus_negative_outer#{index} - torus_negative_inner#{index} '` #this hollow center of the torus
+		`#{mged} 'comb torus_negative#{index} u torus_negative_outer#{index} - torus_negative_inner#{index} '` #this hollow center of the torus
 		
 		`#{mged} 'in lid_knockout#{index} rcc #{v.mged} #{(v.normal*torus ).mged} #{torus_ring_size+torus}'` #this removed the face of the torus so we can install coils
 	end
@@ -192,15 +192,15 @@ if true #parts.include?("chassis")
 			`#{mged} 'in junction_box#{i+1}_#{index} sph #{(a+(bi*1.20)).mged} 3'` 
 		end
 	end
-	`#{mged} 'r solid u #{(0..29).map{|index| " joint1_#{index} u joint2_#{index}"}.join(" u ")} u #{(0..11).map{|index| "torus#{index}"}.join(" u ")}'` #combine the pieces
-	`#{mged} 'r negative_form u #{(0..29).map{|index| " joint_negative1_#{index} u joint_negative2_#{index} u junction_box1_#{index} u junction_box2_#{index}"}.join(" u ")} u #{(0..11).map{|index| "torus_negative#{index} u lid_knockout#{index}"}.join(" u ") } '` #combine the pieces
-	`#{mged} 'r chassis u solid - negative_form'` #combine the pieces
+	`#{mged} 'comb solid u #{(0..29).map{|index| " joint1_#{index} u joint2_#{index}"}.join(" u ")} u #{(0..11).map{|index| "torus#{index}"}.join(" u ")}'` #combine the pieces
+	`#{mged} 'comb negative_form u #{(0..29).map{|index| " joint_negative1_#{index} u joint_negative2_#{index} u junction_box1_#{index} u junction_box2_#{index}"}.join(" u ")} u #{(0..11).map{|index| "torus_negative#{index} u lid_knockout#{index}"}.join(" u ") } '` #combine the pieces
+	`#{mged} 'comb chassis u solid - negative_form'` #combine the pieces
 end
 
 if parts.include?("cutout")
 	cutout_vector = Dodecahedron.icosahedron[0]
 	`#{mged} 'in cutout_shape rcc #{((cutout_vector*scale_factor*0.8).mged)} #{(cutout_vector*scale_factor).mged} #{outside_radius}'` #this hollow center of the torus
-	`#{mged} 'r cutout u chassis + cutout_shape'` #combine the pieces
+	`#{mged} 'comb cutout u chassis + cutout_shape'` #combine the pieces
 
 end
 
@@ -218,13 +218,13 @@ if parts.include?("lids")
 		`#{mged} 'in torus_negative_inner#{index} rcc #{v.mged} #{(v.inverse.normal*(ribbon_width/2)).mged} #{torus_ring_size-(channel_thickness/2)}'` #the inside radious of the ribbon channel
 		`#{mged} 'in cooling_channel#{index} tor #{v.mged} #{v.mged} #{torus_ring_size} #{ribbon_width/4}'` #cooling channel
 
-		`#{mged} 'r lid_torus_negative#{index} u torus_negative_outer#{index} -  torus_negative_inner#{index} '` #this hollow center of the torus
+		`#{mged} 'comb lid_torus_negative#{index} u torus_negative_outer#{index} -  torus_negative_inner#{index} '` #this hollow center of the torus
 
 
 		`#{mged} 'in lid_lid_knockout#{index} rcc #{v.mged}  #{(v*2).mged} #{torus_ring_size+torus}'` #this removed the face of the torus so we can install coils
 		
 	end
-			`#{mged} 'r lids u #{(0..0).map{|index| "torus#{index} - lid_torus_negative#{index} - lid_lid_knockout#{index}"}.join(" u ")}'` #combine the pieces
+			`#{mged} 'comb lids u #{(0..0).map{|index| "torus#{index} - lid_torus_negative#{index} - lid_lid_knockout#{index}"}.join(" u ")}'` #combine the pieces
 
 end
 
@@ -255,9 +255,9 @@ if parts.include?("bobbin_left")
 	`#{mged} 'in wire_access_notch rcc 0 #{torus_ring_size -torus_negative+5 } 0 #{(Vector[0,0,0] - Vector[0,torus_ring_size -torus_negative ,0]).normal*15} 3'` #combine the pieces
 
 
-	`#{mged} 'r shaft_with_notch u screw_hole4 u screw_hole3 u screw_hole2 u screw_hole u shaft_negative - shaft_notch '` # form the shaft with notch
-	`#{mged} 'r bobbin1 u support_plate - shaft_with_notch  u bobbin_torus + bobbin_half - bobbin_negative  '` # form the first half of the bobbin
-	`#{mged} 'r bobbin_left u bobbin1 - wire_access_notch  '` # form the first half of the bobbin
+	`#{mged} 'comb shaft_with_notch u screw_hole4 u screw_hole3 u screw_hole2 u screw_hole u shaft_negative - shaft_notch '` # form the shaft with notch
+	`#{mged} 'comb bobbin1 u support_plate - shaft_with_notch  u bobbin_torus + bobbin_half - bobbin_negative  '` # form the first half of the bobbin
+	`#{mged} 'comb bobbin_left u bobbin1 - wire_access_notch  '` # form the first half of the bobbin
 
 	`cat <<EOF | mged -c #{DB}
 	B bobbin_left	
