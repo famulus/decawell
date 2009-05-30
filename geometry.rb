@@ -49,6 +49,22 @@ module Geometry
 
 
 	PHI = (1+Math.sqrt(5))/2
+	
+	class Tetrahedron
+
+		def self.vertices 
+			Matrix[
+
+				[1, 1, 1],
+				[-1, -1, 1],
+				[-1, 1, -1],
+				[1, -1, -1]
+
+				].row_vectors()
+		end
+
+	end
+
 
 	class Dodecahedron
 
