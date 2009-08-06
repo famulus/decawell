@@ -26,12 +26,12 @@ ohm = Unit("ohm")
 # Unit.setup
 
 
-scale_factor = 57.7 # global scaling factor
+scale_factor = 35 # global scaling factor
 
-ribbon_width = 4
+ribbon_width = 4.2
 ribbon_thickness = 0.3 # mm 
-turns = 4
-minimum_wall_thickness = 2.5 #mm
+turns = 5
+minimum_wall_thickness = 1.7 #mm
 
 
 outside_radius = (Dodecahedron.vertices[0].r) *scale_factor #the distance from the center of the machine to the furthest edge of the core
@@ -49,7 +49,7 @@ torus_negative = 0.72 * torus
 joint_radius = (ribbon_width/2) + (minimum_wall_thickness*0.8)
 joint_negative_radius = (ribbon_width/2) + 0.5
 joint_nudge = 0.925 # this is a percentage scaling of the vector defining the ideal joint location
-joint_nudge_length = 0.13
+joint_nudge_length = 0.1
 # coil_wire_diameter = 2.053  # mm this 12 gauge AWS
 coil_wire_diameter = 1.1  # mm test wire
 coil = Coil.new((torus_negative*2), coil_wire_diameter, torus_ring_size)
@@ -194,7 +194,7 @@ if true #parts.include?("chassis")
 	end
 	`#{mged} 'comb solid.c u #{(0..29).map{|index| " joint1_#{index} u joint2_#{index}"}.join(" u ")} u #{(0..11).map{|index| "torus#{index}"}.join(" u ")}'` #combine the pieces
 	# `#{mged} 'comb negative_form.c u #{(0..29).map{|index| " joint_negative1_#{index} u joint_negative2_#{index} u junction_box1_#{index} u junction_box2_#{index}"}.join(" u ")} u #{(0..11).map{|index| "torus_negative#{index}.c u lid_knockout#{index}"}.join(" u ") } '` #combine the pieces
-	`#{mged} 'comb negative_form.c u #{(0..29).map{|index| " joint_negative1_#{index} u joint_negative2_#{index} u junction_box1_#{index} u junction_box2_#{index}"}.join(" u ")} u #{(0..11).map{|index| "torus_negative#{index}.c u lid_knockout#{index}"}.join(" u ") } '` #combine the pieces
+	`#{mged} 'comb negative_form.c u #{(0..29).map{|index| " joint_negative1_#{index} u joint_negative2_#{index}  "}.join(" u ")} u #{(0..11).map{|index| "torus_negative#{index}.c u lid_knockout#{index}"}.join(" u ") } '` #combine the pieces
 	`#{mged} 'comb chassis u solid.c - negative_form.c'` #combine the pieces
 end
 
@@ -292,27 +292,8 @@ end
 
 parts.each do |part|
 
-# `cat <<EOF | mged -c #{DB}
-# B #{part}
-# ae 135 -35 180
-# set perspective 20
-# zoom .30
-# saveview #{part}.rt
-# EOF`
-# 	
-# `./#{part}.rt -s1024`
-# `pix-png -s1024 < #{part}.rt.pix > #{part}.png` #generate a png from the rt file
-# `open ./#{part}.png` # open the png in preview.app
-
-# `g-stl -a 0.005 -D 0.005 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
-# `g-stl -a 0.01 -D 0.01 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
-# `g-stl -a #{tolerance_distance} -D #{tolerance_distance} -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
-`g-stl -a #{tolerance_distance} -D #{tolerance_distance} -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
-# `g-stl -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
-
-`stl-g #{part}.stl #{part}_proof.g`
-`cat <<EOF | mged -c #{part}_proof.g
-B s.#{part}
+`cat <<EOF | mged -c #{DB}
+B #{part}
 ae 135 -35 180
 set perspective 20
 zoom .30
@@ -322,6 +303,25 @@ EOF`
 `./#{part}.rt -s1024`
 `pix-png -s1024 < #{part}.rt.pix > #{part}.png` #generate a png from the rt file
 `open ./#{part}.png` # open the png in preview.app
+
+# `g-stl -a 0.005 -D 0.005 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
+# `g-stl -a 0.01 -D 0.01 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
+# `g-stl -a #{tolerance_distance} -D #{tolerance_distance} -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
+`g-stl -a #{tolerance_distance} -D #{tolerance_distance} -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
+# `g-stl -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
+
+# `stl-g #{part}.stl #{part}_proof.g`
+# `cat <<EOF | mged -c #{part}_proof.g
+# B s.#{part}
+# ae 135 -35 180
+# set perspective 20
+# zoom .30
+# saveview #{part}.rt
+# EOF`
+	
+# `./#{part}.rt -s1024`
+# `pix-png -s1024 < #{part}.rt.pix > #{part}.png` #generate a png from the rt file
+# `open ./#{part}.png` # open the png in preview.app
 
 `rm -f ./#{part}.rt `
 `rm -f ./#{part}.rt.pix `
