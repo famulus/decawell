@@ -26,7 +26,7 @@ ohm = Unit("ohm")
 # Unit.setup
 
 
-scale_factor = 35 # global scaling factor
+scale_factor = 37 # global scaling factor
 
 ribbon_width = 4.2
 ribbon_thickness = 0.3 # mm 
@@ -291,6 +291,11 @@ end
 
 
 parts.each do |part|
+`rm -f ./#{part}.rt `
+`rm -f ./#{part}.rt.pix `
+`rm -f ./#{part}.rt.log`
+`rm -f ./#{part}.png`
+
 
 `cat <<EOF | mged -c #{DB}
 B #{part}
@@ -307,7 +312,9 @@ EOF`
 # `g-stl -a 0.005 -D 0.005 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 # `g-stl -a 0.01 -D 0.01 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 # `g-stl -a #{tolerance_distance} -D #{tolerance_distance} -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
-`g-stl -a #{tolerance_distance} -D #{tolerance_distance} -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
+
+# `g-stl -a #{tolerance_distance} -D #{tolerance_distance} -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
+
 # `g-stl -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 
 # `stl-g #{part}.stl #{part}_proof.g`
@@ -323,8 +330,5 @@ EOF`
 # `pix-png -s1024 < #{part}.rt.pix > #{part}.png` #generate a png from the rt file
 # `open ./#{part}.png` # open the png in preview.app
 
-`rm -f ./#{part}.rt `
-`rm -f ./#{part}.rt.pix `
-`rm -f ./#{part}.rt.log`
 
 end
