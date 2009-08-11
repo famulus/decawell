@@ -7,7 +7,7 @@ require 'winder'
 # include Constants::Libraries
 
 
-parts = %w(chassis)
+parts = %w(chassis lids)
 # parts = %w(bobbin_left bobbin_right)
 # parts = %w( cutout  lids)
 
@@ -217,7 +217,6 @@ if parts.include?("lids")
 
 		`#{mged} 'in torus_negative_outer#{index} rcc #{v.mged} #{(v.inverse.normal*(ribbon_width/2)).mged} #{torus_ring_size+(channel_thickness/2)} '` #the outside radious of the ribbon channel
 		`#{mged} 'in torus_negative_inner#{index} rcc #{v.mged} #{(v.inverse.normal*(ribbon_width/2)).mged} #{torus_ring_size-(channel_thickness/2)}'` #the inside radious of the ribbon channel
-		`#{mged} 'in cooling_channel#{index} tor #{v.mged} #{v.mged} #{torus_ring_size} #{ribbon_width/4}'` #cooling channel
 
 		`#{mged} 'comb lid_torus_negative#{index} u torus_negative_outer#{index} -  torus_negative_inner#{index} '` #this hollow center of the torus
 
