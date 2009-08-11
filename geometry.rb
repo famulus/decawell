@@ -50,23 +50,41 @@ module Geometry
 
 	PHI = (1+Math.sqrt(5))/2
 
-class Cube
-			def self.vertices 
+	class Cube
+		def self.vertices 
 			Matrix[
 
-				[+1,+1,+1],
-				[+1,+1,-1],
-				[+1,-1,-1],
-				[+1,-1,+1],
 				[-1,-1,-1],
-				[-1,+1,+1],
-				[-1,+1,-1],
-				[-1,-1,+1],
-
+				[-1,-1,1],
+				[-1,1,-1],
+				[-1,1,1],
+				[1,-1,-1],
+				[1,-1,1],
+				[1,1,-1],
+				[1,1,1]
 				].row_vectors()
+			end
+			def self.faces_indices
+				[[8 , 4 , 2 , 6],
+				[8 , 6 , 5 , 7],
+				[8 , 7 , 3 , 4],
+				[4 , 3 , 1 , 2],
+				[1 , 3 , 7 , 5],
+				[2 , 1 , 5 , 6]].map{|a|a.map{|b|b-1}} #shift for a zero based index
+			end
+			def self.octahedron
+				faces.map do |face|
+					midpoint  = Vector.average(*face.map { |v|v  })
+				end
+			end
+
+
+			def self.faces
+				self.faces_indices.map { |f| f.map{|v|vertices[v]}  }
+			end
+
 		end
 
-end
 
 	class Dodecahedron
 

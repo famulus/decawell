@@ -163,7 +163,7 @@ puts "coil start#{coil.truth_array.inspect}"
 
 if true #parts.include?("chassis")
 	
-	Dodecahedron.icosahedron.each_with_index do |v,index| # draw the 12 tori
+	Cube.octahedron.each_with_index do |v,index| # draw the 12 tori
 		v = v*scale_factor
 		# `#{mged} 'in torus#{index} tor #{v.mged} #{v.mged} #{torus_ring_size} #{torus}'` #the torus solid
 		# in okko eto 0 0 0   1 0 0   3  1 0 0   .6
@@ -180,21 +180,21 @@ if true #parts.include?("chassis")
 		
 		`#{mged} 'in lid_knockout#{index} rcc #{v.mged} #{(v.normal*torus ).mged} #{torus_ring_size+torus}'` #this removed the face of the torus so we can install coils
 	end
-	Dodecahedron.edges.each_with_index do |edge,index| #insert the 30 joints
-		edge = edge.map{|e|e *scale_factor} # scale the edges
-		a = average(*edge.map{|e|e}) # the ideal location of the joint
-		a = a * joint_nudge # nudge the joint closer to the center
-		b =cross_product(a,(edge[1]-edge[0])) # this is the vector of the half joint
-		b = b.normal*scale_factor* joint_nudge_length # get the unit vector for this direction and scale
-		[b,b.inverse].each_with_index do |bi,i|
-			`#{mged} 'in joint#{i+1}_#{index} rcc #{a.mged} #{bi.mged} #{joint_radius}'` 
-			`#{mged} 'in joint_negative#{i+1}_#{index} rcc #{a.mged} #{(bi*1.4).mged} #{joint_negative_radius}'` 
-			`#{mged} 'in junction_box#{i+1}_#{index} sph #{(a+(bi*1.20)).mged} 3'` 
-		end
-	end
-	`#{mged} 'comb solid.c u #{(0..29).map{|index| " joint_negative1_#{index} u joint2_#{index}"}.join(" u ")} u #{(0..11).map{|index| "torus#{index}"}.join(" u ")}'` #combine the pieces
-	`#{mged} 'comb negative_form.c u #{(0..29).map{|index| " joint_negative1_#{index} u joint_negative2_#{index}  "}.join(" u ")} u #{(0..11).map{|index| "torus_negative#{index}.c u lid_knockout#{index}"}.join(" u ") } '` #combine the pieces
-	`#{mged} 'comb chassis u solid.c - negative_form.c'` #combine the pieces
+	# Dodecahedron.edges.each_with_index do |edge,index| #insert the 30 joints
+	# 	edge = edge.map{|e|e *scale_factor} # scale the edges
+	# 	a = average(*edge.map{|e|e}) # the ideal location of the joint
+	# 	a = a * joint_nudge # nudge the joint closer to the center
+	# 	b =cross_product(a,(edge[1]-edge[0])) # this is the vector of the half joint
+	# 	b = b.normal*scale_factor* joint_nudge_length # get the unit vector for this direction and scale
+	# 	[b,b.inverse].each_with_index do |bi,i|
+	# 		`#{mged} 'in joint#{i+1}_#{index} rcc #{a.mged} #{bi.mged} #{joint_radius}'` 
+	# 		`#{mged} 'in joint_negative#{i+1}_#{index} rcc #{a.mged} #{(bi*1.4).mged} #{joint_negative_radius}'` 
+	# 		`#{mged} 'in junction_box#{i+1}_#{index} sph #{(a+(bi*1.20)).mged} 3'` 
+	# 	end
+	# end
+	`#{mged} 'comb chassis  u #{(0..5).map{|index| "torus#{index}"}.join(" u ")}'` #combine the pieces
+	# `#{mged} 'comb negative_form.c u #{(0..29).map{|index| " joint_negative1_#{index} u joint_negative2_#{index}  "}.join(" u ")} u #{(0..11).map{|index| "torus_negative#{index}.c u lid_knockout#{index}"}.join(" u ") } '` #combine the pieces
+	# `#{mged} 'comb chassis u solid.c - negative_form.c'` #combine the pieces
 end
 
 if parts.include?("cutout")
