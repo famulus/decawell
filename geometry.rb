@@ -100,6 +100,15 @@ module Geometry
 			def self.edges
 				self.edge_indices.map { |f| f.map{|v|vertices[v]} }
 			end
+		def self.faces_for_edge
+			self.faces_for_edge_indices.map { |a|a.map { |b| b.map { |c| self.vertices[c]  }}  }
+		end
+		def self.faces_for_edge_indices
+			self.edge_indices.map do |edge|
+				self.faces_indices.select{|face| face.include?(edge[0]) && face.include?(edge[1]) }
+
+			end
+		end
 
 		end
 

@@ -30,26 +30,26 @@ scale_factor = 37 # global scaling factor
 
 ribbon_width = 4.2
 ribbon_thickness = 0.3 # mm 
-turns = 7
+turns = 12
 minimum_wall_thickness = 2 #mm
 
 
-outside_radius = (Dodecahedron.vertices[0].r) *scale_factor #the distance from the center of the machine to the furthest edge of the core
-torus_midplane_radius = (Dodecahedron.icosahedron[0].r) * scale_factor #distance from the center of the machine to the center of a coil
+outside_radius = (Cube.vertices[0].r) *scale_factor #the distance from the center of the machine to the furthest edge of the core
+torus_midplane_radius = (Cube.octahedron[0].r) * scale_factor #distance from the center of the machine to the center of a coil
 
-edge = Dodecahedron.edges.first.map{|e|e *scale_factor} # find first edge
+edge = Cube.edges.first.map{|e|e *scale_factor} # find first edge
 a = average(*edge.map{|e|e}) # find midpoint of edge
-b = average(*Dodecahedron.faces_for_edge.first.first.map{|e|e *scale_factor}) #find center of abutting face
+b = average(*Cube.faces_for_edge.first.first.map{|e|e *scale_factor}) #find center of abutting face
 puts "max ring"
 puts max_torus = (a-b).r
 
 torus_ring_size = max_torus/1.305 #0.700 *scale_factor # the main torus shape
 torus = 0.17 *scale_factor 
 torus_negative = 0.72 * torus 
-joint_radius = (ribbon_width/2) + (minimum_wall_thickness*0.8)
-joint_negative_radius = (ribbon_width/2) + 0.5
-joint_nudge = 0.925 # this is a percentage scaling of the vector defining the ideal joint location
-joint_nudge_length = 0.1
+joint_radius = (ribbon_width/2) + (minimum_wall_thickness)
+joint_negative_radius = (ribbon_width/2) + 0.05
+joint_nudge = 0.87 # this is a percentage scaling of the vector defining the ideal joint location
+joint_nudge_length = 0.12
 # coil_wire_diameter = 2.053  # mm this 12 gauge AWS
 coil_wire_diameter = 1.1  # mm test wire
 coil = Coil.new((torus_negative*2), coil_wire_diameter, torus_ring_size)
@@ -86,7 +86,7 @@ ybco_current_density_per_turn = (single_turn * ybco_critical_current)
 
 #test coil
 # puts (Unit('5 volts')/(Unit('22 kohm')>>Unit('ohm'))) 
-puts (Unit('1 Joule')/Unit('2 sec')) >> Unit('watt')  
+puts( (Unit('1 Joule')/Unit('2 sec')) >> Unit('watt'))
 
 
 
@@ -112,17 +112,17 @@ derived_dimentions = {
 }
 
 joule_heating = {
-	:wraps => coil.wraps,
-	:coil_length => (coil.coil_length)*mm,
-	:amp_turn => drive_amps*coil.wraps * Unit("count"),
-	:drive_amps => drive_amps, 
-	:wire_resistance => wire_resistance, 
-	:coil_resistance => coil_resistance, 
-	:specific_heat_of_copper => specific_heat_of_copper, 
-	:atomic_weight_of_copper => atomic_weight_of_copper, 
-	:joule_heating => joule_heating , 
-	:coil_weight_in_moles => coil_weight_in_moles, 
-	:coil_weight => coil_weight, 
+	# :wraps => coil.wraps,
+	# :coil_length => (coil.coil_length)*mm,
+	# :amp_turn => drive_amps*coil.wraps * Unit("count"),
+	# :drive_amps => drive_amps, 
+	# :wire_resistance => wire_resistance, 
+	# :coil_resistance => coil_resistance, 
+	# :specific_heat_of_copper => specific_heat_of_copper, 
+	# :atomic_weight_of_copper => atomic_weight_of_copper, 
+	# :joule_heating => joule_heating , 
+	# :coil_weight_in_moles => coil_weight_in_moles, 
+	# :coil_weight => coil_weight, 
 
 	
 }
@@ -170,7 +170,12 @@ if true #parts.include?("chassis")
 		
 		# `#{mged} 'in torus#{index} eto #{v.mged} #{v.mged} #{torus_ring_size}  #{((v.normal)*((channel_thickness/2)+minimum_wall_thickness)).mged}   #{((channel_thickness/2)+minimum_wall_thickness)} '` #the eto solid
 
-		`#{mged} 'in torus#{index} eto #{v.mged} #{v.mged} #{torus_ring_size}  #{((v.normal)*(ribbon_width/2+minimum_wall_thickness)).mged}   #{((channel_thickness/2)+minimum_wall_thickness)} '` #the eto solid
+		#determin major axis depending on coil proportions
+		major_minor = [((ribbon_width/2+minimum_wall_thickness)),((channel_thickness/2)+minimum_wall_thickness)]
+		major_minor = major_minor.reverse if major_minor[0] < major_minor[1]
+		
+
+		`#{mged} 'in torus#{index} eto #{v.mged} #{v.mged} #{torus_ring_size}  #{((v.normal)*major_minor[0]).mged}   #{major_minor[1]} '` #the eto solid
 		
 		`#{mged} 'in torus_negative_outer#{index} rcc #{v.mged} #{(v.inverse.normal*(ribbon_width/2)).mged} #{torus_ring_size+(channel_thickness/2)} '` #the outside radious of the ribbon channel
 		`#{mged} 'in torus_negative_inner#{index} rcc #{v.mged} #{(v.inverse.normal*(ribbon_width/2)).mged} #{torus_ring_size-(channel_thickness/2)}'` #the inside radious of the ribbon channel
@@ -186,14 +191,14 @@ if true #parts.include?("chassis")
 		a = a * joint_nudge # nudge the joint closer to the center
 		b =cross_product(a,(edge[1]-edge[0])) # this is the vector of the half joint
 		b = b.normal*scale_factor* joint_nudge_length # get the unit vector for this direction and scale
-		[b,b.inverse].each_with_index do |bi,i|
-			`#{mged} 'in joint#{i+1}_#{index} rcc #{a.mged} #{bi.mged} #{joint_radius}'` 
-			`#{mged} 'in joint_negative#{i+1}_#{index} rcc #{a.mged} #{(bi*1.4).mged} #{joint_negative_radius}'` 
-			`#{mged} 'in junction_box#{i+1}_#{index} sph #{(a+(bi*1.20)).mged} 3'` 
-		end
+		# [b,b.inverse].each_with_index do |bi,i|
+			`#{mged} 'in joint_#{index} rcc #{(a+b).mged} #{(b.inverse*2).mged} #{joint_radius}'` 
+			`#{mged} 'in joint_negative_#{index} rcc #{(a+b).mged} #{(b.inverse*2).mged} #{joint_negative_radius}'` 
+			# `#{mged} 'in junction_box#{i+1}_#{index} sph #{(a+(bi*1.20)).mged} 3'` 
+		# end
 	end
-	`#{mged} 'comb solid.c u #{(0..29).map{|index| " joint_negative1_#{index} u joint2_#{index}"}.join(" u ")} u #{(0..5).map{|index| "torus#{index}"}.join(" u ")}'` #combine the pieces
-	`#{mged} 'comb negative_form.c u #{(0..29).map{|index| " joint_negative1_#{index} u joint_negative2_#{index}  "}.join(" u ")} u #{(0..11).map{|index| "torus_negative#{index}.c u lid_knockout#{index}"}.join(" u ") } '` #combine the pieces
+	`#{mged} 'comb solid.c u #{(0..Cube.edges.size).map{|index| " joint_#{index} "}.join(" u ")} u #{(0..5).map{|index| "torus#{index}"}.join(" u ")}'` #combine the pieces
+	`#{mged} 'comb negative_form.c u #{(0..Cube.edges.size).map{|index| " joint_negative_#{index}  "}.join(" u ")} u #{(0..11).map{|index| "torus_negative#{index}.c u lid_knockout#{index}"}.join(" u ") } '` #combine the pieces
 	`#{mged} 'comb chassis u solid.c - negative_form.c'` #combine the pieces
 end
 
