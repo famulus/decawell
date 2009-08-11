@@ -50,6 +50,24 @@ module Geometry
 
 	PHI = (1+Math.sqrt(5))/2
 
+class Cube
+			def self.vertices 
+			Matrix[
+
+				[+1,+1,+1],
+				[+1,+1,-1],
+				[+1,-1,-1],
+				[+1,-1,+1],
+				[-1,-1,-1],
+				[-1,+1,+1],
+				[-1,+1,-1],
+				[-1,-1,+1],
+
+				].row_vectors()
+		end
+
+end
+
 	class Dodecahedron
 
 		def self.vertices 
