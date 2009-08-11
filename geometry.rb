@@ -72,6 +72,21 @@ module Geometry
 				[1 , 3 , 7 , 5],
 				[2 , 1 , 5 , 6]].map{|a|a.map{|b|b-1}} #shift for a zero based index
 			end
+			
+			def self.edge_indices
+				[[1,2],
+				[1,3],
+				[1,5],
+				[2,4],
+				[2,6],
+				[3,4],
+				[3,7],
+				[4,8],
+				[5,6],
+				[5,7],
+				[6,8],
+				[7,8]].map{|a|a.map{|b|b-1}} #shift for a zero based index
+			end
 			def self.octahedron
 				faces.map do |face|
 					midpoint  = Vector.average(*face.map { |v|v  })
@@ -81,6 +96,9 @@ module Geometry
 
 			def self.faces
 				self.faces_indices.map { |f| f.map{|v|vertices[v]}  }
+			end
+			def self.edges
+				self.edge_indices.map { |f| f.map{|v|vertices[v]} }
 			end
 
 		end
