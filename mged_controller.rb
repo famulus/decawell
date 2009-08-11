@@ -30,8 +30,8 @@ scale_factor = 37 # global scaling factor
 
 ribbon_width = 4.2
 ribbon_thickness = 0.3 # mm 
-turns = 5
-minimum_wall_thickness = 1.7 #mm
+turns = 7
+minimum_wall_thickness = 2 #mm
 
 
 outside_radius = (Dodecahedron.vertices[0].r) *scale_factor #the distance from the center of the machine to the furthest edge of the core
@@ -192,8 +192,7 @@ if true #parts.include?("chassis")
 			`#{mged} 'in junction_box#{i+1}_#{index} sph #{(a+(bi*1.20)).mged} 3'` 
 		end
 	end
-	`#{mged} 'comb solid.c u #{(0..29).map{|index| " joint1_#{index} u joint2_#{index}"}.join(" u ")} u #{(0..11).map{|index| "torus#{index}"}.join(" u ")}'` #combine the pieces
-	# `#{mged} 'comb negative_form.c u #{(0..29).map{|index| " joint_negative1_#{index} u joint_negative2_#{index} u junction_box1_#{index} u junction_box2_#{index}"}.join(" u ")} u #{(0..11).map{|index| "torus_negative#{index}.c u lid_knockout#{index}"}.join(" u ") } '` #combine the pieces
+	`#{mged} 'comb solid.c u #{(0..29).map{|index| " joint_negative1_#{index} u joint2_#{index}"}.join(" u ")} u #{(0..11).map{|index| "torus#{index}"}.join(" u ")}'` #combine the pieces
 	`#{mged} 'comb negative_form.c u #{(0..29).map{|index| " joint_negative1_#{index} u joint_negative2_#{index}  "}.join(" u ")} u #{(0..11).map{|index| "torus_negative#{index}.c u lid_knockout#{index}"}.join(" u ") } '` #combine the pieces
 	`#{mged} 'comb chassis u solid.c - negative_form.c'` #combine the pieces
 end
