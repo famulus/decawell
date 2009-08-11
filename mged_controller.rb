@@ -49,7 +49,7 @@ torus_negative = 0.72 * torus
 joint_radius = (ribbon_width/2) + (minimum_wall_thickness)
 joint_negative_radius = (ribbon_width/2) + 0.05
 joint_nudge = 0.87 # this is a percentage scaling of the vector defining the ideal joint location
-joint_nudge_length = 0.12
+joint_nudge_length = 0.16
 # coil_wire_diameter = 2.053  # mm this 12 gauge AWS
 coil_wire_diameter = 1.1  # mm test wire
 coil = Coil.new((torus_negative*2), coil_wire_diameter, torus_ring_size)
@@ -179,7 +179,6 @@ if true #parts.include?("chassis")
 		
 		`#{mged} 'in torus_negative_outer#{index} rcc #{v.mged} #{(v.inverse.normal*(ribbon_width/2)).mged} #{torus_ring_size+(channel_thickness/2)} '` #the outside radious of the ribbon channel
 		`#{mged} 'in torus_negative_inner#{index} rcc #{v.mged} #{(v.inverse.normal*(ribbon_width/2)).mged} #{torus_ring_size-(channel_thickness/2)}'` #the inside radious of the ribbon channel
-		`#{mged} 'in cooling_channel#{index} tor #{v.mged} #{v.mged} #{torus_ring_size} #{ribbon_width/4}'` #cooling channel
 
 		`#{mged} 'comb torus_negative#{index}.c u torus_negative_outer#{index} - torus_negative_inner#{index} '` #this hollow center of the torus
 		
@@ -191,11 +190,8 @@ if true #parts.include?("chassis")
 		a = a * joint_nudge # nudge the joint closer to the center
 		b =cross_product(a,(edge[1]-edge[0])) # this is the vector of the half joint
 		b = b.normal*scale_factor* joint_nudge_length # get the unit vector for this direction and scale
-		# [b,b.inverse].each_with_index do |bi,i|
-			`#{mged} 'in joint_#{index} rcc #{(a+b).mged} #{(b.inverse*2).mged} #{joint_radius}'` 
-			`#{mged} 'in joint_negative_#{index} rcc #{(a+b).mged} #{(b.inverse*2).mged} #{joint_negative_radius}'` 
-			# `#{mged} 'in junction_box#{i+1}_#{index} sph #{(a+(bi*1.20)).mged} 3'` 
-		# end
+		`#{mged} 'in joint_#{index} rcc #{(a+b).mged} #{(b.inverse*2).mged} #{joint_radius}'` 
+		`#{mged} 'in joint_negative_#{index} rcc #{(a+b).mged} #{(b.inverse*2).mged} #{joint_negative_radius}'` 
 	end
 	`#{mged} 'comb solid.c u #{(0..Cube.edges.size).map{|index| " joint_#{index} "}.join(" u ")} u #{(0..5).map{|index| "torus#{index}"}.join(" u ")}'` #combine the pieces
 	`#{mged} 'comb negative_form.c u #{(0..Cube.edges.size).map{|index| " joint_negative_#{index}  "}.join(" u ")} u #{(0..11).map{|index| "torus_negative#{index}.c u lid_knockout#{index}"}.join(" u ") } '` #combine the pieces
@@ -216,7 +212,7 @@ if parts.include?("lids")
 	step = Vector[40,0,0]
 	(0..0).map do |index| # originallty we needed many lids, but now we only need one
 		index1 = index+1
-		v = Dodecahedron.icosahedron.first
+		v = Cube.octahedron.first
 		v = v*scale_factor
 
 		`#{mged} 'in torus_negative_outer#{index} rcc #{v.mged} #{(v.inverse.normal*(ribbon_width/2)).mged} #{torus_ring_size+(channel_thickness/2)} '` #the outside radious of the ribbon channel
