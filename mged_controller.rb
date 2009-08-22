@@ -56,8 +56,8 @@ coil = Coil.new((torus_negative*2), coil_wire_diameter, torus_ring_size)
 
 channel_thickness = (ribbon_thickness*turns)+1
 
-tolerance_distance = 0.01
-# tolerance_distance = 0.08
+# tolerance_distance = 0.01
+tolerance_distance = 0.08
 
 #Joule heating calculations
 drive_amps = 2000.0 * amp
@@ -309,7 +309,7 @@ EOF`
 #this block convers the STL from the previous step back into native BRL-CAD format, and then outputs a snapshot
 `stl-g ./parts/#{part_with_git_hash}.stl ./temp/#{part}_proof.g`
 `cat <<EOF | mged -c ./temp/#{part}_proof.g
-B s.#{part}_proof
+B all
 ae 135 -35 180
 set perspective 20
 zoom .30
