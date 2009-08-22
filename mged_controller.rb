@@ -290,11 +290,8 @@ end
 
 
 parts.each do |part|
-part = `git rev-parse HEAD`+part	
-`rm -f ./#{part}.rt `
-`rm -f ./#{part}.rt.pix `
-`rm -f ./#{part}.rt.log`
-`rm -f ./#{part}.png`
+
+part_with_git_hash = "#{`git rev-parse HEAD`.chomp}_#{part}"	#give the STL output a uniq ID based on git repo hash
 
 
 `cat <<EOF | mged -c #{DB}
@@ -302,18 +299,20 @@ B #{part}
 ae 135 -35 180
 set perspective 20
 zoom .30
-saveview #{part}.rt
+saveview ./temp/#{part}.rt
 EOF`
 	
-`./#{part}.rt -s1024`
-`pix-png -s1024 < #{part}.rt.pix > #{part}.png` #generate a png from the rt file
-`open ./#{part}.png` # open the png in preview.app
+`./temp/#{part}.rt -s1024`
+`mv #{part}.rt.pix ./temp/#{part}.rt.pix`
+`pix-png -s1024 < ./temp/#{part}.rt.pix > ./temp/#{part_with_git_hash}.png` #generate a png from the rt file
+`open ./temp/#{part_with_git_hash}.png` # open the png in preview.app
+
 
 # `g-stl -a 0.005 -D 0.005 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 # `g-stl -a 0.01 -D 0.01 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 # `g-stl -a #{tolerance_distance} -D #{tolerance_distance} -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 
-`g-stl -a #{tolerance_distance} -D #{tolerance_distance} -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
+`g-stl -a #{tolerance_distance} -D #{tolerance_distance} -o ./parts/#{part_with_git_hash}.stl #{DB} #{part}` #this outputs the stl file for the part
 
 # `g-stl -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 
