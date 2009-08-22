@@ -7,7 +7,7 @@ require 'winder'
 # include Constants::Libraries
 
 
-parts = %w(chassis lids)
+parts = %w(lids)
 # parts = %w(bobbin_left bobbin_right)
 # parts = %w( cutout  lids)
 
@@ -307,18 +307,20 @@ EOF`
 `g-stl -a #{tolerance_distance} -D #{tolerance_distance} -o ./parts/#{part_with_git_hash}.stl #{DB} #{part}` #this outputs the stl file for the part
 
 
-# `stl-g #{part}.stl #{part}_proof.g`
-# `cat <<EOF | mged -c #{part}_proof.g
-# B s.#{part}
-# ae 135 -35 180
-# set perspective 20
-# zoom .30
-# saveview #{part}.rt
-# EOF`
+`stl-g ./temp/#{part}.stl ./temp/#{part}_proof.g`
+`cat <<EOF | mged -c ./temp/#{part}_proof.g
+B s.#{part}
+ae 135 -35 180
+set perspective 20
+zoom .30
+saveview ./temp/#{part}_proof.rt
+EOF`
 	
-# `./#{part}.rt -s1024`
-# `pix-png -s1024 < #{part}.rt.pix > #{part}.png` #generate a png from the rt file
-# `open ./#{part}.png` # open the png in preview.app
+`./temp/#{part}_proof.rt -s1024`
+`mv #{part}_proof.rt.pix ./temp/#{part}_proof.rt.pix` # move this file to the temp directory
+
+`pix-png -s1024 < ./temp/#{part}_proof.rt.pix > ./temp/#{part}_proof.png` #generate a png from the rt file
+`open ./temp/#{part}_proof.png` # open the png in preview.app
 
 
 end
