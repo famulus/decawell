@@ -217,12 +217,8 @@ if parts.include?("lids")
 
 		`#{mged} 'in torus_negative_outer#{index} rcc #{v.mged} #{(v.inverse.normal*(ribbon_width/2)).mged} #{torus_ring_size+(channel_thickness/2)} '` #the outside radious of the ribbon channel
 		`#{mged} 'in torus_negative_inner#{index} rcc #{v.mged} #{(v.inverse.normal*(ribbon_width/2)).mged} #{torus_ring_size-(channel_thickness/2)}'` #the inside radious of the ribbon channel
-
 		`#{mged} 'comb lid_torus_negative#{index} u torus_negative_outer#{index} -  torus_negative_inner#{index} '` #this hollow center of the torus
-
-
 		`#{mged} 'in lid_lid_knockout#{index} rcc #{v.mged}  #{(v*2).mged} #{torus_ring_size+torus}'` #this removed the face of the torus so we can install coils
-		
 	end
 			`#{mged} 'comb lids u #{(0..0).map{|index| "torus#{index} - lid_torus_negative#{index} - lid_lid_knockout#{index}"}.join(" u ")}'` #combine the pieces
 
@@ -288,7 +284,7 @@ if parts.include?("lid_with_access")
 end
 
 
-
+`rm -f ./temp/*` #clear out temp files
 parts.each do |part|
 
 part_with_git_hash = "#{`git rev-parse HEAD`.chomp}_#{part}"	#give the STL output a uniq ID based on git repo hash
@@ -305,16 +301,11 @@ EOF`
 `./temp/#{part}.rt -s1024`
 `mv #{part}.rt.pix ./temp/#{part}.rt.pix` # move this file to the temp directory
 `pix-png -s1024 < ./temp/#{part}.rt.pix > ./parts/#{part_with_git_hash}.png` #generate a png from the rt file
-`open ./temp/#{part_with_git_hash}.png` # open the png in preview.app
+`open ./parts/#{part_with_git_hash}.png` # open the png in preview.app
 
-
-# `g-stl -a 0.005 -D 0.005 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
-# `g-stl -a 0.01 -D 0.01 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
-# `g-stl -a #{tolerance_distance} -D #{tolerance_distance} -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 
 `g-stl -a #{tolerance_distance} -D #{tolerance_distance} -o ./parts/#{part_with_git_hash}.stl #{DB} #{part}` #this outputs the stl file for the part
 
-# `g-stl -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 
 # `stl-g #{part}.stl #{part}_proof.g`
 # `cat <<EOF | mged -c #{part}_proof.g
