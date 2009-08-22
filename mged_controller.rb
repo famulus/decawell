@@ -193,8 +193,8 @@ if true #parts.include?("chassis")
 		`#{mged} 'in joint_#{index} rcc #{(a+b).mged} #{(b.inverse*2).mged} #{joint_radius}'` 
 		`#{mged} 'in joint_negative_#{index} rcc #{(a+b).mged} #{(b.inverse*2).mged} #{joint_negative_radius}'` 
 	end
-	`#{mged} 'comb solid.c u #{(0..Cube.edges.size).map{|index| " joint_#{index} "}.join(" u ")} u #{(0..5).map{|index| "torus#{index}"}.join(" u ")}'` #combine the pieces
-	`#{mged} 'comb negative_form.c u #{(0..Cube.edges.size).map{|index| " joint_negative_#{index}  "}.join(" u ")} u #{(0..5).map{|index| "torus_negative#{index}.c u lid_knockout#{index}"}.join(" u ") } '` #combine the pieces
+	`#{mged} 'comb solid.c u #{(0...Cube.edges.size).map{|index| " joint_#{index} "}.join(" u ")} u #{(0..5).map{|index| "torus#{index}"}.join(" u ")}'` #combine the pieces
+	`#{mged} 'comb negative_form.c u #{(0...Cube.edges.size).map{|index| " joint_negative_#{index}  "}.join(" u ")} u #{(0..5).map{|index| "torus_negative#{index}.c u lid_knockout#{index}"}.join(" u ") } '` #combine the pieces
 	`#{mged} 'comb chassis u solid.c - negative_form.c'` #combine the pieces
 end
 
