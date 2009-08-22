@@ -309,7 +309,7 @@ EOF`
 #this block convers the STL from the previous step back into native BRL-CAD format, and then outputs a snapshot
 `stl-g ./parts/#{part_with_git_hash}.stl ./temp/#{part}_proof.g`
 `cat <<EOF | mged -c ./temp/#{part}_proof.g
-B s.#{part}
+B s.#{part}_proof
 ae 135 -35 180
 set perspective 20
 zoom .30
