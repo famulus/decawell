@@ -7,7 +7,7 @@ require 'winder'
 # include Constants::Libraries
 
 
-parts = %w(lids)
+parts = %w(chassis lids)
 # parts = %w(bobbin_left bobbin_right)
 # parts = %w( cutout  lids)
 
@@ -56,8 +56,8 @@ coil = Coil.new((torus_negative*2), coil_wire_diameter, torus_ring_size)
 
 channel_thickness = (ribbon_thickness*turns)+1
 
-# tolerance_distance = 0.01
-tolerance_distance = 0.08
+ tolerance_distance = 0.01
+# tolerance_distance = 0.08
 
 #Joule heating calculations
 drive_amps = 2000.0 * amp
