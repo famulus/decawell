@@ -289,7 +289,7 @@ parts.each do |part|
 
 part_with_git_hash = "#{`git rev-parse HEAD`.chomp}_#{part}"	#give the STL output a uniq ID based on git repo hash
 
-
+# this block prepares a snapshot picture of the part
 `cat <<EOF | mged -c #{DB}
 B #{part}
 ae 135 -35 180
@@ -298,16 +298,16 @@ zoom .30
 saveview ./temp/#{part}.rt
 EOF`
 	
-`./temp/#{part}.rt -s1024`
+`./temp/#{part}.rt -s1024` # calling the .rt file outputs a .pix file
 `mv #{part}.rt.pix ./temp/#{part}.rt.pix` # move this file to the temp directory
-`pix-png -s1024 < ./temp/#{part}.rt.pix > ./parts/#{part_with_git_hash}.png` #generate a png from the rt file
+`pix-png -s1024 < ./temp/#{part}.rt.pix > ./parts/#{part_with_git_hash}.png` #generate a png from the rt.pix file
 `open ./parts/#{part_with_git_hash}.png` # open the png in preview.app
 
 
 `g-stl -a #{tolerance_distance} -D #{tolerance_distance} -o ./parts/#{part_with_git_hash}.stl #{DB} #{part}` #this outputs the stl file for the part
 
-
-`stl-g ./temp/#{part}.stl ./temp/#{part}_proof.g`
+#this block convers the STL from the previous step back into native BRL-CAD format, and then outputs a snapshot
+`stl-g ./parts/#{part_with_git_hash}.stl ./temp/#{part}_proof.g`
 `cat <<EOF | mged -c ./temp/#{part}_proof.g
 B s.#{part}
 ae 135 -35 180
