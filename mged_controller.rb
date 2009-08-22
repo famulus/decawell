@@ -56,8 +56,8 @@ coil = Coil.new((torus_negative*2), coil_wire_diameter, torus_ring_size)
 
 channel_thickness = (ribbon_thickness*turns)+1
 
-# tolerance_distance = 0.01
-tolerance_distance = 0.08
+tolerance_distance = 0.01
+# tolerance_distance = 0.08
 
 #Joule heating calculations
 drive_amps = 2000.0 * amp
@@ -290,6 +290,7 @@ end
 
 
 parts.each do |part|
+part = `git rev-parse HEAD`+part	
 `rm -f ./#{part}.rt `
 `rm -f ./#{part}.rt.pix `
 `rm -f ./#{part}.rt.log`
@@ -312,7 +313,7 @@ EOF`
 # `g-stl -a 0.01 -D 0.01 -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 # `g-stl -a #{tolerance_distance} -D #{tolerance_distance} -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 
-# `g-stl -a #{tolerance_distance} -D #{tolerance_distance} -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
+`g-stl -a #{tolerance_distance} -D #{tolerance_distance} -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 
 # `g-stl -o #{part}.stl #{DB} #{part}` #this outputs the stl file for the part
 
