@@ -220,7 +220,7 @@ if parts.include?("lids")
 		`#{mged} 'comb lid_torus_negative#{index} u torus_negative_outer#{index} -  torus_negative_inner#{index} '` #this hollow center of the torus
 		`#{mged} 'in lid_lid_knockout#{index} rcc #{v.mged}  #{(v*2).mged} #{torus_ring_size+torus}'` #this removed the face of the torus so we can install coils
 	end
-			`#{mged} 'comb lids u #{(0..0).map{|index| "torus#{index} - lid_torus_negative#{index} - lid_lid_knockout#{index}"}.join(" u ")}'` #combine the pieces
+			`#{mged} 'r lids u #{(0..0).map{|index| "torus#{index} - lid_torus_negative#{index} - lid_lid_knockout#{index}"}.join(" u ")}'` #combine the pieces
 
 end
 
