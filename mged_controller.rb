@@ -111,21 +111,6 @@ derived_dimentions = {
 	:donut_hole_radius => torus_ring_size -torus,
 }
 
-joule_heating = {
-	# :wraps => coil.wraps,
-	# :coil_length => (coil.coil_length)*mm,
-	# :amp_turn => drive_amps*coil.wraps * Unit("count"),
-	# :drive_amps => drive_amps, 
-	# :wire_resistance => wire_resistance, 
-	# :coil_resistance => coil_resistance, 
-	# :specific_heat_of_copper => specific_heat_of_copper, 
-	# :atomic_weight_of_copper => atomic_weight_of_copper, 
-	# :joule_heating => joule_heating , 
-	# :coil_weight_in_moles => coil_weight_in_moles, 
-	# :coil_weight => coil_weight, 
-
-	
-}
 
 amperes_force = {
 	:magnetic_constant => magnetic_constant, 
