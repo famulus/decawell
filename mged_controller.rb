@@ -3,8 +3,6 @@ include Geometry
 require 'facets'
 require 'ruby-units'
 require 'winder'
-# require 'constants'
-# include Constants::Libraries
 
 
 parts = %w(chassis lids)
