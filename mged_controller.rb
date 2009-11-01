@@ -38,7 +38,6 @@ joint_radius = (ribbon_width/2) + (minimum_wall_thickness)
 joint_negative_radius = (ribbon_width/2) + 0.05
 joint_nudge = 0.87 # this is a percentage scaling of the vector defining the ideal joint location
 joint_nudge_length = 0.16
-# coil_wire_diameter = 2.053  # mm this 12 gauge AWS
 coil_wire_diameter = 1.1  # mm test wire
 coil = Coil.new((torus_negative*2), coil_wire_diameter, torus_ring_size)
 
@@ -55,25 +54,7 @@ seperation_of_wires = (torus_midplane_radius*mm) >> Unit("m") # in m
 coil_force_per_meter = magnetic_force_constant * ((drive_amps**2)/seperation_of_wires)
 coil_force = coil_force_per_meter * (((coil.coil_length)*mm) >> Unit('m'))
 
-#check out wiki: technology applications of superconductors
-#Superconductor critical current 
-ybco_critical_current = Unit('200 ampere/cm') >>Unit('ampere/mm') #http://www.theva.com/downloads/en/Datasheet_CC.pdf
-single_turn = 2*torus_ring_size*Math::PI*mm
-ybco_current_density_per_turn = (single_turn * ybco_critical_current)
 
-
-#test coil
-# puts (Unit('5 volts')/(Unit('22 kohm')>>Unit('ohm'))) 
-puts( (Unit('1 Joule')/Unit('2 sec')) >> Unit('watt'))
-
-
-
-superconducting = {
-	:ybco_critical_current => ybco_critical_current, 
-	:single_turn => single_turn, 
-	:single_turn_12 => single_turn*12 >> Unit('m'), 
-	:ybco_current_density_per_turn => ybco_current_density_per_turn, 
-}
 
 
 derived_dimentions = {
