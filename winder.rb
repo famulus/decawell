@@ -205,17 +205,3 @@ class Motor
 
 end
 
-# 
-# 5.times do |rev|
-# 	m.step(400)
-# 
-# 	wg.step(10)
-# 
-# 
-# end
-# 
-# 
-# @sp.putc '0'
-# 
-# 
-# @sp.close
