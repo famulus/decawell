@@ -1,8 +1,7 @@
+require 'ruby-units'
 require 'geometry'
 include Geometry
 require 'facets'
-require 'ruby-units'
-require 'winder'
 
 
 parts = %w(chassis lids)
@@ -48,15 +47,6 @@ channel_thickness = (ribbon_thickness*turns)+1
  tolerance_distance = 0.01
 # tolerance_distance = 0.08
 
-#Joule heating calculations
-drive_amps = 2000.0 * amp
-wire_resistance = (Unit("1.5883 ohm")/Unit("1000 ft"))  >> Unit("ohm/mm")  # ohms per mm  derived from http://www.eskimo.com/~billb/tesla/wire1.txt
-coil_resistance = wire_resistance *(coil.coil_length*mm)
-specific_heat_of_copper = (Unit("24.440 J")/Unit("1 mole")/Unit("1 kelvin"))
-atomic_weight_of_copper = (Unit("63.546 g")/Unit("mole"))
-coil_weight = ((Unit("19.765 lb")/Unit("1000 ft") >> Unit("g/mm"))*(coil.coil_length*mm)) 
-coil_weight_in_moles = (coil_weight * atomic_weight_of_copper.inverse)
-joule_heating = ((coil_resistance * (drive_amps**2))>>Unit('watt')   )* (specific_heat_of_copper.inverse) *coil_weight_in_moles.inverse
 
 
 # Ampère's force law calculations  http://en.wikipedia.org/wiki/Ampère%27s_force_law
