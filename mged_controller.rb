@@ -14,13 +14,6 @@ mm = Unit("mm")
 amp = Unit("amp")
 ohm = Unit("ohm")
 
-# class Unit < Numeric
-# 	UNIT_DEFINITIONS = {
-# 		'<watt>'  => [%w{watt}, 1.0, :power, %w{<Joule>} , %w{<second>} ]
-# 	}
-# end
-# Unit.setup
-
 
 scale_factor = 37 # global scaling factor
 
