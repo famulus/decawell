@@ -39,11 +39,10 @@ joint_negative_radius = (ribbon_width/2) + 0.05
 joint_nudge = 0.87 # this is a percentage scaling of the vector defining the ideal joint location
 joint_nudge_length = 0.16
 coil_wire_diameter = 1.1  # mm test wire
-coil = Coil.new((torus_negative*2), coil_wire_diameter, torus_ring_size)
 
 channel_thickness = (ribbon_thickness*turns)+1
 
- tolerance_distance = 0.01
+tolerance_distance = 0.01
 
 
 
