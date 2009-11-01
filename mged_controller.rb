@@ -8,8 +8,6 @@ require 'winder'
 
 
 parts = %w(chassis lids)
-# parts = %w(bobbin_left bobbin_right)
-# parts = %w( cutout  lids)
 
 DB = "decawell.g"
 mged ="mged -c  #{DB} "
@@ -150,23 +148,14 @@ if true #parts.include?("chassis")
 	
 	Cube.octahedron.each_with_index do |v,index| # draw the 12 tori
 		v = v*scale_factor
-		# `#{mged} 'in torus#{index} tor #{v.mged} #{v.mged} #{torus_ring_size} #{torus}'` #the torus solid
-		# in okko eto 0 0 0   1 0 0   3  1 0 0   .6
-		
-		# `#{mged} 'in torus#{index} eto #{v.mged} #{v.mged} #{torus_ring_size}  #{((v.normal)*((channel_thickness/2)+minimum_wall_thickness)).mged}   #{((channel_thickness/2)+minimum_wall_thickness)} '` #the eto solid
-
 		#determin major axis depending on coil proportions
 		major_minor = [((ribbon_width/2+minimum_wall_thickness)),((channel_thickness/2)+minimum_wall_thickness)]
 		major_minor = major_minor.reverse if major_minor[0] < major_minor[1]
 		
-
 		`#{mged} 'in torus#{index} eto #{v.mged} #{v.mged} #{torus_ring_size}  #{((v.normal)*major_minor[0]).mged}   #{major_minor[1]} '` #the eto solid
-		
 		`#{mged} 'in torus_negative_outer#{index} rcc #{v.mged} #{(v.inverse.normal*(ribbon_width/2)).mged} #{torus_ring_size+(channel_thickness/2)} '` #the outside radious of the ribbon channel
 		`#{mged} 'in torus_negative_inner#{index} rcc #{v.mged} #{(v.inverse.normal*(ribbon_width/2)).mged} #{torus_ring_size-(channel_thickness/2)}'` #the inside radious of the ribbon channel
-
 		`#{mged} 'comb torus_negative#{index}.c u torus_negative_outer#{index} - torus_negative_inner#{index} '` #this hollow center of the torus
-		
 		`#{mged} 'in lid_knockout#{index} rcc #{v.mged} #{(v.normal*torus ).mged} #{torus_ring_size+torus}'` #this removed the face of the torus so we can install coils
 	end
 	Cube.edges.each_with_index do |edge,index| #insert the 30 joints
@@ -207,58 +196,6 @@ if parts.include?("lids")
 
 end
 
-# the bobbin 
-
-if parts.include?("bobbin_left")
-	offset = Vector[20,0,0]
-	wall_thickness = (2.6) # mm
-	shaft_radius = (6.35 ) /2.0
-	shaft_length = (16 )
-	screw_hole_radius = 2 #mm
-	screw_hole_position_radius = (torus_ring_size - torus)*0.7 #mm
-	notch_origin = shaft_radius -((shaft_radius * 2) - (5.8 )) 
-	puts "notch_origin#{notch_origin}"
-	puts "wall_thickness: #{wall_thickness}"
-	`#{mged} 'in bobbin_torus tor 0 0 0 #{offset.mged} #{torus_ring_size} #{torus_negative+wall_thickness}'` #the torus solid
-	`#{mged} 'in bobbin_negative tor 0 0 0  #{offset.mged} #{torus_ring_size} #{torus_negative}'` #this hollow center of the torus
-	`#{mged} 'in bobbin_half rcc 0 0 0 #{(offset.normal*torus).mged} #{torus_ring_size}'` #this defines half the torus, so the bobin splits apart
-	`#{mged} 'in support_plate rcc 0 0 0 #{(offset.normal*wall_thickness).mged} #{torus_ring_size-torus + wall_thickness  }'` #the plate to the shaft
-	`#{mged} 'in shaft_negative rcc 0 0 0  #{(offset.normal*shaft_length).mged} #{shaft_radius  }'` #the plate to the shaft
-	`#{mged} 'in shaft_notch rcc #{(Vector[0,notch_origin,0]).mged} #{Vector[0,shaft_length,0].mged}  #{shaft_length*1.2  }'` #the plate to the shaft
-
-	`#{mged} 'in screw_hole rcc 0 #{(screw_hole_position_radius)} 0  #{(offset.normal*shaft_length).mged} #{screw_hole_radius}'` #the screw hole to hold the halves together
-	`#{mged} 'in screw_hole2 rcc 0 0 #{screw_hole_position_radius}  #{(offset.normal*shaft_length).mged} #{screw_hole_radius}'` #the screw hole to hold the halves together
-	`#{mged} 'mirror screw_hole screw_hole3 y'` #combine the pieces
-	`#{mged} 'mirror screw_hole2 screw_hole4 z'` #combine the pieces
-
-	`#{mged} 'in wire_access_notch rcc 0 #{torus_ring_size -torus_negative+5 } 0 #{(Vector[0,0,0] - Vector[0,torus_ring_size -torus_negative ,0]).normal*15} 3'` #combine the pieces
-
-
-	`#{mged} 'comb shaft_with_notch u screw_hole4 u screw_hole3 u screw_hole2 u screw_hole u shaft_negative - shaft_notch '` # form the shaft with notch
-	`#{mged} 'comb bobbin1 u support_plate - shaft_with_notch  u bobbin_torus + bobbin_half - bobbin_negative  '` # form the first half of the bobbin
-	`#{mged} 'comb bobbin_left u bobbin1 - wire_access_notch  '` # form the first half of the bobbin
-
-	`cat <<EOF | mged -c #{DB}
-	B bobbin_left	
-	oed / bobbin_left/bobbin1/bobbin_torus	
-	translate #{offset.mged}
-	accept
-EOF`
-	
-	
-		`#{mged} 'mirror bobbin_left bobbin_right x'` #combine the pieces
-
-
-# 	`cat <<EOF | mged -c #{DB}
-# 	B bobbin	
-# 	oed bobbin bobbin_twin
-# 	translate #{(Vector[0,0,0] -offset).mged}
-# 	accept
-# EOF`
-
-
-	# `#{mged} 'r bobbin_pair u bobbin  u bobbin_twin'` #combine the pieces
-end
 
 if parts.include?("lid_with_access")
 	`#{mged} 'in lid_with_access_torus#{index} tor #{(step*index1).mged} #{(step*index1).mged}  #{torus_ring_size} #{torus}'` #the torus solid
