@@ -1,4 +1,0 @@
---- 
-serial_port: /dev/tty.usbserial*
-physical_reset: false
-mcu: atmega168
