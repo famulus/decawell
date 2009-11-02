@@ -1,0 +1,135 @@
+= Module methods
+
+Daqmxbase::reset_device(deviceName)
+(errorCode, serno) = Daqmxbase::get_dev_serial_num(deviceName)
+
+== Don't use:
+Daqmxbase::get_extended_error_info (automatically called on errors)
+Daqmxbase::create_task (called from Daqmxbase::Task::initialize())
+Daqmxbase::load_task (called from Daqmxbase::Task::initialize())
+
+= Constants
+
+Daqmxbase::ERROR_*
+Daqmxbase::WARNING_*
+Daqmxbase::VAL_*
+Daqmxbase::SUCCESS
+
+= class Daqmxbase::Task
+
+== Daqmxbase::Task instance methods
+
+initialize(taskName=nil)
+	given nil or empty taskName, does create_task, else load_task.
+
+clear
+start
+stop
+
+is_task_done
+	returns true if task is done (should probably be is_task_done? or done?)
+
+t	(don't call)
+t=	(don't call)
+
+* cfg_anlg_edge_ref_trig
+* cfg_anlg_edge_start_trig
+* cfg_dig_edge_ref_trig
+
+cfg_dig_edge_start_trig(triggerSource,triggerEdge)
+	On USB-6008/9, only usable with Analog Input
+	cfg_dig_edge_start_trig("Dev1/PFI0", Daqmxbase::VAL_FALLING)
+
+* disable_ref_trig
+
+disable_start_trig
+
+cfg_implicit_timing
+
+Sets only the number of samples to acquire or generate without specifying
+timing. Typically, you should use this function when the task does not require
+sample timing, such as tasks that use counters for buffered frequency
+measurement, buffered period measurement, or pulse train generation.
+
+  task.cfg_implicit_timing(sampleMode, samplesPerChan)
+	sampleMode = VAL_FINITE_SAMPS | VAL_CONT_SAMPS
+
+cfg_samp_clk_timing
+
+Sets the source of the Sample Clock, the rate of the Sample Clock, and the
+number of samples to acquire or generate.
+
+  task.cfg_samp_clk_timing(source, sampleRate, activeEdge, sampleMode, samplesPerChan)
+	source = "OnboardClock"
+	sampleRate
+
+create_aithrmcpl_chan
+create_aivoltage_chan
+create_aovoltage_chan
+create_cicount_edges_chan
+create_ciperiod_chan
+create_cipulse_width_chan
+create_copulse_chan_freq
+create_dichan
+create_dochan
+
+cfg_input_buffer
+
+read_analog_f64
+read_binary_i16
+read_binary_i32
+read_counter_f64
+read_counter_scalar_f64
+read_counter_scalar_u32
+read_counter_u32
+read_digital_scalar_u32
+read_digital_u32
+read_digital_u8
+
+write_analog_f64
+write_digital_scalar_u32
+write_digital_u32
+write_digital_u8
+
+NI USB-6008/9
+  *Supported in NI-DAQmx Base Task Configuration Utility
+  *Analog Input
+    -Digital start triggering
+    -Multi-channel, multi-sample read (scaled)
+      ai/acquireNScans
+    -Multi-channel, single sample read (scaled)
+      ai/acquire1Scan
+  *Analog Output
+    -Multi-channel, multi-sample write (scaled)
+    -Multi-channel, single-sample write (scaled)
+      ao/voltageUpdate
+  *Counter Input
+    -Simple event counting (falling edge only)
+  *Digital I/O
+    -Line input
+    -Port input
+      dio/readDigPort
+    -Port output
+      dio/writeDigPort
+    -Line output
+      ./ContReadDigChan-ExtClk
+        DAQmx Base Error: <err>Specified property is not supported by the device or is not applicable to the task.
+          can't use PFI0 with time? Rising Edge bad?
+      ./ContWriteDigPort-ExtClk
+          DAQmx Base Error: <err>Specified property is not supported by the device or is not applicable to the task.
+      ./readDigMultiplePorts
+          DAQmxBase Error -200559: Task cannot contain a channel with the specified channel type, because the task already contains channels with a different channel type.
+          Create one task for each channel type.
+         works when only one port is defined (and read as uint32).
+      ./readDigPort
+        Data read: 0xFF
+      ./readWriteDigPort
+        Data to write: 0x55
+        Samples written: 1
+        Data read: 0x55
+      ./writeDigMultiplePorts
+        DAQmxBase Error -200170: Physical channel specified does not exist on this device.
+        Refer to the documentation for channels available on this device.
+      ./writeDigPort
+        Data to write: 0x55
+

@@ -1,0 +1,42 @@
+NI USB-6008/9
+  *Supported in NI-DAQmx Base Task Configuration Utility
+  *Analog Input
+    -Digital start triggering
+    -Multi-channel, multi-sample read (scaled)
+      ai/acquireNScans
+    -Multi-channel, single sample read (scaled)
+      ai/acquire1Scan
+  *Analog Output
+    -Multi-channel, multi-sample write (scaled)
+    -Multi-channel, single-sample write (scaled)
+      ao/voltageUpdate
+  *Counter Input
+    -Simple event counting (falling edge only)
+  *Digital I/O
+    -Line input
+    -Port input
+      dio/readDigPort
+    -Port output
+      dio/writeDigPort
+    -Line output
+      ./ContReadDigChan-ExtClk
+        DAQmx Base Error: <err>Specified property is not supported by the device or is not applicable to the task.
+          can't use PFI0 with time? Rising Edge bad?
+      ./ContWriteDigPort-ExtClk
+          DAQmx Base Error: <err>Specified property is not supported by the device or is not applicable to the task.
+      ./readDigMultiplePorts
+          DAQmxBase Error -200559: Task cannot contain a channel with the specified channel type, because the task already contains channels with a different channel type.
+          Create one task for each channel type.
+         works when only one port is defined (and read as uint32).
+      ./readDigPort
+        Data read: 0xFF
+      ./readWriteDigPort
+        Data to write: 0x55
+        Samples written: 1
+        Data read: 0x55
+      ./writeDigMultiplePorts
+        DAQmxBase Error -200170: Physical channel specified does not exist on this device.
+        Refer to the documentation for channels available on this device.
+      ./writeDigPort
+        Data to write: 0x55
+

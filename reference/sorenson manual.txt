@@ -1,0 +1,12 @@
+3.3.1.2 Voltage Signal
+To adapt an SRL unit to voltage signal programming, connect the programming
+device as shown in Figure 3-3 and follow the procedure listed below. This method
+will alleviate the possibility of damage to the equipment by inadvertent application
+of too high a programming voltage by presetting a current llmlt "threshold’*.
+The external program power supply must have an OP-AMP output, capable of
+sinking 1 mA through CR1. External sense must be used as shown. Do not
+ground either the positive or negatlve terminals of the program power supply.
+See Unit Specifications Table 1-3 or 1-4, CURRENT MODE AMPS/AMP heading for
+the program constant. (The full scale voltage varies from 250 mV to 1V de-
+pending on model.
+

@@ -1,0 +1,11 @@
+--- /Applications/National Instruments/NI-DAQmx Base/includes/NIDAQmxBase.h.orig	2007-10-26 12:35:41.000000000 -0700
++++ /Applications/National Instruments/NI-DAQmx Base/includes/NIDAQmxBase.h	2007-10-26 12:36:48.000000000 -0700
+@@ -1247,7 +1247,7 @@
+ 
+ //int32 DllExport __CFUNC     DAQmxBaseReadBinaryU16         (TaskHandle taskHandle, int32 numSampsPerChan, float64 timeout, bool32 fillMode, uInt16 readArray[], uInt32 arraySizeInSamps, int32 *sampsPerChanRead, bool32 *reserved);
+ 
+-int32 DllExport __CFUNC     DAQmxReadBinaryI32             (TaskHandle taskHandle, int32 numSampsPerChan, float64 timeout, bool32 fillMode, int32 readArray[], uInt32 arraySizeInSamps, int32 *sampsPerChanRead, bool32 *reserved);
++int32 DllExport __CFUNC     DAQmxBaseReadBinaryI32             (TaskHandle taskHandle, int32 numSampsPerChan, float64 timeout, bool32 fillMode, int32 readArray[], uInt32 arraySizeInSamps, int32 *sampsPerChanRead, bool32 *reserved);
+ 
+ //int32 DllExport __CFUNC     DAQmxReadBinaryU32             (TaskHandle taskHandle, int32 numSampsPerChan, float64 timeout, bool32 fillMode, uInt32 readArray[], uInt32 arraySizeInSamps, int32 *sampsPerChanRead, bool32 *reserved);
+ 

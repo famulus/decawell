@@ -1,0 +1,18 @@
+Debugging ruby with NI-DAQmxBase libs:
+
+Error: dll starting at 0xf781000 not found.
+warning: <mda:msg xmlns:mda="http://schemas.microsoft.com/CLR/2004/10/mda">
+  <!--
+       DLL 'C:\Program Files\National Instruments\Shared\LabVIEW
+       Run-Time\7.0\DNCompInfo.dll' is attempting managed execution inside OS Loader
+       lock. Do not attempt to run managed code inside a DllMain or image
+       initialization function since doing so can cause the application to hang.
+   -->
+  <mda:loaderLockMsg break="true"/>
+</mda:msg>
+
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+0x7a00e881 in mscorwks_ntdef!GetIdentityAuthority ()
+   from /c/WINDOWS/Microsoft.NET/Framework/v2.0.50727/mscorwks.dll
+

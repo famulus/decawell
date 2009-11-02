@@ -1,0 +1,95 @@
+K 25
+svn:wc:ra_dav:version-url
+V 22
+/svn/!svn/ver/93/daqmx
+END
+test.rb
+K 25
+svn:wc:ra_dav:version-url
+V 30
+/svn/!svn/ver/89/daqmx/test.rb
+END
+testload.rb
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/!svn/ver/89/daqmx/testload.rb
+END
+LICENSE
+K 25
+svn:wc:ra_dav:version-url
+V 30
+/svn/!svn/ver/89/daqmx/LICENSE
+END
+rewrite.rb
+K 25
+svn:wc:ra_dav:version-url
+V 33
+/svn/!svn/ver/90/daqmx/rewrite.rb
+END
+Makefile.swig
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/svn/!svn/ver/93/daqmx/Makefile.swig
+END
+NIDAQmxBase.patch
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/!svn/ver/89/daqmx/NIDAQmxBase.patch
+END
+daqmxbase.rdoc
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/89/daqmx/daqmxbase.rdoc
+END
+daqmxbase.i
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/!svn/ver/89/daqmx/daqmxbase.i
+END
+.vimrc
+K 25
+svn:wc:ra_dav:version-url
+V 29
+/svn/!svn/ver/93/daqmx/.vimrc
+END
+capability.txt
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/89/daqmx/capability.txt
+END
+notice.txt
+K 25
+svn:wc:ra_dav:version-url
+V 33
+/svn/!svn/ver/89/daqmx/notice.txt
+END
+arraystats.rb
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/svn/!svn/ver/82/daqmx/arraystats.rb
+END
+notes.txt
+K 25
+svn:wc:ra_dav:version-url
+V 32
+/svn/!svn/ver/89/daqmx/notes.txt
+END
+daqmxbase_decls.i
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/!svn/ver/92/daqmx/daqmxbase_decls.i
+END
+daqmx.rb
+K 25
+svn:wc:ra_dav:version-url
+V 31
+/svn/!svn/ver/89/daqmx/daqmx.rb
+END

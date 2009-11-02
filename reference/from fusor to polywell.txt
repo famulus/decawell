@@ -1,0 +1,14 @@
+delta obstacles going from fusor to polywell
+
+vacuum requirements go to 9e-9 torr (current best is 9e-7)
+electron injectors
+superconducting magrid
+running SC magnet in persistent mode / controller hardware
+computer control for deuterium system 
+computer control for HV
+computer metering for hornet
+
+LN2 channeling
+
+
+
