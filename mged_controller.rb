@@ -41,6 +41,7 @@ joint_nudge_length = 0.16
 coil_wire_diameter = 1.1  # mm test wire
 channel_thickness = (ribbon_thickness*turns)+1
 tolerance_distance = 0.01
+drive_amps = 80
 
 
 
@@ -49,7 +50,6 @@ magnetic_constant = (4*Math::PI * (10.0**-7)) * Unit("newton/ampere**2")
 magnetic_force_constant = magnetic_constant / (2*Math::PI)
 seperation_of_wires = (torus_midplane_radius*mm) >> Unit("m") # in m
 coil_force_per_meter = magnetic_force_constant * ((drive_amps**2)/seperation_of_wires)
-coil_force = coil_force_per_meter * (((coil.coil_length)*mm) >> Unit('m'))
 
 
 
@@ -73,7 +73,7 @@ amperes_force = {
 	:magnetic_force_constant => magnetic_force_constant, 
 	:seperation_of_wires => seperation_of_wires, 
 	:coil_force_per_meter => coil_force_per_meter, 
-	:coil_force => coil_force, 
+
 
 }
 
@@ -83,7 +83,7 @@ amperes_force = {
 puts "\n\n"
 derived_dimentions.select{|k,v| v.class != Unit}.sort_by{|k,v| v}.reverse.each { |k,v| puts "#{k}: #{v} mm"  }
 puts "\n\n"
-[joule_heating,amperes_force,superconducting].each do |topic|
+[amperes_force].each do |topic|
 	puts "\n\n"
 	topic.select{|k,v| v.class == Unit}.each { |k,v| puts "#{k}: #{v}"  }
 	puts "\n\n"
@@ -91,17 +91,9 @@ end
 
 
 `rm -f ./#{DB.gsub(".g","")}.*`
-# `rm ./*.png`
 `#{mged} 'units mm'` # set mged's units to decimeter 
 `#{mged} 'tol dist #{tolerance_distance}'` #  
 
-coil.grid.each {|row| puts row.map{|c|  c ? 1 : 0}.join("")}
-# coil.grid.each {|row|  row.split(false).each{|a| puts a.size}}
-coil.grid.each_with_index {|row,index| puts coil.wrap_radius_for_row(index)}
-
-puts "coil start#{coil.truth_array.inspect}"
-# coil.wind
-# break
 
 if true #parts.include?("chassis")
 	
