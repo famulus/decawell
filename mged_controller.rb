@@ -39,9 +39,7 @@ joint_negative_radius = (ribbon_width/2) + 0.05
 joint_nudge = 0.87 # this is a percentage scaling of the vector defining the ideal joint location
 joint_nudge_length = 0.16
 coil_wire_diameter = 1.1  # mm test wire
-
 channel_thickness = (ribbon_thickness*turns)+1
-
 tolerance_distance = 0.01
 
 
@@ -80,10 +78,11 @@ amperes_force = {
 }
 
 
+
+# Print the dimentions and properties of the current magrid to standard output.
 puts "\n\n"
 derived_dimentions.select{|k,v| v.class != Unit}.sort_by{|k,v| v}.reverse.each { |k,v| puts "#{k}: #{v} mm"  }
 puts "\n\n"
-
 [joule_heating,amperes_force,superconducting].each do |topic|
 	puts "\n\n"
 	topic.select{|k,v| v.class == Unit}.each { |k,v| puts "#{k}: #{v}"  }
