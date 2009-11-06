@@ -1,12 +1,12 @@
 require 'Matrix'
 
 class Vector
-	def mged
+	def mged #to mged format
 		s = self.to_a
 		s.map{|v| v}.join(" ")
 	end
 
-	def normal
+	def normal #find the normal of Vector
 		v = []
 		self.map do |p|
 			v << (p/Math.sqrt( self.to_a.map{|q| q**2 }.inject(0){|sum, n| sum +n } ))
@@ -14,46 +14,40 @@ class Vector
 		Vector[*v]
 	end	
 	
-	def inverse
+	def inverse # find the inverse of Vector
 		Vector[0,0,0] - self
 	end
 	
-	def self.average(*args)
+	def self.average(*args) # average two or more Vectors
 		v = args.first
 		args.each_with_index do |vector,index|
+			raise TypeError unless vector.is_a? Vector # this funtion only works on Vectors!
 			v = v+vector unless index == 0
-
 		end
 		v*(1/(args.size).to_f)
 	end
-
-	
 	
 end
 
+
+
+
+
+
 module Geometry
-
-
-	def cross_product(v1,v2)
-		Vector[(v1[1]*v2[2] - v1[2]*v2[1]),(v1[2]*v2[0] - v1[0]*v2[2]), (v1[0]*v2[1] - v1[1]*v2[0])]
-	end
-
-	def average(*args)
-		v = args.first
-		args.each_with_index do |vector,index|
-			v = v+vector unless index == 0
-
-		end
-		v*(1/(args.size).to_f)
-	end
-
 
 	PHI = (1+Math.sqrt(5))/2
 
+
+	def cross_product(v1,v2) # cross prouct of two Vectors
+		Vector[(v1[1]*v2[2] - v1[2]*v2[1]),(v1[2]*v2[0] - v1[0]*v2[2]), (v1[0]*v2[1] - v1[1]*v2[0])]
+	end
+
+
 	class Cube
+		
 		def self.vertices 
 			Matrix[
-
 				[-1,-1,-1],
 				[-1,-1,1],
 				[-1,1,-1],
@@ -64,6 +58,8 @@ module Geometry
 				[1,1,1]
 				].row_vectors()
 			end
+			
+			
 			def self.faces_indices
 				[[8 , 4 , 2 , 6],
 				[8 , 6 , 5 , 7],
@@ -72,6 +68,7 @@ module Geometry
 				[1 , 3 , 7 , 5],
 				[2 , 1 , 5 , 6]].map{|a|a.map{|b|b-1}} #shift for a zero based index
 			end
+			
 			
 			def self.edge_indices
 				[[1,2],
@@ -87,6 +84,8 @@ module Geometry
 				[6,8],
 				[7,8]].map{|a|a.map{|b|b-1}} #shift for a zero based index
 			end
+
+
 			def self.octahedron
 				faces.map do |face|
 					midpoint  = Vector.average(*face.map { |v|v  })
@@ -97,18 +96,23 @@ module Geometry
 			def self.faces
 				self.faces_indices.map { |f| f.map{|v|vertices[v]}  }
 			end
+
+
 			def self.edges
 				self.edge_indices.map { |f| f.map{|v|vertices[v]} }
 			end
-		def self.faces_for_edge
-			self.faces_for_edge_indices.map { |a|a.map { |b| b.map { |c| self.vertices[c]  }}  }
-		end
-		def self.faces_for_edge_indices
-			self.edge_indices.map do |edge|
-				self.faces_indices.select{|face| face.include?(edge[0]) && face.include?(edge[1]) }
 
+
+			def self.faces_for_edge
+				self.faces_for_edge_indices.map { |a|a.map { |b| b.map { |c| self.vertices[c]  }}  }
 			end
-		end
+
+
+			def self.faces_for_edge_indices
+				self.edge_indices.map do |edge|
+					self.faces_indices.select{|face| face.include?(edge[0]) && face.include?(edge[1]) }
+				end
+			end
 
 		end
 
@@ -152,14 +156,13 @@ module Geometry
 		def self.faces_for_edge_indices
 			self.edge_indices.map do |edge|
 				self.faces_indices.select{|face| face.include?(edge[0]) && face.include?(edge[1]) }
-
 			end
 		end
 
 		def self.faces_for_edge
 			self.faces_for_edge_indices.map { |a|a.map { |b| b.map { |c| self.vertices[c]  }}  }
 		end
-		
+
 		def self.faces
 			self.faces_indices.map { |f| f.map{|v|vertices[v]}  }
 		end

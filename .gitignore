@@ -1,6 +1,2 @@
-*.g
-*.stl*
-*.zip*
-/applet/*
-*.png
-*.rt
+/temp/
+/parts/

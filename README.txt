@@ -1,6 +1,6 @@
-Decawell - The opensource bussard fusion reactor.
+The opensource bussard fusion reactor.
 
-This repository is for all the source code and digital resources for the decawell project.
+http://prometheusfusionperfection.com/
 
-So far we have ruby code which emits commands to mged(BRL-CAD) to product schematics for rapid prototyping and direct manufacture. 
+This code generates STL files of the superconducting magrid and corresponding lids from parameters. 
 
