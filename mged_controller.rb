@@ -142,12 +142,6 @@ end
 `#{@mged} 'units mm'` # set mged's units to millimeter 
 `#{@mged} 'tol dist #{@tolerance_distance}'` #  set the global tolerance distance
 
-
-
-
-
-
-
 `rm -f ./temp/*` #clear out temp files
 chassis # generate the parts in mged
 lid 
