@@ -41,7 +41,7 @@ if ARGV[0] == '-h'
 end
 
 require 'daqmxbase'
-require 'arraystats'
+# require 'arraystats'
 
 require 'rubygems'
 require 'active_record'
@@ -101,8 +101,7 @@ def doOneScan(output)
   $scanNum = $scanNum + 1
   (data, samplesPerChanRead) = readAnalog()
   $nAIChans.times { |c| 
-    avg = data[c * samplesPerChanRead, samplesPerChanRead].average
-    output.printf("%d: %7.4f    ", c, avg)
+    output.print("#{c}, #{data.to_s}")
     # Sample.create({:sample => avg,:channel => c,  })
     
   }
@@ -147,7 +146,7 @@ end
   writeAnalog(outputVals)
 
   while true
-    # doOneScan(output)
+    doOneScan(output)
     begin
       # process additional input chars for chnum/chval AO setting
       inputLine = inputLine + input.read_nonblock(100)
