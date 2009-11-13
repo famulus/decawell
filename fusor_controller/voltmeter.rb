@@ -98,41 +98,68 @@ $timeout = 10.0
 $fillMode = VAL_GROUP_BY_SCAN_NUMBER
 $bufferSize = $numSamplesPerChan * $nAIChans
 
+
+# Digital Output Channel parameters
+chan = "Dev1/port0/line0:1" # all 8 bits in this port
+@autoStart = autoStart = 0
+
+HV_ENABLE = 0
+
+
+
+
 $scanNum = 0
+
+@bit_mask = 0b00000000
+
+def set_bit(bit=0, value = true)
+  if value == true
+    @bit_mask = (@bit_mask | (2**bit))
+  else
+    @bit_mask = (@bit_mask & (~(2**bit)))
+  end
+  @bit_mask
+end
+
+def high_voltage_on
+  @task.write_digital_scalar_u32(@autoStart, @timeout, set_bit(HV_ENABLE,true))
+end
+def high_voltage_off
+  @task.write_digital_scalar_u32(@autoStart, @timeout, set_bit(HV_ENABLE,false))
+end
+
+
 
 def doOneScan(output)
   $scanNum = $scanNum + 1
   (data, samplesPerChanRead) = readAnalog()
   samples = data.in_groups_of($nAIChans)
   samples.each_with_index do |sample,i| 
-    
-  sample.each_with_index do  |value,channel|
-    Sample.create({:sample => value,:channel => channel,  })
-    output.print("channel #{channel} is at value #{value}\n") 
-    
+
+    sample.each_with_index do  |value,channel|
+      # Sample.create({:sample => value,:channel => channel,  })
+      # output.print("channel #{channel} is at value #{value}\n") 
+
+    end
+
+
+    output.print("#{$scanNum }:#{i} #{sample.join(",")}\n") 
   end
-  
-  
-    # output.print("#{$scanNum }:#{i} #{s.join(",")}\n") 
-  end
 
 
-
-  # $nAIChans.times { |c| 
-  #   output.print("#{c}, #{data.to_s}")
-  #  
-  #   
-  # }
-  # output.printf("  (%6d)\r", $scanNum)
 
 end
 
 def createAITask
   $aiTask = Task.new()
+  puts "New Task"
   $aiTask.create_aivoltage_chan($aiChans, $terminalConfig, $aiMin, $aiMax, $units) 
+  $aiTask.create_dochan(chan)
   $aiTask.cfg_samp_clk_timing($source, $sampleRate, $activeEdge, $sampleMode, $numSamplesPerChan)
   $aiTask.cfg_input_buffer($numSamplesPerChan * 10)
   $aiTask.start()
+  puts "Start Task"
+  
 end
 
 def readAnalog
@@ -176,7 +203,17 @@ while true
       output.puts("\nwrote #{chVal} to AO#{chNum}")
       ""
     }
-
+    inputLine.sub!(/^hv ([01])\s*/) { |match|
+      if $1.to_i == 0
+        high_voltage_off
+        output.puts("\nhight voltage off")        
+      end
+      if $1.to_i == 1
+        high_voltage_on
+        output.puts("\nhight voltage on")        
+      end
+      
+    }
   rescue SystemCallError => e
     retry if e.errno == Errno::EAGAIN
   end
