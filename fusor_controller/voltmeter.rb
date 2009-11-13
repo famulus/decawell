@@ -45,6 +45,8 @@ require 'daqmxbase'
 
 require 'rubygems'
 require 'active_record'
+require 'activeresource'
+
 
 ActiveRecord::Base.establish_connection(
   :adapter  => 'mysql',
@@ -85,14 +87,15 @@ $aoMax = 5.0
 
 # Timing parameters
 $source = "OnboardClock"
-$sampleRate = 1000.0
+$sampleRate = 5.0
 $activeEdge = VAL_RISING
 $sampleMode = VAL_CONT_SAMPS
-$numSamplesPerChan = 1000
+$numSamplesPerChan = 5
 
 # Data read parameters
 $timeout = 10.0
-$fillMode = VAL_GROUP_BY_CHANNEL # or VAL_GROUP_BY_SCAN_NUMBER
+# $fillMode = VAL_GROUP_BY_CHANNEL # or VAL_GROUP_BY_SCAN_NUMBER
+$fillMode = VAL_GROUP_BY_SCAN_NUMBER
 $bufferSize = $numSamplesPerChan * $nAIChans
 
 $scanNum = 0
@@ -100,12 +103,17 @@ $scanNum = 0
 def doOneScan(output)
   $scanNum = $scanNum + 1
   (data, samplesPerChanRead) = readAnalog()
-  $nAIChans.times { |c| 
-    output.print("#{c}, #{data.to_s}")
-    # Sample.create({:sample => avg,:channel => c,  })
-    
-  }
-  output.printf("  (%6d)\r", $scanNum)
+  samples = data.in_groups_of($nAIChans)
+  samples.each_with_index {|s,i| output.print("#{$scanNum }:#{i} #{s}\n") }
+  
+  
+  
+  # $nAIChans.times { |c| 
+  #   output.print("#{c}, #{data.to_s}")
+  #   # Sample.create({:sample => avg,:channel => c,  })
+  #   
+  # }
+  # output.printf("  (%6d)\r", $scanNum)
   
 end
 
