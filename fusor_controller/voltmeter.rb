@@ -49,13 +49,13 @@ require 'activeresource'
 
 
 ActiveRecord::Base.establish_connection(
-  :adapter  => 'mysql',
-  :database => 'fusion',
-  :username => 'root',
-  :host     => 'localhost')
+:adapter  => 'mysql',
+:database => 'fusion',
+:username => 'root',
+:host     => 'localhost')
 
-  class Sample < ActiveRecord::Base
-  end
+class Sample < ActiveRecord::Base
+end
 
 include Daqmxbase
 
@@ -104,17 +104,27 @@ def doOneScan(output)
   $scanNum = $scanNum + 1
   (data, samplesPerChanRead) = readAnalog()
   samples = data.in_groups_of($nAIChans)
-  samples.each_with_index {|s,i| output.print("#{$scanNum }:#{i} #{s.join(",")}\n") }
+  samples.each_with_index do |sample,i| 
+    
+  sample.each_with_index do  |value,channel|
+    Sample.create({:sample => value,:channel => channel,  })
+    output.print("channel #{channel} is at value #{value}\n") 
+    
+  end
   
   
-  
+    # output.print("#{$scanNum }:#{i} #{s.join(",")}\n") 
+  end
+
+
+
   # $nAIChans.times { |c| 
   #   output.print("#{c}, #{data.to_s}")
-  #   # Sample.create({:sample => avg,:channel => c,  })
+  #  
   #   
   # }
   # output.printf("  (%6d)\r", $scanNum)
-  
+
 end
 
 def createAITask
@@ -141,36 +151,36 @@ end
 
 
 # begin
-  output = $stdout
-  input = $stdin
-  input.sync= true
-  output.sync= true
-  inputLine = ""
+output = $stdout
+input = $stdin
+input.sync= true
+output.sync= true
+inputLine = ""
 
-  createAITask()
+createAITask()
 
-  createAOTask()
-  outputVals = [0.0, 0.0]
-  writeAnalog(outputVals)
+createAOTask()
+outputVals = [0.0, 0.0]
+writeAnalog(outputVals)
 
-  while true
-    doOneScan(output)
-    begin
-      # process additional input chars for chnum/chval AO setting
-      inputLine = inputLine + input.read_nonblock(100)
-      inputLine.sub!(/^([01])\s+([0-9.]+)\s*/) { |match|
-        chNum = $1.to_i
-        chVal = $2.to_f
-        outputVals[chNum] = chVal
-        writeAnalog(outputVals)
-        output.puts("\nwrote #{chVal} to AO#{chNum}")
-        ""
-      }
-      
-    rescue SystemCallError => e
-      retry if e.errno == Errno::EAGAIN
-    end
+while true
+  doOneScan(output)
+  begin
+    # process additional input chars for chnum/chval AO setting
+    inputLine = inputLine + input.read_nonblock(100)
+    inputLine.sub!(/^([01])\s+([0-9.]+)\s*/) { |match|
+      chNum = $1.to_i
+      chVal = $2.to_f
+      outputVals[chNum] = chVal
+      writeAnalog(outputVals)
+      output.puts("\nwrote #{chVal} to AO#{chNum}")
+      ""
+    }
+
+  rescue SystemCallError => e
+    retry if e.errno == Errno::EAGAIN
   end
+end
 
 # rescue  Exception => e
 #   $stderr.reopen($stdout) if $suppressStderr
