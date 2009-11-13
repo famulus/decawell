@@ -104,7 +104,7 @@ def doOneScan(output)
   $scanNum = $scanNum + 1
   (data, samplesPerChanRead) = readAnalog()
   samples = data.in_groups_of($nAIChans)
-  samples.each_with_index {|s,i| output.print("#{$scanNum }:#{i} #{s}\n") }
+  samples.each_with_index {|s,i| output.print("#{$scanNum }:#{i} #{s.join(",")}\n") }
   
   
   
