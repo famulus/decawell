@@ -100,7 +100,7 @@ $bufferSize = $numSamplesPerChan * $nAIChans
 
 
 # Digital Output Channel parameters
-chan = "Dev1/port0/line0:1" # all 8 bits in this port
+@chan = "Dev1/port0/line0:1" # all 8 bits in this port
 @autoStart = autoStart = 0
 
 HV_ENABLE = 0
@@ -118,14 +118,14 @@ def set_bit(bit=0, value = true)
   else
     @bit_mask = (@bit_mask & (~(2**bit)))
   end
-  @bit_mask
+  return @bit_mask
 end
 
 def high_voltage_on
-  @task.write_digital_scalar_u32(@autoStart, @timeout, set_bit(HV_ENABLE,true))
+  @DO_task.write_digital_scalar_u32(@autoStart, $timeout, set_bit(HV_ENABLE,true))
 end
 def high_voltage_off
-  @task.write_digital_scalar_u32(@autoStart, @timeout, set_bit(HV_ENABLE,false))
+  @DO_task.write_digital_scalar_u32(@autoStart, $timeout, set_bit(HV_ENABLE,false))
 end
 
 
@@ -137,7 +137,7 @@ def doOneScan(output)
   samples.each_with_index do |sample,i| 
 
     sample.each_with_index do  |value,channel|
-      # Sample.create({:sample => value,:channel => channel,  })
+      Sample.create({:sample => value,:channel => channel,  })
       # output.print("channel #{channel} is at value #{value}\n") 
 
     end
@@ -154,11 +154,18 @@ def createAITask
   $aiTask = Task.new()
   puts "New Task"
   $aiTask.create_aivoltage_chan($aiChans, $terminalConfig, $aiMin, $aiMax, $units) 
-  $aiTask.create_dochan(chan)
   $aiTask.cfg_samp_clk_timing($source, $sampleRate, $activeEdge, $sampleMode, $numSamplesPerChan)
   $aiTask.cfg_input_buffer($numSamplesPerChan * 10)
   $aiTask.start()
   puts "Start Task"
+  
+end
+
+
+def createDOTask
+  @DO_task = Task.new()
+  @DO_task.create_dochan(@chan)
+  @DO_task.start()
   
 end
 
@@ -185,8 +192,11 @@ output.sync= true
 inputLine = ""
 
 createAITask()
-
 createAOTask()
+createDOTask()
+
+# high_voltage_off # turn the high voltage off by default
+
 outputVals = [0.0, 0.0]
 writeAnalog(outputVals)
 
