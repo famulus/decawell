@@ -114,7 +114,7 @@ $scanNum = 0
 
 def set_bit(bit=0, value = true)
   if value == true
-    @bit_mask = (@bit_mask | (2**bit))
+    @bit_mask = (@bit_mask | (2**bit)) #http://en.wikipedia.org/wiki/Mask_(computing)
   else
     @bit_mask = (@bit_mask & (~(2**bit)))
   end
