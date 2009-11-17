@@ -3,6 +3,7 @@
 require 'rubygems'
 require 'activerecord'
 require 'devices'
+
 ActiveRecord::Base.establish_connection(
 :adapter  => 'mysql',
 :database => 'fusion',
