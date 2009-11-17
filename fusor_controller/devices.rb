@@ -1,5 +1,5 @@
 class Hornet
-	def self.convert_voltage(voltage)
+	def self.pressure(voltage)
 		pressure_in_torr = 10**(voltage - 10)
 		pressure_in_millitorr = pressure_in_torr*1000
 	end
@@ -18,7 +18,7 @@ class Glassman
 end
 
 class Stec
-	def self.convert_voltage(voltage)
+	def self.sccm(voltage)
 		# the Stec goes from 0 to 20 sccm represented by 0 to 5 volts
 		voltage*4
 	end
