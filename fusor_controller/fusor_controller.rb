@@ -136,19 +136,12 @@ def doOneScan(output)
   (data, samplesPerChanRead) = readAnalog()
   samples = data.in_groups_of($nAIChans)
   samples.each_with_index do |sample,i| 
-
     sample.each_with_index do  |value,channel|
       Sample.create({:sample => value,:channel => channel,  })
       # output.print("channel #{channel} is at value #{value}\n") 
-
     end
-
-
     output.print("#{$scanNum }:#{i} #{sample.join(",")}\n") 
   end
-
-
-
 end
 
 def createAITask
