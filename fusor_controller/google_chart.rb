@@ -13,17 +13,6 @@ ActiveRecord::Base.establish_connection(
 class Sample < ActiveRecord::Base
 end
 
-class Array
-	def average
-		inject(0.0) { |sum, e| sum + e } / length
-	end
-end
-
-class Float
-	def round_to(x)
-		(self * 10**x).round.to_f / 10**x
-	end
-end
 
 # samples = Sample.find(:all, :conditions => {:channel =>0, :created_at => (Time::now - 2000.minutes .. Time::now)}).map{|r| r.sample}
 

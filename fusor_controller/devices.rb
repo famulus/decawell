@@ -1,4 +1,15 @@
 
+class Array
+	def average
+		inject(0.0) { |sum, e| sum + e } / length
+	end
+end
+
+class Float
+	def round_to(x)
+		(self * 10**x).round.to_f / 10**x
+	end
+end
 
 class Hornet
 	def self.interpret_voltage(voltage)
@@ -14,7 +25,7 @@ end
 class GlassmanCurrent
 	def self.interpret_voltage(voltage)
 		# the Glassman goes from 0 to 10 milliamps  represented by 0 to 10 volts
-		voltage
+		voltage - (offset = 1.39)
 	end
 	def self.title
 	 "Current in milliamps"
@@ -25,7 +36,8 @@ end
 class GlassmanVoltage
 	def self.interpret_voltage(voltage)
 		# the Glassman goes from 0 to 30,000 volts represented by 0 to 10 volts
-		voltage*3
+    voltage*3.2 + (offset = 3.93)
+
 	end
 	def self.title
 	 "Voltage in Kilovolts"

@@ -44,7 +44,7 @@ require 'rubygems'
 require 'daqmxbase'
 require 'active_record'
 require 'activeresource'
-require 'devices'
+require 'fusor_controller/devices'
 include Daqmxbase
 
 
@@ -137,8 +137,9 @@ def doOneScan(output)
     sample.each_with_index do  |value,channel|
       Sample.create({:sample => value,:channel => channel,  })
       # output.print("channel #{channel} is at value #{value}\n") 
+      output.print("#{CHANNEL_BANK[channel].interpret_voltage(value).round_to(5)}  ")
     end
-    output.print("#{$scanNum }:#{i} #{sample.join(",")}\n") 
+    output.print("\n") 
   end
 end
 
