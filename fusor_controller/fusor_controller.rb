@@ -192,11 +192,11 @@ input.sync= true
 output.sync= true
 inputLine = ""
 
-createAITask()
-createAOTask()
-createDOTask()
+createAITask() # create the analog input task
+createAOTask() # create the analoh output task
+createDOTask() # create the digital output task
 
-# high_voltage_off # turn the high voltage off by default
+high_voltage_off # turn the high voltage off by default
 
 outputVals = [0.0, 0.0]
 writeAnalog(outputVals)
