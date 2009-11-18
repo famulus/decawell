@@ -45,6 +45,7 @@ require 'daqmxbase'
 require 'active_record'
 require 'activeresource'
 require 'devices'
+include Daqmxbase
 
 
 ActiveRecord::Base.establish_connection(
@@ -56,7 +57,6 @@ ActiveRecord::Base.establish_connection(
 class Sample < ActiveRecord::Base
 end
 
-include Daqmxbase
 
 # Task parameters
 $aiTask = nil
