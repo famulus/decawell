@@ -104,7 +104,7 @@ $bufferSize = $numSamplesPerChan * $nAIChans
 @chan = "Dev1/port0/line0:1" # all 8 bits in this port
 @autoStart = autoStart = 0
 
-HV_ENABLE = 0
+HV_ENABLE = 0 # the HV_ENABLE is on digital channel 0
 
 
 
