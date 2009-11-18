@@ -46,6 +46,7 @@ require 'daqmxbase'
 require 'rubygems'
 require 'active_record'
 require 'activeresource'
+require 'devices'
 
 
 ActiveRecord::Base.establish_connection(

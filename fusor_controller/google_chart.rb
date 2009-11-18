@@ -34,7 +34,6 @@ CHANNEL_BANK.each_with_index do |@channel_proc, index| #generate a chart for eac
 	samples = sample_records.map{|r| @channel_proc.interpret_voltage(r.sample)}
 	resamples = samples.in_groups_of(samples.size/number_of_data_points).map{|slice| slice.average rescue 0} 
 	url = "http://chart.apis.google.com/chart?cht=lc&chs=438x125&chd=t:#{resamples.join(",")}&chds=#{resamples.min},#{resamples.max}&chxt=y,x&chxr=0,#{resamples.min},#{resamples.max}|1,0,#{(sample_records.last.created_at - sample_records.first.created_at)/60.to_i}&chxl=0:test&chtt=#{@channel_proc.title.gsub(" ","+")}"
-  # |1,0,#{(sample_records.last.created_at - sample_records.first.created_at)/60.to_i}
 	puts "<img src=\"#{url}\" alt=\"\" />"
   # puts `open -a Safari '#{url}'`
 end
