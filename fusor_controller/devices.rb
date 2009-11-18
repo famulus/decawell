@@ -25,7 +25,7 @@ end
 class GlassmanCurrent
 	def self.interpret_voltage(voltage)
 		# the Glassman goes from 0 to 10 milliamps  represented by 0 to 10 volts
-		voltage - (offset = 1.39)
+		voltage #- (offset = 1.39)
 	end
 	def self.title
 	 "Current in milliamps"
@@ -36,7 +36,7 @@ end
 class GlassmanVoltage
 	def self.interpret_voltage(voltage)
 		# the Glassman goes from 0 to 30,000 volts represented by 0 to 10 volts
-    voltage*3.2 + (offset = 3.93)
+    voltage*3.2 + (offset = 3.93) # I added these correction factors to get a better match with voltage measurement from the voltage divider. These may prove inaccurate under load.
 
 	end
 	def self.title
