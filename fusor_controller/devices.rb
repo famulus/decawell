@@ -1,3 +1,5 @@
+
+
 class Hornet
 	def self.interpret_voltage(voltage)
 		pressure_in_torr = 10**(voltage - 10)
@@ -42,3 +44,6 @@ class Stec
 	end
 	
 end
+
+
+CHANNEL_BANK = [Hornet,GlassmanVoltage,GlassmanCurrent,Stec]
