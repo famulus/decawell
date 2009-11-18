@@ -40,10 +40,8 @@ if ARGV[0] == '-h'
   exit 
 end
 
-require 'daqmxbase'
-# require 'arraystats'
-
 require 'rubygems'
+require 'daqmxbase'
 require 'active_record'
 require 'activeresource'
 require 'devices'
