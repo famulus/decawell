@@ -40,12 +40,12 @@ if ARGV[0] == '-h'
   exit 
 end
 
-require 'daqmxbase'
-# require 'arraystats'
-
 require 'rubygems'
+require 'daqmxbase'
 require 'active_record'
 require 'activeresource'
+require 'fusor_controller/devices'
+include Daqmxbase
 
 
 ActiveRecord::Base.establish_connection(
@@ -57,7 +57,6 @@ ActiveRecord::Base.establish_connection(
 class Sample < ActiveRecord::Base
 end
 
-include Daqmxbase
 
 # Task parameters
 $aiTask = nil
@@ -103,7 +102,7 @@ $bufferSize = $numSamplesPerChan * $nAIChans
 @chan = "Dev1/port0/line0:1" # all 8 bits in this port
 @autoStart = autoStart = 0
 
-HV_ENABLE = 0
+HV_ENABLE = 0 # the HV_ENABLE is on digital channel 0
 
 
 
@@ -135,19 +134,13 @@ def doOneScan(output)
   (data, samplesPerChanRead) = readAnalog()
   samples = data.in_groups_of($nAIChans)
   samples.each_with_index do |sample,i| 
-
     sample.each_with_index do  |value,channel|
       Sample.create({:sample => value,:channel => channel,  })
       # output.print("channel #{channel} is at value #{value}\n") 
-
+      output.print("#{CHANNEL_BANK[channel].interpret_voltage(value).round_to(5)}  ")
     end
-
-
-    output.print("#{$scanNum }:#{i} #{sample.join(",")}\n") 
+    output.print("\n") 
   end
-
-
-
 end
 
 def createAITask
@@ -191,11 +184,11 @@ input.sync= true
 output.sync= true
 inputLine = ""
 
-createAITask()
-createAOTask()
-createDOTask()
+createAITask() # create the analog input task
+createAOTask() # create the analoh output task
+createDOTask() # create the digital output task
 
-# high_voltage_off # turn the high voltage off by default
+high_voltage_off # turn the high voltage off by default
 
 outputVals = [0.0, 0.0]
 writeAnalog(outputVals)
