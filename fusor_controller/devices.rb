@@ -70,4 +70,4 @@ class Stec
 end
 
 
-CHANNEL_BANK = [Hornet,GlassmanVoltage,GlassmanCurrent,Stec]
+CHANNEL_BANK = [Hornet,VoltageDivider,GlassmanCurrent,Stec]
