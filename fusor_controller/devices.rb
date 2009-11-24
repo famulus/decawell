@@ -47,7 +47,7 @@ end
 
 class VoltageDivider
   def self.interpret_voltage(voltage)
-    voltage/3.0
+    voltage*3.0
   end
   def self.title
 	 "Voltage in Kilovolts"
