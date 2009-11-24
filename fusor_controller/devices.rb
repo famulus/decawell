@@ -37,13 +37,25 @@ class GlassmanVoltage
 	def self.interpret_voltage(voltage)
 		# the Glassman goes from 0 to 30,000 volts represented by 0 to 10 volts
     voltage*3.2 + (offset = 3.93) # I added these correction factors to get a better match with voltage measurement from the voltage divider. These may prove inaccurate under load.
-
-	end
-	def self.title
-	 "Voltage in Kilovolts"
 	end
 	
+	def self.title
+	 "Voltage in Kilovolts"
+	end	
 end
+
+
+class VoltageDivider
+  def self.interpret_voltage(voltage)
+    voltage/3.0
+  end
+  def self.title
+	 "Voltage in Kilovolts"
+	end	
+	
+end
+
+
 
 class Stec
 	def self.interpret_voltage(voltage)
