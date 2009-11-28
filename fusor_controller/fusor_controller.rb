@@ -1,32 +1,4 @@
-# $Id: voltmeter.rb 89 2008-04-08 20:09:05Z bikenomad $
-#
-# voltmeter.rb: sample program to do multi-channel multi-sample
-# analog input and display repeatedly
-#
-# Displays all 4 differential input channel voltages repeatedly;
-#
-# If you enter an AO channel number [1/0], a space, and a value, followed by a
-# space or CR you will set the analog output as well.
-#
-#-----------------------------------------------------------------------
-# ruby-daqmxbase: A SWIG interface for Ruby and the NI-DAQmx Base data
-# acquisition library.
-# 
-# Copyright (C) 2007 Ned Konz
-# 
-# Licensed under the Apache License, Version 2.0 (the "License"); you
-# may not use this file except in compliance with the License.  You may
-# obtain a copy of the License at
-# 
-# http://www.apache.org/licenses/LICENSE-2.0
-# 
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-# implied.  See the License for the specific language governing
-# permissions and limitations under the License.
-#-----------------------------------------------------------------------
-#
+# fusor controller
 $suppressStderr = false
 
 BEGIN {
@@ -123,11 +95,14 @@ end
 def high_voltage_on
   @DO_task.write_digital_scalar_u32(@autoStart, $timeout, set_bit(HV_ENABLE,true))
   @hv_enabled = 1
+	output.puts("\nhight voltage on")        
+
 end
 def high_voltage_off
   @DO_task.write_digital_scalar_u32(@autoStart, $timeout, set_bit(HV_ENABLE,false))
   @hv_enabled = 0
-  
+	output.puts("\nhight voltage off")        
+
 end
 
 
@@ -184,6 +159,16 @@ end
 
 
 # begin
+
+#duty cycle setup
+wavelength = 10.0 #length in seconds for the wavelength
+duty_cycle = 0.7 # a float between 0 and 1
+time_on = wavelength*duty_cycle
+start_time = Time.now()
+state = true
+duty_cycle_enable = false
+
+
 output = $stdout
 input = $stdin
 input.sync= true
@@ -203,8 +188,8 @@ while true
   doOneScan(output)
   begin
     # process additional input chars for chnum/chval AO setting
-    inputLine = inputLine + input.read_nonblock(100)
-    inputLine.sub!(/^([01])\s+([0-9.]+)\s*/) { |match|
+    inputLine = input.read_nonblock(100)
+    inputLine.sub(/^([01])\s+([0-9.]+)\s*/) { |match|
       chNum = $1.to_i
       chVal = $2.to_f
       outputVals[chNum] = chVal
@@ -212,17 +197,51 @@ while true
       output.puts("\nwrote #{chVal} to AO#{chNum}")
       ""
     }
-    inputLine.sub!(/^hv ([01])\s*/) { |match|
+
+    inputLine.sub(/^hv ([01])\s*/) { |match|
       if $1.to_i == 0
         high_voltage_off
-        output.puts("\nhight voltage off")        
       end
       if $1.to_i == 1
         high_voltage_on
-        output.puts("\nhight voltage on")        
       end
-      
     }
+
+    inputLine.sub(/^wl (\d+)\s*/) { |match|
+      wavelength = $1.to_i
+    }
+
+    inputLine.sub(/^dc (\d\.\d)\s*/)  { |match|
+      duty_cycle = $1.to_f
+    }
+
+    inputLine.sub(/^dce (\d+)\s*/)  { |match|
+			if $1.to_i == 0
+				duty_cycle_enable = false
+				output.puts("\nduty cycle off")        
+			end
+			if $1.to_i == 1
+				duty_cycle_enable = true
+				output.puts("\nduty cycle on")        
+			end
+
+    }
+
+		# duty cycle
+		time_now = Time.now()
+		(duration = (time_on) ) if state 
+		(duration = (wavelength - time_on)) unless state 
+		if ((time_now - start_time) > (duration))
+			state = !state
+			start_time = time_now
+		end
+		if state 
+			high_voltage_on if duty_cycle_enable
+		else
+			high_voltage_off if duty_cycle_enable
+		end
+
+
   rescue SystemCallError => e
     retry if e.errno == Errno::EAGAIN
   end
