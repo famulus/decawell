@@ -178,6 +178,16 @@ end
 
 
 # begin
+
+#duty cycle setup
+wavelength = 10.0 #length in seconds for the wavelength
+duty_cycle = 0.7 # a float between 0 and 1
+time_on = wavelength*duty_cycle
+start_time = Time.now()
+state = true
+
+
+
 output = $stdout
 input = $stdin
 input.sync= true
@@ -217,6 +227,22 @@ while true
       end
       
     }
+
+		# duty cycle
+		time_now = Time.now()
+		(duration = (time_on) ) if state 
+		(duration = (wavelength - time_on)) unless state 
+		if ((time_now - start_time) > (duration))
+			state = !state
+			start_time = time_now
+		end
+		if state
+			high_voltage_on
+		else
+			high_voltage_off
+		end
+
+
   rescue SystemCallError => e
     retry if e.errno == Errno::EAGAIN
   end

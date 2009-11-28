@@ -1,6 +1,6 @@
 #http://en.wikipedia.org/wiki/Pulse-width_modulation
-wavelength = 5.0
-duty_cycle = 0.1 # a float between 0 and 1
+wavelength = 10.0 #length in seconds for the wavelength
+duty_cycle = 0.7 # a float between 0 and 1
 time_on = wavelength*duty_cycle
 start_time = Time.now()
 state = true
