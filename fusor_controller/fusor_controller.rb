@@ -188,7 +188,7 @@ while true
       output.puts("\nwrote #{chVal} to AO#{chNum}")
       ""
     }
-    inputLine.sub!(/^hv ([01])\s*/) { |match|
+    inputLine.sub(/^hv ([01])\s*/) { |match|
       if $1.to_i == 0
         high_voltage_off
         output.puts("\nhight voltage off")        
@@ -198,6 +198,24 @@ while true
         output.puts("\nhight voltage on")        
       end
       
+    }
+    inputLine.sub(/^hv ([01])\s*/) { |match|
+      if $1.to_i == 0
+        high_voltage_off
+        output.puts("\nhight voltage off")        
+      end
+      if $1.to_i == 1
+        high_voltage_on
+        output.puts("\nhight voltage on")        
+      end
+      
+    }
+    inputLine.sub(/^wl (\d+)\s*/) { |match|
+      wavelength = $1.to_i
+    }
+
+    inputLine.sub(/^dc (\d\.\d)\s*/)  { |match|
+      duty_cycle = $1.to_f
     }
 
 		# duty cycle
