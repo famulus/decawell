@@ -210,6 +210,7 @@ while true
       end
       
     }
+
     inputLine.sub(/^wl (\d+)\s*/) { |match|
       wavelength = $1.to_i
     }
