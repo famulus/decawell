@@ -94,9 +94,13 @@ end
 
 def high_voltage_on
   @DO_task.write_digital_scalar_u32(@autoStart, $timeout, set_bit(HV_ENABLE,true))
+	output.puts("\nhight voltage on")        
+
 end
 def high_voltage_off
   @DO_task.write_digital_scalar_u32(@autoStart, $timeout, set_bit(HV_ENABLE,false))
+	output.puts("\nhight voltage off")        
+
 end
 
 
@@ -157,7 +161,7 @@ duty_cycle = 0.7 # a float between 0 and 1
 time_on = wavelength*duty_cycle
 start_time = Time.now()
 state = true
-
+duty_cycle_enable = false
 
 
 output = $stdout
@@ -179,8 +183,8 @@ while true
   doOneScan(output)
   begin
     # process additional input chars for chnum/chval AO setting
-    inputLine = inputLine + input.read_nonblock(100)
-    inputLine.sub!(/^([01])\s+([0-9.]+)\s*/) { |match|
+    inputLine = input.read_nonblock(100)
+    inputLine.sub(/^([01])\s+([0-9.]+)\s*/) { |match|
       chNum = $1.to_i
       chVal = $2.to_f
       outputVals[chNum] = chVal
@@ -188,27 +192,14 @@ while true
       output.puts("\nwrote #{chVal} to AO#{chNum}")
       ""
     }
+
     inputLine.sub(/^hv ([01])\s*/) { |match|
       if $1.to_i == 0
         high_voltage_off
-        output.puts("\nhight voltage off")        
       end
       if $1.to_i == 1
         high_voltage_on
-        output.puts("\nhight voltage on")        
       end
-      
-    }
-    inputLine.sub(/^hv ([01])\s*/) { |match|
-      if $1.to_i == 0
-        high_voltage_off
-        output.puts("\nhight voltage off")        
-      end
-      if $1.to_i == 1
-        high_voltage_on
-        output.puts("\nhight voltage on")        
-      end
-      
     }
 
     inputLine.sub(/^wl (\d+)\s*/) { |match|
@@ -219,6 +210,18 @@ while true
       duty_cycle = $1.to_f
     }
 
+    inputLine.sub(/^dce (\d+)\s*/)  { |match|
+			if $1.to_i == 0
+				duty_cycle_enable = false
+				output.puts("\nduty cycle off")        
+			end
+			if $1.to_i == 1
+				duty_cycle_enable = true
+				output.puts("\nduty cycle on")        
+			end
+
+    }
+
 		# duty cycle
 		time_now = Time.now()
 		(duration = (time_on) ) if state 
@@ -227,10 +230,10 @@ while true
 			state = !state
 			start_time = time_now
 		end
-		if state
-			high_voltage_on
+		if state 
+			high_voltage_on if duty_cycle_enable
 		else
-			high_voltage_off
+			high_voltage_off if duty_cycle_enable
 		end
 
 
