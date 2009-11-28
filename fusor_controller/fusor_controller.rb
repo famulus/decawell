@@ -103,7 +103,7 @@ $bufferSize = $numSamplesPerChan * $nAIChans
 @autoStart = autoStart = 0
 
 HV_ENABLE = 0 # the HV_ENABLE is on digital channel 0
-
+@hv_enabled = 0
 
 
 
@@ -122,9 +122,12 @@ end
 
 def high_voltage_on
   @DO_task.write_digital_scalar_u32(@autoStart, $timeout, set_bit(HV_ENABLE,true))
+  @hv_enabled = 1
 end
 def high_voltage_off
   @DO_task.write_digital_scalar_u32(@autoStart, $timeout, set_bit(HV_ENABLE,false))
+  @hv_enabled = 0
+  
 end
 
 
@@ -137,8 +140,11 @@ def doOneScan(output)
     sample.each_with_index do  |value,channel|
       Sample.create({:sample => value,:channel => channel,  })
       # output.print("channel #{channel} is at value #{value}\n") 
-      output.print("#{CHANNEL_BANK[channel].interpret_voltage(value).round_to(5)}  ")
+      output.printf("%4.5f","#{CHANNEL_BANK[channel].interpret_voltage(value).round_to(5)}     ")
+      output.print "  "
     end
+    Sample.create({:sample => @hv_enabled,:channel => 4,  })
+    
     output.print("\n") 
   end
 end
