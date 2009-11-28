@@ -95,13 +95,13 @@ end
 def high_voltage_on
   @DO_task.write_digital_scalar_u32(@autoStart, $timeout, set_bit(HV_ENABLE,true))
   @hv_enabled = 1
-	output.puts("\nhight voltage on")        
+	@output.puts("\nhight voltage on")        
 
 end
 def high_voltage_off
   @DO_task.write_digital_scalar_u32(@autoStart, $timeout, set_bit(HV_ENABLE,false))
   @hv_enabled = 0
-	output.puts("\nhight voltage off")        
+	@output.puts("\nhight voltage off")        
 
 end
 
@@ -161,7 +161,7 @@ end
 # begin
 
 #duty cycle setup
-wavelength = 10.0 #length in seconds for the wavelength
+wavelength = 3.0 #length in seconds for the wavelength
 duty_cycle = 0.7 # a float between 0 and 1
 time_on = wavelength*duty_cycle
 start_time = Time.now()
@@ -169,7 +169,7 @@ state = true
 duty_cycle_enable = false
 
 
-output = $stdout
+@output = output = $stdout
 input = $stdin
 input.sync= true
 output.sync= true
@@ -209,10 +209,14 @@ while true
 
     inputLine.sub(/^wl (\d+)\s*/) { |match|
       wavelength = $1.to_i
+      output.puts("\nwavelength set to #{wavelength}")        
+			
     }
 
     inputLine.sub(/^dc (\d\.\d)\s*/)  { |match|
       duty_cycle = $1.to_f
+      output.puts("\nduty cycle set to #{duty_cycle}")        
+      
     }
 
     inputLine.sub(/^dce (\d+)\s*/)  { |match|
@@ -235,6 +239,7 @@ while true
 			state = !state
 			start_time = time_now
 		end
+		output.puts "\nOKOK:#{duty_cycle_enable}"
 		if state 
 			high_voltage_on if duty_cycle_enable
 		else
@@ -243,6 +248,7 @@ while true
 
 
   rescue SystemCallError => e
+    output.puts "TRAPPED ERROR #{e}"
     retry if e.errno == Errno::EAGAIN
   end
 end
