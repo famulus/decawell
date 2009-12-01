@@ -18,7 +18,8 @@ def chassis # the chassis is the inner section of the magrid
 		`#{@mged} 'comb torus_negative#{index}.c u torus_negative_outer#{index} - torus_negative_inner#{index} '` #this hollow center of the torus
 		`#{@mged} 'in lid_knockout#{index} rcc #{v.mged} #{(v.normal*@torus ).mged} #{@torus_ring_size+@torus}'` #this removed the face of the torus so we can install coils
 		#build the thermal shell
-		`#{@mged} 'in torus#{index} eto #{v.mged} #{v.mged} #{@torus_ring_size}  #{((v.normal)*major_minor[0]).mged}   #{major_minor[1]} '` #the eto solid
+		`#{@mged} 'in thermal_shell#{index} eto #{v.mged} #{v.mged} #{@torus_ring_size+2}  #{((v.normal)*major_minor[0]).mged}   #{major_minor[1]} '` #the eto solid
+		`#{@mged} 'in thermal_shell#{index} eto #{v.mged} #{v.mged} #{@torus_ring_size+1}  #{((v.normal)*major_minor[0]).mged}   #{major_minor[1]} '` #the eto solid
 
 		
 	end
