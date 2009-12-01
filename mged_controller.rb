@@ -17,6 +17,10 @@ def chassis # the chassis is the inner section of the magrid
 		`#{@mged} 'in torus_negative_inner#{index} rcc #{v.mged} #{(v.inverse.normal*(@ribbon_width/2)).mged} #{@torus_ring_size-(@channel_thickness/2)}'` #the inside radious of the ribbon channel
 		`#{@mged} 'comb torus_negative#{index}.c u torus_negative_outer#{index} - torus_negative_inner#{index} '` #this hollow center of the torus
 		`#{@mged} 'in lid_knockout#{index} rcc #{v.mged} #{(v.normal*@torus ).mged} #{@torus_ring_size+@torus}'` #this removed the face of the torus so we can install coils
+		#build the thermal shell
+		`#{@mged} 'in torus#{index} eto #{v.mged} #{v.mged} #{@torus_ring_size}  #{((v.normal)*major_minor[0]).mged}   #{major_minor[1]} '` #the eto solid
+
+		
 	end
 	Cube.edges.each_with_index do |edge,index| #insert the  joints
 		edge = edge.map{|e|e *@scale_factor} # scale the edges
