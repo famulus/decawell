@@ -18,8 +18,10 @@ def chassis # the chassis is the inner section of the magrid
 		`#{@mged} 'comb torus_negative#{index}.c u torus_negative_outer#{index} - torus_negative_inner#{index} '` #this hollow center of the torus
 		`#{@mged} 'in lid_knockout#{index} rcc #{v.mged} #{(v.normal*@torus ).mged} #{@torus_ring_size+@torus}'` #this removed the face of the torus so we can install coils
 		#build the thermal shell
-		`#{@mged} 'in thermal_shell#{index} eto #{v.mged} #{v.mged} #{@torus_ring_size+2}  #{((v.normal)*major_minor[0]).mged}   #{major_minor[1]} '` #the eto solid
-		`#{@mged} 'in thermal_shell#{index} eto #{v.mged} #{v.mged} #{@torus_ring_size+1}  #{((v.normal)*major_minor[0]).mged}   #{major_minor[1]} '` #the eto solid
+		`#{@mged} 'in thermal_shell_positive#{index} eto #{v.mged} #{v.mged} #{@torus_ring_size+2}  #{((v.normal)*major_minor[0]).mged}   #{major_minor[1]} '` #the eto for the thermal shell
+		`#{@mged} 'in thermal_shell_negative#{index} eto #{v.mged} #{v.mged} #{@torus_ring_size+1}  #{((v.normal)*major_minor[0]).mged}   #{major_minor[1]} '` #the eto negative for the thermal shield
+		`#{@mged} 'comb thermal_shell#{index}.c u thermal_shell_positive#{index} - thermal_shell_negative#{index} '` #the combined thermal shell
+
 
 		
 	end
@@ -32,7 +34,7 @@ def chassis # the chassis is the inner section of the magrid
 		`#{@mged} 'in joint_#{index} rcc #{(a+b).mged} #{(b.inverse*2).mged} #{@joint_radius}'` 
 		`#{@mged} 'in joint_negative_#{index} rcc #{(a+b).mged} #{(b.inverse*2).mged} #{@joint_negative_radius}'` 
 	end
-	`#{@mged} 'comb solid.c u #{(0...Cube.edges.size).map{|index| " joint_#{index} "}.join(" u ")} u #{(0..5).map{|index| "torus#{index}"}.join(" u ")}'` #combine the pieces
+	`#{@mged} 'comb solid.c u #{(0...Cube.edges.size).map{|index| " joint_#{index} "}.join(" u ")} u #{(0..5).map{|index| "torus#{index} u thermal_shell#{index}.c"}.join(" u ")}'` #combine the pieces
 	`#{@mged} 'comb negative_form.c u #{(0...Cube.edges.size).map{|index| " joint_negative_#{index}  "}.join(" u ")} u #{(0..5).map{|index| "torus_negative#{index}.c u lid_knockout#{index}"}.join(" u ") } '` #combine the pieces
 	`#{@mged} 'r chassis u solid.c - negative_form.c'` #combine the pieces
 end
