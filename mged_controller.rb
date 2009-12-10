@@ -24,11 +24,13 @@ def chassis # the chassis is the inner section of the magrid
 		a = a * @joint_nudge # nudge the joint closer to the center
 		b = cross_product(a,(edge[1]-edge[0])) # this is the vector of the half joint
 		b = b.normal*@scale_factor* @joint_nudge_length # get the unit vector for this direction and scale
-		`#{@mged} 'in joint_#{index} rcc #{(a+b).mged} #{(b.inverse*2).mged} #{@joint_radius}'` 
+		`#{@mged} 'in joint_positive_#{index} rcc #{(a+b).mged} #{(b.inverse*2).mged} #{@joint_radius}'` 
 		`#{@mged} 'in joint_negative_#{index} rcc #{(a+b).mged} #{(b.inverse*2).mged} #{@joint_negative_radius}'` 
+		`#{@mged} 'in joint_knockout_#{index} rcc #{a.mged} #{(a).mged} #{@joint_negative_radius*5}'` 
+		`#{@mged} 'comb joint_#{index} u joint_positive_#{index} - joint_knockout_#{index}'` 
 	end
 	`#{@mged} 'comb solid.c u #{(0...Cube.edges.size).map{|index| " joint_#{index} "}.join(" u ")} u #{(0..5).map{|index| "torus#{index}"}.join(" u ")}'` #combine the pieces
-	`#{@mged} 'comb negative_form.c u #{(0...Cube.edges.size).map{|index| " joint_negative_#{index}  "}.join(" u ")} u #{(0..5).map{|index| "torus_negative#{index}.c u lid_knockout#{index}"}.join(" u ") } '` #combine the pieces
+	`#{@mged} 'comb negative_form.c u #{(0...Cube.edges.size).map{|index| " joint_negative_#{index} "}.join(" u ")} u #{(0..5).map{|index| "torus_negative#{index}.c u lid_knockout#{index}"}.join(" u ") } '` #combine the pieces
 	`#{@mged} 'r chassis u solid.c - negative_form.c'` #combine the pieces
 end
 
@@ -87,7 +89,7 @@ max_torus = (a-b).r
 @torus_negative = 0.72 * @torus 
 @joint_radius = (@ribbon_width/2) + (@minimum_wall_thickness)
 @joint_negative_radius = (@ribbon_width/2) + 0.05
-@joint_nudge = 0.87 # this is a percentage scaling of the vector defining the ideal joint location
+@joint_nudge = 0.91 # this is a percentage scaling of the vector defining the ideal joint location
 @joint_nudge_length = 0.16
 @coil_wire_diameter = 1.1  # mm test wire
 @channel_thickness = (@ribbon_thickness*@turns)+1
@@ -166,23 +168,23 @@ EOF`
 `open ./parts/#{part_with_git_hash}.png` # open the png in preview.app
 
 
-`g-stl -a #{@tolerance_distance} -D #{@tolerance_distance} -o ./parts/#{part_with_git_hash}.stl #{DB} #{part}` #this outputs the stl file for the part
-
-#this block convers the STL from the previous step back into native BRL-CAD format, and then outputs a snapshot
-`stl-g ./parts/#{part_with_git_hash}.stl ./temp/#{part}_proof.g`
-`cat <<EOF | mged -c ./temp/#{part}_proof.g
-B all
-ae 135 -35 180
-set perspective 20
-zoom .30
-saveview ./temp/#{part}_proof.rt
-EOF`
-
-`./temp/#{part}_proof.rt -s1024`
-`mv #{part}_proof.rt.pix ./temp/#{part}_proof.rt.pix` # move this file to the temp directory
-
-`pix-png -s1024 < ./temp/#{part}_proof.rt.pix > ./temp/#{part}_proof.png` #generate a png from the rt file
-`open ./temp/#{part}_proof.png` # open the png in preview.app
+# `g-stl -a #{@tolerance_distance} -D #{@tolerance_distance} -o ./parts/#{part_with_git_hash}.stl #{DB} #{part}` #this outputs the stl file for the part
+# 
+# #this block converts the STL from the previous step back into native BRL-CAD format, and then outputs a snapshot
+# `stl-g ./parts/#{part_with_git_hash}.stl ./temp/#{part}_proof.g`
+# `cat <<EOF | mged -c ./temp/#{part}_proof.g
+# B all
+# ae 135 -35 180
+# set perspective 20
+# zoom .30
+# saveview ./temp/#{part}_proof.rt
+# EOF`
+# 
+# `./temp/#{part}_proof.rt -s1024`
+# `mv #{part}_proof.rt.pix ./temp/#{part}_proof.rt.pix` # move this file to the temp directory
+# 
+# `pix-png -s1024 < ./temp/#{part}_proof.rt.pix > ./temp/#{part}_proof.png` #generate a png from the rt file
+# `open ./temp/#{part}_proof.png` # open the png in preview.app
 
 
 end
