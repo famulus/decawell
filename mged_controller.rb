@@ -24,7 +24,7 @@ def chassis # the chassis is the inner section of the magrid
 		a = a * @joint_nudge # nudge the joint closer to the center
 		b = cross_product(a,(edge[1]-edge[0])) # this is the vector of the half joint
 		b = b.normal*@scale_factor* @joint_nudge_length # get the unit vector for this direction and scale
-		`#{@mged} 'in joint_positive_#{index} rcc #{(a+b).mged} #{(b.inverse*2).mged} #{@joint_radius}'` 
+		`#{@mged} 'in joint_positive_#{index} rec #{(a+b).mged} #{(b.inverse*2).mged}  #{(a.normal*6).mged} #{(cross_product(a,b).normal*4).mged} '` 
 		`#{@mged} 'in joint_negative_#{index} rcc #{(a+b).mged} #{(b.inverse*2).mged} #{@joint_negative_radius}'` 
 		`#{@mged} 'in joint_knockout_#{index} rcc #{a.mged} #{(a).mged} #{@joint_negative_radius*5}'` 
 		`#{@mged} 'comb joint_#{index} u joint_positive_#{index} - joint_knockout_#{index}'` 
@@ -72,8 +72,8 @@ ohm = Unit("ohm")
 
 @ribbon_width = 4.2
 @ribbon_thickness = 0.3 # mm 
-@turns = 12
-@minimum_wall_thickness = 2 #mm
+@turns = 2
+@minimum_wall_thickness = 4 #mm
 
 
 @outside_radius = (Cube.vertices[0].r) *@scale_factor #the distance from the center of the machine to the furthest edge of the core
@@ -88,8 +88,8 @@ max_torus = (a-b).r
 @torus = 0.17 *@scale_factor 
 @torus_negative = 0.72 * @torus 
 @joint_radius = (@ribbon_width/2) + (@minimum_wall_thickness)
-@joint_negative_radius = (@ribbon_width/2) + 0.05
-@joint_nudge = 0.91 # this is a percentage scaling of the vector defining the ideal joint location
+@joint_negative_radius = (@ribbon_width/2) + 0.2
+@joint_nudge = 0.94 # this is a percentage scaling of the vector defining the ideal joint location
 @joint_nudge_length = 0.16
 @coil_wire_diameter = 1.1  # mm test wire
 @channel_thickness = (@ribbon_thickness*@turns)+1
