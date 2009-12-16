@@ -15,7 +15,9 @@ def chassis # the chassis is the inner section of the magrid
 		`#{@mged} 'in torus#{index} eto #{v.mged} #{v.mged} #{@torus_ring_size}  #{((v.normal)*major_minor[0]).mged}   #{major_minor[1]} '` #the eto solid
 		`#{@mged} 'in torus_negative_outer#{index} rcc #{v.mged} #{(v.inverse.normal*(@ribbon_width/2)).mged} #{@torus_ring_size+(@channel_thickness/2)} '` #the outside radious of the ribbon channel
 		`#{@mged} 'in torus_negative_inner#{index} rcc #{v.mged} #{(v.inverse.normal*(@ribbon_width/2)).mged} #{@torus_ring_size-(@channel_thickness/2)}'` #the inside radious of the ribbon channel
+		`#{@mged} 'in torus_ridge_inner#{index} tor #{v.mged} #{v.mged} #{@torus_ring_size-1} 0.5'` #this is to block the laser from damaging the coil
 		`#{@mged} 'comb torus_negative#{index}.c u torus_negative_outer#{index} - torus_negative_inner#{index} '` #this hollow center of the torus
+
 		`#{@mged} 'in lid_knockout#{index} rcc #{v.mged} #{(v.normal*@torus ).mged} #{@torus_ring_size+@torus}'` #this removed the face of the torus so we can install coils
 	end
 	Cube.edges.each_with_index do |edge,index| #insert the  joints
@@ -29,7 +31,7 @@ def chassis # the chassis is the inner section of the magrid
 		`#{@mged} 'in joint_knockout_#{index} rcc #{a.mged} #{(a).mged} #{@joint_negative_radius*5}'` 
 		`#{@mged} 'comb joint_#{index} u joint_positive_#{index} - joint_knockout_#{index}'` 
 	end
-	`#{@mged} 'comb solid.c u #{(0...Cube.edges.size).map{|index| " joint_#{index} "}.join(" u ")} u #{(0..5).map{|index| "torus#{index}"}.join(" u ")}'` #combine the pieces
+	`#{@mged} 'comb solid.c u #{(0...Cube.edges.size).map{|index| " joint_#{index} "}.join(" u ")} u #{(0..5).map{|index| "torus#{index} u torus_ridge_inner#{index}"}.join(" u ")}'` #combine the pieces
 	`#{@mged} 'comb negative_form.c u #{(0...Cube.edges.size).map{|index| " joint_negative_#{index} "}.join(" u ")} u #{(0..5).map{|index| "torus_negative#{index}.c u lid_knockout#{index}"}.join(" u ") } '` #combine the pieces
 	`#{@mged} 'r chassis u solid.c - negative_form.c'` #combine the pieces
 end
