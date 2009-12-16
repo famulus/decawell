@@ -15,10 +15,12 @@ def chassis # the chassis is the inner section of the magrid
 		`#{@mged} 'in torus#{index} eto #{v.mged} #{v.mged} #{@torus_ring_size}  #{((v.normal)*major_minor[0]).mged}   #{major_minor[1]} '` #the eto solid
 		`#{@mged} 'in torus_negative_outer#{index} rcc #{v.mged} #{(v.inverse.normal*(@ribbon_width/2)).mged} #{@torus_ring_size+(@channel_thickness/2)} '` #the outside radious of the ribbon channel
 		`#{@mged} 'in torus_negative_inner#{index} rcc #{v.mged} #{(v.inverse.normal*(@ribbon_width/2)).mged} #{@torus_ring_size-(@channel_thickness/2)}'` #the inside radious of the ribbon channel
-		`#{@mged} 'in torus_ridge_inner#{index} tor #{v.mged} #{v.mged} #{@torus_ring_size-1} 0.5'` #this is to block the laser from damaging the coil
+		`#{@mged} 'in torus_ridge_inner#{index} tor #{v.mged} #{v.mged} #{@torus_ring_size+3} 0.6'` #this is to block the laser from damaging the coil
 		`#{@mged} 'comb torus_negative#{index}.c u torus_negative_outer#{index} - torus_negative_inner#{index} '` #this hollow center of the torus
 
-		`#{@mged} 'in lid_knockout#{index} rcc #{v.mged} #{(v.normal*@torus ).mged} #{@torus_ring_size+@torus}'` #this removed the face of the torus so we can install coils
+		`#{@mged} 'in lid_knockout_cylinder#{index} rcc #{v.mged} #{(v.normal*@torus ).mged} #{@torus_ring_size+@torus}'` #this removed the face of the torus so we can install coils
+		`#{@mged} 'comb lid_knockout#{index} u lid_knockout_cylinder#{index} - torus_ridge_inner#{index} '` #this hollow center of the torus
+
 	end
 	Cube.edges.each_with_index do |edge,index| #insert the  joints
 		edge = edge.map{|e|e *@scale_factor} # scale the edges
@@ -150,24 +152,34 @@ end
 chassis # generate the parts in mged
 lid 
 
+# this block prepares a snapshot picture of the part
+def render_view(ae ="ae 135 -35 180", zoom = 0.3 )
+end
+
+
 parts.each do |part|
 
 	part_with_git_hash = "#{`git rev-parse HEAD`.chomp}_#{part}"	#give the STL output a uniq ID based on git repo hash
 
-# this block prepares a snapshot picture of the part
+
+views = [["ae 135 -35 180",0.3], ["ae -22 -30 -16",0.54]]
+
+views.each_with_index do |view,index|
 `cat <<EOF | mged -c #{DB}
 B #{part}
-ae 135 -35 180
+#{view[0]}
 set perspective 20
-zoom .30
-saveview ./temp/#{part}.rt
+zoom #{view[1]}
+saveview ./temp/#{part}_#{index}.rt
 EOF`
 
-`./temp/#{part}.rt -s1024` # calling the .rt file outputs a .pix file
-`mv #{part}.rt.pix ./temp/#{part}.rt.pix` # move this file to the temp directory
-`mv #{part}.rt.log ./temp/#{part}.rt.log` # move this file to the temp directory
-`pix-png -s1024 < ./temp/#{part}.rt.pix > ./parts/#{part_with_git_hash}.png` #generate a png from the rt.pix file
-`open ./parts/#{part_with_git_hash}.png` # open the png in preview.app
+`./temp/#{part}_#{index}.rt -s1024` # calling the .rt file outputs a .pix file
+`mv #{part}_#{index}.rt.pix ./temp/#{part}_#{index}.rt.pix` # move this file to the temp directory
+`mv #{part}_#{index}.rt.log ./temp/#{part}_#{index}.rt.log` # move this file to the temp directory
+`pix-png -s1024 < ./temp/#{part}_#{index}.rt.pix > ./parts/#{part_with_git_hash}_#{index}.png` #generate a png from the rt.pix file
+`open ./parts/#{part_with_git_hash}_#{index}.png` # open the png in preview.app
+
+end
 
 
 # `g-stl -a #{@tolerance_distance} -D #{@tolerance_distance} -o ./parts/#{part_with_git_hash}.stl #{DB} #{part}` #this outputs the stl file for the part
