@@ -12,10 +12,12 @@ def chassis # the chassis is the inner section of the magrid
 		major_minor = [((@ribbon_width/2+@minimum_wall_thickness)),((@channel_thickness/2)+@minimum_wall_thickness)]
 		major_minor = major_minor.reverse if major_minor[0] < major_minor[1]
 		
+		weld_shield_inner = (@torus_ring_size + (@channel_thickness/2) + (@minimum_wall_thickness/2))
+		
 		`#{@mged} 'in torus#{index} eto #{v.mged} #{v.mged} #{@torus_ring_size}  #{((v.normal)*major_minor[0]).mged}   #{major_minor[1]} '` #the eto solid
 		`#{@mged} 'in torus_negative_outer#{index} rcc #{v.mged} #{(v.inverse.normal*(@ribbon_width/2)).mged} #{@torus_ring_size+(@channel_thickness/2)} '` #the outside radious of the ribbon channel
 		`#{@mged} 'in torus_negative_inner#{index} rcc #{v.mged} #{(v.inverse.normal*(@ribbon_width/2)).mged} #{@torus_ring_size-(@channel_thickness/2)}'` #the inside radious of the ribbon channel
-		`#{@mged} 'in torus_ridge_inner#{index} tor #{v.mged} #{v.mged} #{@torus_ring_size+3} 0.6'` #this is to block the laser from damaging the coil
+		`#{@mged} 'in torus_ridge_inner#{index} tor #{v.mged} #{v.mged} #{weld_shield_inner} 0.6'` #this is to block the laser from damaging the coil
 		`#{@mged} 'comb torus_negative#{index}.c u torus_negative_outer#{index} - torus_negative_inner#{index} '` #this hollow center of the torus
 
 		`#{@mged} 'in lid_knockout_cylinder#{index} rcc #{v.mged} #{(v.normal*@torus ).mged} #{@torus_ring_size+@torus}'` #this removed the face of the torus so we can install coils
@@ -162,7 +164,7 @@ parts.each do |part|
 	part_with_git_hash = "#{`git rev-parse HEAD`.chomp}_#{part}"	#give the STL output a uniq ID based on git repo hash
 
 
-views = [["ae 135 -35 180",0.3], ["ae -22 -30 -16",0.54]]
+views = [["ae 135 -35 180",0.3], ["ae -22 -30 -16",0.54],["ae 9.5316 21.1861 33.5715",0.5]]
 
 views.each_with_index do |view,index|
 `cat <<EOF | mged -c #{DB}
