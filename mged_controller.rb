@@ -12,16 +12,18 @@ def chassis # the chassis is the inner section of the magrid
 		major_minor = [((@ribbon_width/2+@minimum_wall_thickness)),((@channel_thickness/2)+@minimum_wall_thickness)]
 		major_minor = major_minor.reverse if major_minor[0] < major_minor[1]
 		
-		weld_shield_inner = (@torus_ring_size + (@channel_thickness/2) + (@minimum_wall_thickness/2))
+		weld_shield_outer = (@torus_ring_size + (@channel_thickness/2) + (@minimum_wall_thickness/2)) # these calculate the position of the weld shields
+		weld_shield_inner = (@torus_ring_size - (@channel_thickness/2) - (@minimum_wall_thickness/2))
 		
 		`#{@mged} 'in torus#{index} eto #{v.mged} #{v.mged} #{@torus_ring_size}  #{((v.normal)*major_minor[0]).mged}   #{major_minor[1]} '` #the eto solid
 		`#{@mged} 'in torus_negative_outer#{index} rcc #{v.mged} #{(v.inverse.normal*(@ribbon_width/2)).mged} #{@torus_ring_size+(@channel_thickness/2)} '` #the outside radious of the ribbon channel
 		`#{@mged} 'in torus_negative_inner#{index} rcc #{v.mged} #{(v.inverse.normal*(@ribbon_width/2)).mged} #{@torus_ring_size-(@channel_thickness/2)}'` #the inside radious of the ribbon channel
-		`#{@mged} 'in torus_ridge_inner#{index} tor #{v.mged} #{v.mged} #{weld_shield_inner} 0.6'` #this is to block the laser from damaging the coil
+		`#{@mged} 'in weld_shield_outer#{index} tor #{v.mged} #{v.mged} #{weld_shield_outer} 0.6'` #this is to block the laser from damaging the coil
+		`#{@mged} 'in weld_shield_inner#{index} tor #{v.mged} #{v.mged} #{weld_shield_inner} 0.6'` #this is to block the laser from damaging the coil
 		`#{@mged} 'comb torus_negative#{index}.c u torus_negative_outer#{index} - torus_negative_inner#{index} '` #this hollow center of the torus
 
 		`#{@mged} 'in lid_knockout_cylinder#{index} rcc #{v.mged} #{(v.normal*@torus ).mged} #{@torus_ring_size+@torus}'` #this removed the face of the torus so we can install coils
-		`#{@mged} 'comb lid_knockout#{index} u lid_knockout_cylinder#{index} - torus_ridge_inner#{index} '` #this hollow center of the torus
+		`#{@mged} 'comb lid_knockout#{index} u lid_knockout_cylinder#{index} - weld_shield_inner#{index} - weld_shield_outer#{index} '` #this hollow center of the torus
 
 	end
 	Cube.edges.each_with_index do |edge,index| #insert the  joints
@@ -35,7 +37,7 @@ def chassis # the chassis is the inner section of the magrid
 		`#{@mged} 'in joint_knockout_#{index} rcc #{a.mged} #{(a).mged} #{@joint_negative_radius*5}'` 
 		`#{@mged} 'comb joint_#{index} u joint_positive_#{index} - joint_knockout_#{index}'` 
 	end
-	`#{@mged} 'comb solid.c u #{(0...Cube.edges.size).map{|index| " joint_#{index} "}.join(" u ")} u #{(0..5).map{|index| "torus#{index} u torus_ridge_inner#{index}"}.join(" u ")}'` #combine the pieces
+	`#{@mged} 'comb solid.c u #{(0...Cube.edges.size).map{|index| " joint_#{index} "}.join(" u ")} u #{(0..5).map{|index| "torus#{index} u weld_shield_inner#{index} u weld_shield_outer#{index}"}.join(" u ")}'` #combine the pieces
 	`#{@mged} 'comb negative_form.c u #{(0...Cube.edges.size).map{|index| " joint_negative_#{index} "}.join(" u ")} u #{(0..5).map{|index| "torus_negative#{index}.c u lid_knockout#{index}"}.join(" u ") } '` #combine the pieces
 	`#{@mged} 'r chassis u solid.c - negative_form.c'` #combine the pieces
 end
@@ -48,7 +50,9 @@ def lid  #the lid seals the chassis
 	v = v*@scale_factor
 
 	`#{@mged} 'comb lid_torus_negative0 u torus_negative_outer0 -   torus_negative_inner0 '` #this hollow center of the torus
-	`#{@mged} 'in lid_lid_knockout0 rcc #{v.mged}  #{(v*2).mged} #{@torus_ring_size+@torus}'` #this removed the face of the torus so we can install coils
+	`#{@mged} 'in lid_lid_knockout0_rcc rcc #{v.mged}  #{(v*2).mged} #{@torus_ring_size+@torus}'` #this removed the face of the torus so we can install coils
+	`#{@mged} 'comb lid_lid_knockout0 u lid_lid_knockout0_rcc u weld_shield_outer0 u weld_shield_inner0'` 
+
 	`#{@mged} 'r lids u #{(0..0).map{|index| "torus#{index} - lid_torus_negative#{index} - lid_lid_knockout#{index}"}.join(" u ")}'` #combine the pieces
 end
 
