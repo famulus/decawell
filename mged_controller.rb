@@ -50,10 +50,11 @@ def lid  #the lid seals the chassis
 	v = v*@scale_factor
 
 	`#{@mged} 'comb lid_torus_negative0 u torus_negative_outer0 -   torus_negative_inner0 '` #this hollow center of the torus
-	`#{@mged} 'in lid_lid_knockout0_rcc rcc #{v.mged}  #{(v*2).mged} #{@torus_ring_size+@torus}'` #this removed the face of the torus so we can install coils
-	`#{@mged} 'comb lid_lid_knockout0 u lid_lid_knockout0_rcc u weld_shield_outer0 u weld_shield_inner0'` 
+	`#{@mged} 'in lid_lid_knockout0_rcc rcc #{v.mged}  #{(v*2).inverse.mged} #{@torus_ring_size+@torus}'` #this removed the face of the torus so we can install coils
+	`#{@mged} 'comb lid_lid_knockout0 u lid_lid_knockout0_rcc u weld_shield_outer0 u weld_shield_inner0 '` 
+	`#{@mged} 'comb torus_with_joint_cover u torus0 u joint_3 u joint_4 u joint_7 u joint_10'` #attach the nubs to the lid
 
-	`#{@mged} 'r lids u #{(0..0).map{|index| "torus#{index} - lid_torus_negative#{index} - lid_lid_knockout#{index}"}.join(" u ")}'` #combine the pieces
+	`#{@mged} 'r lids u #{(0..0).map{|index| "torus_with_joint_cover - lid_torus_negative#{index} - lid_lid_knockout#{index}"}.join(" u ")}'` #combine the pieces
 end
 
 
