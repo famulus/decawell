@@ -1,0 +1,62 @@
+BRL-CAD Release 7.12.2  The BRL-CAD Raytracer RT
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Ray-Tracing Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Numerical Computation Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Utility Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+
+Compile-time debug symbols are available
+Running on tests-macbook.local
+Planning to run with 2 processors
+rt -M -p20 -o lids_proof.rt.pix -s1024
+opendb ./temp/lids_proof.g;
+tree all;
+db title:  Conversion from Stereolithography format
+DIRBUILD: cpu = 0.000301 sec, elapsed = 0.000556 sec
+    parent: 0.0user 0.0sys 0:00real 0% 0i+0d 1609728maxrss 0+49pf 0+0csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=42, #free=26, #realloc=4 (16 retained)
+0602b028 TOL 5.000000e-04 (sq=2.500000e-07) perp=1.000000e-06, para=9.999990e-01
+BRL-CAD Release 7.12.2  The BRL-CAD Optical Shader Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+Additional mem=0., #malloc=2050, #free=2, #realloc=1 (2048 retained)
+GETTREE: cpu = 0.005453 sec, elapsed = 0.00727 sec
+    parent: 0.0user 0.0sys 0:00real 0% 0i+0d 3151872maxrss 0+547pf 0+5csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=9996, #free=1157, #realloc=3 (8839 retained)
+
+...................Frame     0...................
+PREP: cpu = 0.006367 sec, elapsed = 0.006853 sec
+    parent: 0.0user 0.0sys 0:00real 0% 0i+0d 3393536maxrss 0+115pf 0+0csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=7688, #free=3815, #realloc=5 (3873 retained)
+NUBSP: 0 nu, 1901 cut, 1902 box (0 empty)
+Tree: 1 solids in 1 regions
+Model: X(-33,33), Y(-33,33), Z(31,38)
+View: 135 azimuth, -35 elevation off of front view
+Orientation: 0.819491, 0.339444, -0.176704, -0.4266
+Eye_pos: -124.147, 124.141, -88.4854
+Size: 428.663mm
+Grid: (0.418616, 0.418616) mm, (1024, 1024) pixels
+Beam: radius=0 mm, divergence=0.000170442 mm/1mm
+Output file is 'lids_proof.rt.pix' 1024x1024 pixels
+Low overhead scanline-per-CPU buffering
+
+SHOT: cpu = 3.89362 sec, elapsed = 2.25192 sec
+    parent: 3.8user 0.0sys 0:02real 174% 0i+0d 5097472maxrss 0+834pf 0+2511csw
+  children: 0.0user 0.0sys 0:02real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=1067, #free=1040, #realloc=3 (27 retained)
+3650984 solid/ray intersections: 427061 hits + 3223923 miss
+pruned 11.7%:  513184 model RPP, 8077311 dups skipped, 41753 solid RPP
+Frame  0:    1048576 pixels in      1.95 sec =    538612.81 pixels/sec
+Frame  0:    1048576 rays   in      1.95 sec =    538612.81 rays/sec (RTFM)
+Frame  0:    1048576 rays   in      3.89 sec =    269306.41 rays/CPU_sec
+Frame  0:    1048576 rays   in      2.25 sec =    465637.06 rays/sec (wallclock)
+

@@ -1,0 +1,62 @@
+BRL-CAD Release 7.12.2  The BRL-CAD Raytracer RT
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Ray-Tracing Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Numerical Computation Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+BRL-CAD Release 7.12.2  The BRL-CAD Utility Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+
+Compile-time debug symbols are available
+Running on tests-macbook.local
+Planning to run with 2 processors
+rt -M -p20 -o chassis_proof.rt.pix -s1024
+opendb ./temp/chassis_proof.g;
+tree all;
+db title:  Conversion from Stereolithography format
+DIRBUILD: cpu = 0.000297 sec, elapsed = 0.000634 sec
+    parent: 0.0user 0.0sys 0:00real 0% 0i+0d 1613824maxrss 0+51pf 0+0csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=43, #free=26, #realloc=4 (17 retained)
+0602b028 TOL 5.000000e-04 (sq=2.500000e-07) perp=1.000000e-06, para=9.999990e-01
+BRL-CAD Release 7.12.2  The BRL-CAD Optical Shader Library
+    Tue Apr 29 01:35:15 EDT 2008, Compilation 1
+    morrison@sushi.local:/usr/brlcad/rel-7.12.2
+Additional mem=0., #malloc=2050, #free=2, #realloc=1 (2048 retained)
+GETTREE: cpu = 0.030425 sec, elapsed = 0.041111 sec
+    parent: 0.0user 0.0sys 0:00real 75% 0i+0d 8091648maxrss 3+2954pf 0+17csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=54894, #free=1157, #realloc=3 (53737 retained)
+
+...................Frame     0...................
+PREP: cpu = 0.038679 sec, elapsed = 0.040608 sec
+    parent: 0.0user 0.0sys 0:00real 75% 0i+0d 9144320maxrss 0+511pf 0+0csw
+  children: 0.0user 0.0sys 0:00real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=28339, #free=14097, #realloc=86 (14242 retained)
+NUBSP: 0 nu, 7006 cut, 7007 box (0 empty)
+Tree: 1 solids in 1 regions
+Model: X(-38,38), Y(-38,38), Z(-38,38)
+View: 135 azimuth, -35 elevation off of front view
+Orientation: 0.819491, 0.339444, -0.176704, -0.4266
+Eye_pos: -142.876, 142.876, -141.482
+Size: 493.333mm
+Grid: (0.481771, 0.481771) mm, (1024, 1024) pixels
+Beam: radius=0 mm, divergence=0.000170442 mm/1mm
+Output file is 'chassis_proof.rt.pix' 1024x1024 pixels
+Low overhead scanline-per-CPU buffering
+
+SHOT: cpu = 49.8865 sec, elapsed = 32.3768 sec
+    parent: 49.8user 0.3sys 0:32real 155% 0i+0d 10864640maxrss 7+844pf 14+38877csw
+  children: 0.0user 0.0sys 0:32real 0% 0i+0d 0maxrss 0+0pf 0+0csw
+Additional mem=0., #malloc=1075, #free=1040, #realloc=3 (35 retained)
+26069707 solid/ray intersections: 1683475 hits + 24386232 miss
+pruned 6.5%:  22184 model RPP, 401653806 dups skipped, 11200 solid RPP
+Frame  0:    1048576 pixels in     24.94 sec =     42038.49 pixels/sec
+Frame  0:    1048576 rays   in     24.94 sec =     42038.49 rays/sec (RTFM)
+Frame  0:    1048576 rays   in     49.89 sec =     21019.24 rays/CPU_sec
+Frame  0:    1048576 rays   in     32.38 sec =     32386.63 rays/sec (wallclock)
+

@@ -1,8 +1,7 @@
 require 'ruby-units'
-require 'geometry'
+require './geometry'
 include Geometry
 require 'facets'
-
 
 def chassis # the chassis is the inner section of the magrid
 
