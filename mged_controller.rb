@@ -5,24 +5,12 @@ require 'facets'
 
 def chassis # the chassis is the inner section of the magrid
 
-	Cube.octahedron.each_with_index do |v,index| # draw the 12 tori
-		v = v*@scale_factor
-		#determin major axis depending on coil proportions
-		major_minor = [((@ribbon_width/2+@minimum_wall_thickness)),((@channel_thickness/2)+@minimum_wall_thickness)]
-		major_minor = major_minor.reverse if major_minor[0] < major_minor[1]
-		
-		weld_shield_outer = (@torus_ring_size + (@channel_thickness/2) + (@minimum_wall_thickness/2)) # these calculate the position of the weld shields
-		weld_shield_inner = (@torus_ring_size - (@channel_thickness/2) - (@minimum_wall_thickness/2))
-		
-		`#{@mged} 'in torus#{index} eto #{v.mged} #{v.mged} #{@torus_ring_size}  #{((v.normal)*major_minor[0]).mged}   #{major_minor[1]} '` #the eto solid
-		`#{@mged} 'in torus_negative_outer#{index} rcc #{v.mged} #{(v.inverse.normal*(@ribbon_width/2)).mged} #{@torus_ring_size+(@channel_thickness/2)} '` #the outside radious of the ribbon channel
-		`#{@mged} 'in torus_negative_inner#{index} rcc #{v.mged} #{(v.inverse.normal*(@ribbon_width/2)).mged} #{@torus_ring_size-(@channel_thickness/2)}'` #the inside radious of the ribbon channel
-		`#{@mged} 'in weld_shield_outer#{index} tor #{v.mged} #{v.mged} #{weld_shield_outer} 0.6'` #this is to block the laser from damaging the coil
-		`#{@mged} 'in weld_shield_inner#{index} tor #{v.mged} #{v.mged} #{weld_shield_inner} 0.6'` #this is to block the laser from damaging the coil
-		`#{@mged} 'comb torus_negative#{index}.c u torus_negative_outer#{index} - torus_negative_inner#{index} '` #this hollow center of the torus
+	
 
-		`#{@mged} 'in lid_knockout_cylinder#{index} rcc #{v.mged} #{(v.normal*@torus ).mged} #{@torus_ring_size+@torus}'` #this removed the face of the torus so we can install coils
-		`#{@mged} 'comb lid_knockout#{index} u lid_knockout_cylinder#{index} - weld_shield_inner#{index} - weld_shield_outer#{index} '` #this hollow center of the torus
+	Cube.octahedron.each_with_index do |v,index| # draw the 6 tori
+		v = v*@scale_factor		
+		`#{@mged} 'in torus#{index} tor #{v.mged} #{v.mged} #{@torus_ring_size} #{@torus} '` #the eto solid
+		`#{@mged} 'in torus_negative#{index} tor #{v.mged} #{v.mged} #{@torus_ring_size+@torus} #{@torus*0.7} '` #the eto solid
 
 	end
 	Cube.edges.each_with_index do |edge,index| #insert the  joints
@@ -31,30 +19,19 @@ def chassis # the chassis is the inner section of the magrid
 		a = a * @joint_nudge # nudge the joint closer to the center
 		b = cross_product(a,(edge[1]-edge[0])) # this is the vector of the half joint
 		b = b.normal*@scale_factor* @joint_nudge_length # get the unit vector for this direction and scale
-		`#{@mged} 'in joint_positive_#{index} rec #{(a+b).mged} #{(b.inverse*2).mged}  #{(a.normal*6).mged} #{(cross_product(a,b).normal*4).mged} '` 
-		`#{@mged} 'in joint_negative_#{index} rcc #{(a+b).mged} #{(b.inverse*2).mged} #{@joint_negative_radius}'` 
-		`#{@mged} 'in joint_knockout_#{index} rcc #{a.mged} #{(a).mged} #{@joint_negative_radius*5}'` 
-		`#{@mged} 'comb joint_#{index} u joint_positive_#{index} - joint_knockout_#{index}'` 
 	end
-	`#{@mged} 'comb solid.c u #{(0...Cube.edges.size).map{|index| " joint_#{index} "}.join(" u ")} u #{(0..5).map{|index| "torus#{index} u weld_shield_inner#{index} u weld_shield_outer#{index}"}.join(" u ")}'` #combine the pieces
-	`#{@mged} 'comb negative_form.c u #{(0...Cube.edges.size).map{|index| " joint_negative_#{index} "}.join(" u ")} u #{(0..5).map{|index| "torus_negative#{index}.c u lid_knockout#{index}"}.join(" u ") } '` #combine the pieces
-	`#{@mged} 'r chassis u solid.c - negative_form.c'` #combine the pieces
+			`#{@mged} 'in electron_gun_sphere sph #{(Cube.octahedron.first*@scale_factor*1.5).mged} 17'` #sphere to hold electron gun
+
+	
+	
+	`#{@mged} 'comb solid.c u #{(0..5).map{|index| "torus#{index}"}.join(" u ")} u electron_gun_sphere'` #combine the pieces
+	`#{@mged} 'comb negative_form.c u #{(0..5).map{|index| "torus_negative#{index}"  }.join(' u ')}'` #combine the pieces
+	`#{@mged} 'r chassis u solid.c - negative_form.c'` #remove negative from positive
 end
 
 
 
 
-def lid  #the lid seals the chassis
-	v = Cube.octahedron.first
-	v = v*@scale_factor
-
-	`#{@mged} 'comb lid_torus_negative0 u torus_negative_outer0 -   torus_negative_inner0 '` #this hollow center of the torus
-	`#{@mged} 'in lid_lid_knockout0_rcc rcc #{v.mged}  #{(v*2).inverse.mged} #{@torus_ring_size+@torus}'` #this removed the face of the torus so we can install coils
-	`#{@mged} 'comb lid_lid_knockout0 u lid_lid_knockout0_rcc u weld_shield_outer0 u weld_shield_inner0 '` 
-	`#{@mged} 'comb torus_with_joint_cover u torus0 u joint_3 u joint_4 u joint_7 u joint_10'` #attach the nubs to the lid
-
-	`#{@mged} 'r lids u #{(0..0).map{|index| "torus_with_joint_cover - lid_torus_negative#{index} - lid_lid_knockout#{index}"}.join(" u ")}'` #combine the pieces
-end
 
 
 
@@ -67,7 +44,7 @@ end
 
 
 
-parts = %w(chassis lids)
+parts = %w(chassis )
 
 DB = "./temp/decawell.g" # location of BRL-CAD database
 @mged ="mged -c  #{DB} " # shorthand for sending a command to mged using the decawell database
@@ -83,7 +60,7 @@ ohm = Unit("ohm")
 @ribbon_width = 4.2
 @ribbon_thickness = 0.3 # mm 
 @turns = 2
-@minimum_wall_thickness = 4 #mm
+@minimum_wall_thickness = 3 #mm
 
 
 @outside_radius = (Cube.vertices[0].r) *@scale_factor #the distance from the center of the machine to the furthest edge of the core
@@ -95,16 +72,19 @@ b = Vector.average(*Cube.faces_for_edge.first.first.map{|e|e *@scale_factor}) #f
 max_torus = (a-b).r
 
 @torus_ring_size = max_torus/1.305 #0.700 *@scale_factor # the main torus shape
-@torus = 0.17 *@scale_factor 
+@torus = 0.14 *@scale_factor 
 @torus_negative = 0.72 * @torus 
 @joint_radius = (@ribbon_width/2) + (@minimum_wall_thickness)
 @joint_negative_radius = (@ribbon_width/2) + 0.2
-@joint_nudge = 0.94 # this is a percentage scaling of the vector defining the ideal joint location
+@joint_nudge = 0.84 # this is a percentage scaling of the vector defining the ideal joint location
 @joint_nudge_length = 0.16
 @coil_wire_diameter = 1.1  # mm test wire
 @channel_thickness = (@ribbon_thickness*@turns)+1
 @tolerance_distance = 0.01
 @drive_amps = 80
+
+
+@electron_gun_distance = @torus_midplane_radius *1.5 
 
 
 
@@ -156,7 +136,7 @@ end
 
 `rm -f ./temp/*` #clear out temp files
 chassis # generate the parts in mged
-lid 
+# lid 
 
 # this block prepares a snapshot picture of the part
 def render_view(ae ="ae 135 -35 180", zoom = 0.3 )
