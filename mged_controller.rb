@@ -5,12 +5,15 @@ require 'facets'
 
 def chassis # the chassis is the inner section of the magrid
 
-	
+	chassis_solids = []
+	chassis_negatives = []
 
 	Cube.octahedron.each_with_index do |v,index| # draw the 6 tori
 		v = v*@scale_factor		
 		`#{@mged} 'in torus#{index} tor #{v.mged} #{v.mged} #{@torus_ring_size} #{@torus} '` #the torus solid
+		chassis_solids << "torus#{index}"
 		`#{@mged} 'in torus_negative#{index} tor #{v.mged} #{v.mged} #{@torus_ring_size+@torus} #{@torus*0.7} '` #the depression negative to hold the coils
+		chassis_negatives << "torus_negative#{index}"
 
 	end
 	Cube.edges.each_with_index do |edge,index| #insert the  joints
@@ -19,19 +22,31 @@ def chassis # the chassis is the inner section of the magrid
 		a = a * @joint_nudge # nudge the joint closer to the center
 		b = cross_product(a,(edge[1]-edge[0])) # this is the vector of the half joint
 		b = b.normal*@scale_factor* @joint_nudge_length # get the unit vector for this direction and scale
+		base = b*20
+		`#{@mged} 'in joint_#{index} rcc #{(a+b).mged} #{(b.inverse*2).mged} #{@joint_radius}'`
+		chassis_solids << "joint_#{index}"
+
+		if [3,4,7,10].include?(index) # these are the joins that extend to become a base
+			`#{@mged} 'in base_#{index} rcc #{(a+base).mged} #{(base.inverse).mged} #{@joint_radius}'` if [4,10].include?(index)
+			`#{@mged} 'in base_#{index} rcc #{(a).mged} #{(base.inverse).mged} #{@joint_radius}'` if [3,7].include?(index)
+			chassis_solids << "base_#{index}"
+		end
 		
 	end
 	
 	base_vector = Cube.octahedron.first
 	
-	`#{@mged} 'in electron_gun_sphere sph #{(base_vector*@scale_factor*1.5).mged} 17'` #sphere to hold electron gun
-	`#{@mged} 'in electron_gun_hollow rcc #{(base_vector*@scale_factor*1.5).mged} #{base_vector*18} 8'` #hollow to fit copper tube
+	`#{@mged} 'in electron_gun_sphere sph #{(base_vector*@scale_factor*1.7).mged} 15'` #sphere to hold electron gun
+	`#{@mged} 'in electron_gun_hollow rcc #{(base_vector*@scale_factor*1.7).mged} #{base_vector*18} 8'` #hollow to fit copper tube
 	`#{@mged} 'in electron_gun_hollow_inverse rcc #{(base_vector*@scale_factor*1.5).mged} #{base_vector.inverse*18} 8'` #hollow to fit copper tube
-
+	chassis_solids << "electron_gun_sphere"
+	chassis_negatives << "electron_gun_hollow"
+	chassis_negatives << "electron_gun_hollow_inverse"
 	
 	
-	`#{@mged} 'comb solid.c u #{(0..5).map{|index| "torus#{index}"}.join(" u ")} u electron_gun_sphere'` #combine the pieces
-	`#{@mged} 'comb negative_form.c u electron_gun_hollow u electron_gun_hollow_inverse u #{(0..5).map{|index| "torus_negative#{index}"  }.join(' u ')}'` #combine the pieces
+	`#{@mged} 'comb solid.c u #{chassis_solids.map{|c| c }.join(" u ")}'` #combine the pieces
+	
+	`#{@mged} 'comb negative_form.c u #{chassis_negatives.map{|c|c }.join(" u ")}'` #combine the pieces
 	`#{@mged} 'r chassis u solid.c - negative_form.c'` #remove negative from positive
 end
 
@@ -67,7 +82,7 @@ ohm = Unit("ohm")
 @ribbon_thickness = 0.3 # mm 
 @turns = 2
 @minimum_wall_thickness = 3 #mm
-
+@joint_radius = 3
 
 @outside_radius = (Cube.vertices[0].r) *@scale_factor #the distance from the center of the machine to the furthest edge of the core
 @torus_midplane_radius = (Cube.octahedron[0].r) * @scale_factor #distance from the center of the machine to the center of a coil
