@@ -44,9 +44,9 @@ def chassis # the chassis is the inner section of the magrid
 	chassis_negatives << "electron_gun_hollow_inverse"
 	
 	
-	`#{@mged} 'comb solid.c u #{chassis_solids.map{|c| c }.join(" u ")}'` #combine the pieces
+	`#{@mged} 'comb solid.c u #{chassis_solids.map{|c| c }.join(" u ")}'` #combine the solids
 	
-	`#{@mged} 'comb negative_form.c u #{chassis_negatives.map{|c|c }.join(" u ")}'` #combine the pieces
+	`#{@mged} 'comb negative_form.c u #{chassis_negatives.map{|c|c }.join(" u ")}'` #combine the negatives 
 	`#{@mged} 'r chassis u solid.c - negative_form.c'` #remove negative from positive
 end
 
@@ -77,11 +77,6 @@ ohm = Unit("ohm")
 
 
 @scale_factor = 37 # global scaling factor
-
-@ribbon_width = 4.2
-@ribbon_thickness = 0.3 # mm 
-@turns = 2
-@minimum_wall_thickness = 3 #mm
 @joint_radius = 3
 
 @outside_radius = (Cube.vertices[0].r) *@scale_factor #the distance from the center of the machine to the furthest edge of the core
@@ -115,7 +110,7 @@ parts.each do |part|
 	part_with_git_hash = "#{`git rev-parse HEAD`.chomp}_#{part}"	#give the STL output a uniq ID based on git repo hash
 
 
-views = [["ae 135 -35 180",0.3], ["ae -22 -30 -16",0.54],["ae 9.5316 21.1861 33.5715",0.5]]
+views = [["ae 135 -35 180",0.25], ["ae -22 -30 -16",0.3],["ae 9.5316 21.1861 33.5715",0.3]]
 
 views.each_with_index do |view,index|
 `cat <<EOF | mged -c #{DB}
