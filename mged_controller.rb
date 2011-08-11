@@ -12,7 +12,7 @@ def chassis # the chassis is the inner section of the magrid
 		v = v*@scale_factor		
 		`#{@mged} 'in torus#{index} tor #{v.mged} #{v.mged} #{@torus_ring_size} #{@torus} '` #the torus solid
 		chassis_solids << "torus#{index}"
-		`#{@mged} 'in torus_negative#{index} tor #{v.mged} #{v.mged} #{@torus_ring_size+@torus} #{@torus*0.7} '` #the depression negative to hold the coils
+		`#{@mged} 'in torus_negative#{index} tor #{v.mged} #{v.mged} #{(@torus_ring_size+@torus)*1.001} #{@torus*0.4} '` #the depression negative to hold the coils
 		chassis_negatives << "torus_negative#{index}"
 
 	end
@@ -36,8 +36,8 @@ def chassis # the chassis is the inner section of the magrid
 	
 	base_vector = Cube.octahedron.first
 	
-	`#{@mged} 'in electron_gun_sphere sph #{(base_vector*@scale_factor*1.7).mged} 15'` #sphere to hold electron gun
-	`#{@mged} 'in electron_gun_hollow rcc #{(base_vector*@scale_factor*1.7).mged} #{base_vector*18} 8'` #hollow to fit copper tube
+	`#{@mged} 'in electron_gun_sphere sph #{(base_vector*@scale_factor*1.8).mged} 15'` #sphere to hold electron gun
+	`#{@mged} 'in electron_gun_hollow rcc #{(base_vector*@scale_factor*1.8).mged} #{base_vector*18} 9.955'` #hollow to fit copper tube
 	`#{@mged} 'in electron_gun_hollow_inverse rcc #{(base_vector*@scale_factor*1.5).mged} #{base_vector.inverse*18} 8'` #hollow to fit copper tube
 	chassis_solids << "electron_gun_sphere"
 	chassis_negatives << "electron_gun_hollow"
@@ -76,8 +76,8 @@ amp = Unit("amp")
 ohm = Unit("ohm")
 
 
-@scale_factor = 37 # global scaling factor
-@joint_radius = 3
+@scale_factor = 39.2 # global scaling factor
+@joint_radius = 5
 
 @outside_radius = (Cube.vertices[0].r) *@scale_factor #the distance from the center of the machine to the furthest edge of the core
 @torus_midplane_radius = (Cube.octahedron[0].r) * @scale_factor #distance from the center of the machine to the center of a coil
@@ -89,10 +89,11 @@ max_torus = (a-b).r
 
 @torus_ring_size = max_torus/1.305 #0.700 *@scale_factor # the main torus shape
 @torus = 0.14 *@scale_factor 
-@joint_nudge = 0.84 # this is a percentage scaling of the vector defining the ideal joint location
+@joint_nudge = 0.88 # this is a percentage scaling of the vector defining the ideal joint location
 @joint_nudge_length = 0.16
 
 
+puts "toriod radius: #{@torus_ring_size}"
 
 `#{@mged} 'units mm'` # set mged's units to millimeter 
 `#{@mged} 'tol dist #{@tolerance_distance}'` #  set the global tolerance distance
