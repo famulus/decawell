@@ -39,9 +39,14 @@ def chassis # the chassis is the inner section of the magrid
 	`#{@mged} 'in electron_gun_sphere sph #{(base_vector*@scale_factor*1.8).mged} 15'` #sphere to hold electron gun
 	`#{@mged} 'in electron_gun_hollow rcc #{(base_vector*@scale_factor*1.8).mged} #{base_vector*18} 9.955'` #hollow to fit copper tube
 	`#{@mged} 'in electron_gun_hollow_inverse rcc #{(base_vector*@scale_factor*1.5).mged} #{base_vector.inverse*18} 8'` #hollow to fit copper tube
+	`#{@mged} 'in base rcc #{(base_vector*@scale_factor*3.1).mged} #{base_vector.inverse*4} 60'` #hollow to fit copper tube
+	`#{@mged} 'in base_negative rcc #{(base_vector*@scale_factor*3.1).mged} #{base_vector.inverse*4} 30'` #hollow to fit copper tube
+	
 	chassis_solids << "electron_gun_sphere"
+	chassis_solids << "base"
 	chassis_negatives << "electron_gun_hollow"
 	chassis_negatives << "electron_gun_hollow_inverse"
+	chassis_negatives << "base_negative"
 	
 	
 	`#{@mged} 'comb solid.c u #{chassis_solids.map{|c| c }.join(" u ")}'` #combine the solids
